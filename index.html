@@ -704,7 +704,7 @@
 
       <div class="search-wrap">
         <span class="search-icon">⌕</span>
-        <input class="search-input" type="text" placeholder="Search addresses, transactions, blocks..." />
+        <input class="search-input" id="explorer-search" type="text" placeholder="Search address, transaction ID, or block height..." />
       </div>
 
       <div class="data-table-wrap">
@@ -1456,6 +1456,30 @@
         makeRow(r.name, r.price, r.change, r.vol, r.spread, r.ok)
       ).join('');
     }
+
+    // ─── BLOCK EXPLORER SEARCH ───────────────────────────────────────
+    document.getElementById('explorer-search').addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter') return;
+      const q = this.value.trim();
+      if (!q) return;
+
+      let url;
+      if (/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(q) || /^bc1[a-z0-9]{6,87}$/i.test(q)) {
+        // Bitcoin address (P2PKH, P2SH, or bech32)
+        url = `https://mempool.space/address/${q}`;
+      } else if (/^[a-fA-F0-9]{64}$/.test(q)) {
+        // Transaction ID or block hash
+        url = `https://mempool.space/tx/${q}`;
+      } else if (/^\d+$/.test(q)) {
+        // Block height
+        url = `https://mempool.space/block/${q}`;
+      } else {
+        // Fallback
+        url = `https://mempool.space/search?q=${encodeURIComponent(q)}`;
+      }
+
+      window.open(url, '_blank', 'noopener');
+    });
 
     // ─── LIGHTNING NETWORK ───────────────────────────────────────────
     async function fetchLightning() {
