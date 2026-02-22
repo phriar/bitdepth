@@ -486,7 +486,128 @@
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
 
-    /* ─── RESPONSIVE ─── */
+    /* ─── TOOL CARDS ─── */
+    .tool-card {
+      background: var(--bg);
+      border: 1px solid var(--orange);
+      padding: 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(247,147,26,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tool-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-family: var(--mono);
+    }
+    .tool-title {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+    }
+    .tool-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.7;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tool-body { flex: 1; }
+    .tool-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .fee-btn {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.6rem 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .fee-btn:hover { border-color: var(--orange); color: var(--text); }
+    .fee-btn.active { border-color: var(--orange); color: var(--orange); background: rgba(247,147,26,0.08); }
+    .conv-input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 1rem;
+      padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+      -moz-appearance: textfield;
+    }
+    .conv-input::-webkit-outer-spin-button,
+    .conv-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .conv-input:focus { border-color: var(--orange); }
+    .clock-unit {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1rem 0.5rem;
+      text-align: center;
+    }
+    .clock-val {
+      font-family: var(--display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .clock-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+    .obit-card {
+      background: var(--bg);
+      padding: 1.25rem;
+    }
+    .obit-year {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      margin-bottom: 0.4rem;
+    }
+    .obit-headline {
+      font-size: 0.75rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 0.4rem;
+    }
+    .obit-source {
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      #tools-grid { grid-template-columns: 1fr; }
+      #obits-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      #tools-grid { grid-template-columns: 1fr; }
+      #obits-grid { grid-template-columns: 1fr; }
+      .clock-val { font-size: 1.5rem; }
+    }
 
     /* Prevent any element from causing horizontal scroll */
     * { max-width: 100%; }
@@ -590,6 +711,7 @@
       <li><a href="#mining">Mining</a></li>
       <li><a href="#lightning">Lightning</a></li>
       <li><a href="#macro">Macro</a></li>
+      <li><a href="#tools" style="color:var(--orange)">⚙ Tools</a></li>
       <li><a href="#bitcoin-101">Learn</a></li>
       <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
     </ul>
@@ -1038,6 +1160,180 @@
         </div>
 
       </div>
+    </section>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       BITDEPTH TOOLS — interactive utilities
+  ════════════════════════════════════════════════════════════════ -->
+  <div id="tools" style="background:var(--bg3);border-top:2px solid var(--orange);border-bottom:1px solid var(--border)">
+    <section>
+      <div class="section-header" style="border-bottom-color:var(--orange)">
+        <div class="section-title" style="color:var(--orange)">BitDepth Tools</div>
+        <div class="section-tag" style="color:var(--muted)">// interactive utilities — built different</div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:3rem;max-width:600px;line-height:1.8">These tools don't exist on CoinGecko or Mempool.space. Use them to make smarter decisions with live Bitcoin data.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem" id="tools-grid">
+
+        <!-- ── TOOL 1: Fee Estimator ── -->
+        <div class="tool-card" id="tool-fee">
+          <div class="tool-badge">TOOL 01</div>
+          <div class="tool-title">⛽ Fee Estimator</div>
+          <div class="tool-desc">How long will your transaction take? Pick your urgency and get the exact fee rate to use right now.</div>
+          <div class="tool-body">
+            <div style="margin-bottom:1.5rem">
+              <div class="tool-label">Target confirmation time</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-top:0.5rem">
+                <button class="fee-btn active" data-target="next">Next Block<br/><span style="font-size:0.65rem;color:var(--muted)">~10 min</span></button>
+                <button class="fee-btn" data-target="30min">3 Blocks<br/><span style="font-size:0.65rem;color:var(--muted)">~30 min</span></button>
+                <button class="fee-btn" data-target="hour">6 Blocks<br/><span style="font-size:0.65rem;color:var(--muted)">~1 hour</span></button>
+              </div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem">
+              <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">Recommended Fee Rate</div>
+              <div style="display:flex;align-items:baseline;gap:0.5rem">
+                <span id="fee-rate-val" style="font-family:var(--display);font-size:2.2rem;font-weight:800;color:var(--orange)">—</span>
+                <span style="color:var(--muted);font-size:0.75rem">sat/vByte</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;font-size:0.72rem">
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem;text-align:center">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">SIMPLE TX</div>
+                <div id="fee-cost-simple" style="color:var(--text)">—</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem;text-align:center">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">SEGWIT TX</div>
+                <div id="fee-cost-segwit" style="color:var(--text)">—</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem;text-align:center">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">BATCH TX</div>
+                <div id="fee-cost-batch" style="color:var(--text)">—</div>
+              </div>
+            </div>
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:0.75rem" id="fee-mempool-note">Fetching mempool data...</div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 2: Sats Converter ── -->
+        <div class="tool-card" id="tool-sats">
+          <div class="tool-badge">TOOL 02</div>
+          <div class="tool-title">🔄 Sats Converter</div>
+          <div class="tool-desc">Instantly convert between USD, BTC, and satoshis. Type in any field to update the others.</div>
+          <div class="tool-body">
+            <div style="margin-bottom:1rem">
+              <div class="tool-label">US Dollars (USD)</div>
+              <div style="position:relative;margin-top:0.4rem">
+                <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem">$</span>
+                <input id="conv-usd" class="conv-input" type="number" placeholder="0.00" step="any" />
+              </div>
+            </div>
+            <div style="margin-bottom:1rem">
+              <div class="tool-label">Bitcoin (BTC)</div>
+              <div style="position:relative;margin-top:0.4rem">
+                <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--orange);font-size:0.85rem">₿</span>
+                <input id="conv-btc" class="conv-input" type="number" placeholder="0.00000000" step="any" />
+              </div>
+            </div>
+            <div style="margin-bottom:1.25rem">
+              <div class="tool-label">Satoshis (sats)</div>
+              <div style="position:relative;margin-top:0.4rem">
+                <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.75rem">⚡</span>
+                <input id="conv-sats" class="conv-input" type="number" placeholder="0" step="1" />
+              </div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--border);padding:1rem;font-size:0.72rem">
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+                <span style="color:var(--muted)">1 BTC =</span>
+                <span id="conv-rate-btc" style="color:var(--text)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem">
+                <span style="color:var(--muted)">1 sat =</span>
+                <span id="conv-rate-sat" style="color:var(--text)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="color:var(--muted)">$1 USD =</span>
+                <span id="conv-rate-usd" style="color:var(--text)">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 3: Halving Countdown ── -->
+        <div class="tool-card" id="tool-halving">
+          <div class="tool-badge">TOOL 03</div>
+          <div class="tool-title">📉 Halving Countdown</div>
+          <div class="tool-desc">Bitcoin's next supply shock, live to the second. Each halving cuts the block reward in half — permanently.</div>
+          <div class="tool-body">
+            <div id="halving-clock" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1.5rem">
+              <div class="clock-unit"><div class="clock-val" id="hc-days">—</div><div class="clock-label">DAYS</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-hours">—</div><div class="clock-label">HRS</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-mins">—</div><div class="clock-label">MIN</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-secs">—</div><div class="clock-label">SEC</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;font-size:0.72rem">
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">CURRENT HEIGHT</div>
+                <div id="hc-current-block" style="color:var(--text)">—</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">HALVING BLOCK</div>
+                <div id="hc-target-block" style="color:var(--orange)">—</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">BLOCKS LEFT</div>
+                <div id="hc-blocks-left" style="color:var(--text)">—</div>
+              </div>
+              <div style="background:var(--bg);border:1px solid var(--border);padding:0.75rem">
+                <div style="color:var(--muted);font-size:0.6rem;margin-bottom:0.25rem">NEXT REWARD</div>
+                <div style="color:var(--green)">1.5625 BTC</div>
+              </div>
+            </div>
+            <div style="font-size:0.68rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:0.75rem">
+              Past halvings: <span style="color:var(--text)">Nov 2012</span> → <span style="color:var(--text)">Jul 2016</span> → <span style="color:var(--text)">May 2020</span> → <span style="color:var(--text)">Apr 2024</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 4: Is Bitcoin Cheap? ── -->
+        <div class="tool-card" id="tool-signal">
+          <div class="tool-badge">TOOL 04</div>
+          <div class="tool-title">🎯 Is Bitcoin Cheap?</div>
+          <div class="tool-desc">One signal. No noise. Based on the Mayer Multiple — the ratio of price to 200-day moving average used by long-term investors.</div>
+          <div class="tool-body" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+            <!-- Big signal display -->
+            <div id="signal-ring" style="width:160px;height:160px;border-radius:50%;border:3px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:1rem auto 1.5rem;position:relative;transition:border-color 0.6s">
+              <div style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem">MAYER MULTIPLE</div>
+              <div id="signal-mayer-num" style="font-family:var(--display);font-size:2.4rem;font-weight:800;line-height:1;transition:color 0.6s">—</div>
+              <div id="signal-vs-ma" style="font-size:0.65rem;color:var(--muted);margin-top:0.25rem">vs 200d MA</div>
+            </div>
+            <div id="signal-verdict" style="font-family:var(--display);font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.5rem">Loading...</div>
+            <div id="signal-detail" style="font-size:0.72rem;color:var(--muted);line-height:1.7;max-width:280px;margin-bottom:1.5rem">Fetching data...</div>
+            <div style="width:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;font-size:0.55rem;text-align:center">
+              <div style="padding:0.4rem;background:#1a2a4a;color:#3b82f6">EXTREME LOW<br/>&lt;0.5</div>
+              <div style="padding:0.4rem;background:#0a2a1a;color:#00d68f">BUY ZONE<br/>0.5–1.0</div>
+              <div style="padding:0.4rem;background:#2a2010;color:#f7931a">FAIR VALUE<br/>1.0–1.5</div>
+              <div style="padding:0.4rem;background:#2a1a00;color:#ff8c00">ELEVATED<br/>1.5–2.4</div>
+              <div style="padding:0.4rem;background:#2a0a0a;color:#ff4d4d">TOP ZONE<br/>&gt;2.4</div>
+            </div>
+            <div style="font-size:0.6rem;color:var(--muted);margin-top:0.75rem">Not financial advice. Historical signal only.</div>
+          </div>
+        </div>
+
+      </div><!-- /tools-grid -->
+
+      <!-- Bitcoin Obituaries -->
+      <div style="margin-top:3rem">
+        <div style="font-family:var(--display);font-weight:800;font-size:1.2rem;margin-bottom:0.5rem">💀 Bitcoin Obituaries</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:1.5rem">Every time the media declared Bitcoin dead. It's still here.</div>
+        <div id="obits-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
+          <!-- Populated by JS -->
+        </div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:0.75rem;text-align:right">
+          Source: <a href="https://99bitcoins.com/bitcoin-obituaries/" target="_blank" rel="noopener" style="color:var(--orange)">99Bitcoins.com</a>
+        </div>
+      </div>
+
     </section>
   </div>
 
@@ -1612,7 +1908,210 @@
       }
     }
 
-    // ─── INIT & REFRESH ──────────────────────────────────────────────
+    // ─── TOOL: FEE ESTIMATOR ─────────────────────────────────────────
+    let feeData = { fastestFee: 0, halfHourFee: 0, hourFee: 0 };
+    let currentFeeTarget = 'next';
+    let btcPriceForTools = 0;
+
+    function updateFeeDisplay() {
+      const rate = currentFeeTarget === 'next' ? feeData.fastestFee
+                 : currentFeeTarget === '30min' ? feeData.halfHourFee
+                 : feeData.hourFee;
+
+      $('fee-rate-val').textContent = rate;
+
+      // Typical tx sizes in vBytes
+      const simple  = 141;  // P2PKH
+      const segwit  = 102;  // P2WPKH
+      const batch   = 350;  // multi-output
+
+      if (btcPriceForTools > 0) {
+        const toUSD = (vb) => '$' + ((rate * vb / 1e8) * btcPriceForTools).toFixed(2);
+        $('fee-cost-simple').textContent = toUSD(simple);
+        $('fee-cost-segwit').textContent = toUSD(segwit);
+        $('fee-cost-batch').textContent  = toUSD(batch);
+      }
+      $('fee-mempool-note').textContent =
+        `Based on live mempool — ${feeData.fastestFee} / ${feeData.halfHourFee} / ${feeData.hourFee} sat/vB (next / 30min / 1hr)`;
+    }
+
+    document.querySelectorAll('.fee-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentFeeTarget = this.dataset.target;
+        updateFeeDisplay();
+      });
+    });
+
+    async function fetchFeeEstimator() {
+      try {
+        const res = await fetch('https://mempool.space/api/v1/fees/recommended');
+        feeData = await res.json();
+        updateFeeDisplay();
+      } catch(e) { console.error('Fee estimator error:', e); }
+    }
+
+    // ─── TOOL: SATS CONVERTER ────────────────────────────────────────
+    let convPrice = 0;
+
+    function initConverter(price) {
+      convPrice = price;
+      $('conv-rate-btc').textContent = '$' + fmt(price);
+      $('conv-rate-sat').textContent = '$' + (price / 1e8).toFixed(8);
+      $('conv-rate-usd').textContent = fmt(Math.round(1e8 / price)) + ' sats';
+    }
+
+    $('conv-usd').addEventListener('input', function() {
+      if (!convPrice || !this.value) { $('conv-btc').value = ''; $('conv-sats').value = ''; return; }
+      const btc = parseFloat(this.value) / convPrice;
+      $('conv-btc').value  = btc.toFixed(8);
+      $('conv-sats').value = Math.round(btc * 1e8);
+    });
+    $('conv-btc').addEventListener('input', function() {
+      if (!convPrice || !this.value) { $('conv-usd').value = ''; $('conv-sats').value = ''; return; }
+      const btc = parseFloat(this.value);
+      $('conv-usd').value  = (btc * convPrice).toFixed(2);
+      $('conv-sats').value = Math.round(btc * 1e8);
+    });
+    $('conv-sats').addEventListener('input', function() {
+      if (!convPrice || !this.value) { $('conv-usd').value = ''; $('conv-btc').value = ''; return; }
+      const btc = parseInt(this.value) / 1e8;
+      $('conv-btc').value = btc.toFixed(8);
+      $('conv-usd').value = (btc * convPrice).toFixed(2);
+    });
+
+    // ─── TOOL: HALVING COUNTDOWN ─────────────────────────────────────
+    let halvingTarget = null;
+
+    function initHalvingClock(currentHeight) {
+      const HALVING_INTERVAL = 210000;
+      const nextHalving = Math.ceil(currentHeight / HALVING_INTERVAL) * HALVING_INTERVAL;
+      const blocksLeft  = nextHalving - currentHeight;
+      const msLeft      = blocksLeft * 10 * 60 * 1000; // 10 min per block
+      halvingTarget     = Date.now() + msLeft;
+
+      $('hc-current-block').textContent = fmt(currentHeight);
+      $('hc-target-block').textContent  = fmt(nextHalving);
+      $('hc-blocks-left').textContent   = fmt(blocksLeft);
+    }
+
+    function tickHalvingClock() {
+      if (!halvingTarget) return;
+      const ms   = Math.max(0, halvingTarget - Date.now());
+      const secs = Math.floor(ms / 1000);
+      const d    = Math.floor(secs / 86400);
+      const h    = Math.floor((secs % 86400) / 3600);
+      const m    = Math.floor((secs % 3600) / 60);
+      const s    = secs % 60;
+      $('hc-days').textContent  = String(d).padStart(3, '0');
+      $('hc-hours').textContent = String(h).padStart(2, '0');
+      $('hc-mins').textContent  = String(m).padStart(2, '0');
+      $('hc-secs').textContent  = String(s).padStart(2, '0');
+    }
+    setInterval(tickHalvingClock, 1000);
+
+    // ─── TOOL: IS BITCOIN CHEAP? ─────────────────────────────────────
+    function updateCheapSignal(mayer) {
+      const ring = $('signal-ring');
+      const num  = $('signal-mayer-num');
+      const verdict = $('signal-verdict');
+      const detail   = $('signal-detail');
+
+      num.textContent = mayer.toFixed(3);
+
+      let color, label, text;
+      if (mayer < 0.5) {
+        color = '#3b82f6'; label = 'EXTREMELY CHEAP';
+        text  = 'Rare territory. Price is less than half the 200-day MA. Historically one of the best accumulation windows in Bitcoin history.';
+      } else if (mayer < 1.0) {
+        color = '#00d68f'; label = 'YES — BUY ZONE';
+        text  = 'Price is below the 200-day moving average. Long-term holders have historically been rewarded buying here.';
+      } else if (mayer < 1.5) {
+        color = '#f7931a'; label = 'FAIR VALUE';
+        text  = 'Price is near the 200-day MA. Neither cheap nor expensive by historical standards. Accumulate or hold.';
+      } else if (mayer < 2.4) {
+        color = '#ff8c00'; label = 'GETTING PRICEY';
+        text  = 'Significantly above the 200-day MA. Not a screaming buy. Past cycles showed volatility and pullbacks from these levels.';
+      } else {
+        color = '#ff4d4d'; label = 'HISTORICALLY EXPENSIVE';
+        text  = 'Mayer Multiple above 2.4 — this zone has historically coincided with cycle peaks. Extreme caution warranted.';
+      }
+
+      ring.style.borderColor    = color;
+      ring.style.boxShadow      = `0 0 30px ${color}33`;
+      num.style.color           = color;
+      verdict.textContent       = label;
+      verdict.style.color       = color;
+      detail.textContent        = text;
+    }
+
+    // ─── BITCOIN OBITUARIES ──────────────────────────────────────────
+    const obituaries = [
+      { year: '2010', headline: '"Bitcoin is worthless"', source: 'Various forums', price: '$0.07' },
+      { year: '2011', headline: '"The Bitcoin Bubble"', source: 'Time Magazine', price: '$32' },
+      { year: '2012', headline: '"Bitcoin Is Dead"', source: 'Gizmodo', price: '$5' },
+      { year: '2013', headline: '"Bitcoin Will Never Be a Currency"', source: 'Wired', price: '$1,200' },
+      { year: '2014', headline: '"The Bitcoin Dream Is Dead"', source: 'Business Insider', price: '$300' },
+      { year: '2015', headline: '"Bitcoin Is Dead, Long Live the Blockchain"', source: 'Bloomberg', price: '$200' },
+      { year: '2017', headline: '"Bitcoin Is a Fraud" — Jamie Dimon', source: 'CNBC', price: '$4,200' },
+      { year: '2018', headline: '"Bitcoin Is a Pyramid Scheme"', source: 'NYT', price: '$6,500' },
+      { year: '2019', headline: '"The Bitcoin Bear Market Is Here To Stay"', source: 'Forbes', price: '$3,500' },
+      { year: '2020', headline: '"Bitcoin Will Never Recover From COVID"', source: 'MarketWatch', price: '$6,000' },
+      { year: '2022', headline: '"Bitcoin Is Worthless" — Warren Buffett', source: 'Fortune', price: '$29,000' },
+      { year: '2023', headline: '"Bitcoin Has No Future After FTX"', source: 'The Guardian', price: '$16,500' },
+    ];
+
+    const obitsGrid = $('obits-grid');
+    obitsGrid.innerHTML = obituaries.map(o => `
+      <div class="obit-card">
+        <div class="obit-year">${o.year} — BTC: ${o.price}</div>
+        <div class="obit-headline">"${o.headline}"</div>
+        <div class="obit-source">${o.source}</div>
+      </div>
+    `).join('');
+
+    // ─── HOOK TOOLS INTO EXISTING DATA FETCHES ───────────────────────
+    // Patch fetchCoinGecko to also update tools
+    const _origFetchCG = fetchCoinGecko;
+    fetchCoinGecko = async function() {
+      await _origFetchCG();
+      // Get price from hero card after it's set
+      const priceEl = $('hero-price');
+      if (priceEl && priceEl.textContent !== '—') {
+        const p = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
+        if (p > 0) {
+          btcPriceForTools = p;
+          convPrice = p;
+          initConverter(p);
+          updateFeeDisplay();
+        }
+      }
+    };
+
+    // Patch fetchMempool to init halving clock and fee data
+    const _origFetchMP = fetchMempool;
+    fetchMempool = async function() {
+      await _origFetchMP();
+      // Block height — grab from already-set DOM
+      const heightEl = $('chain-height');
+      if (heightEl && heightEl.textContent !== '—') {
+        const h = parseInt(heightEl.textContent.replace(/,/g, ''));
+        if (h > 0) initHalvingClock(h);
+      }
+      await fetchFeeEstimator();
+    };
+
+    // Patch fetchMacro to update cheap signal
+    const _origFetchMacro = fetchMacro;
+    fetchMacro = async function() {
+      await _origFetchMacro();
+      const mayerEl = $('macro-mayer');
+      if (mayerEl && mayerEl.textContent !== '—') {
+        const m = parseFloat(mayerEl.textContent);
+        if (m > 0) updateCheapSignal(m);
+      }
+    };
     async function init() {
       await Promise.allSettled([
         fetchCoinGecko(),
