@@ -513,31 +513,31 @@
     </ul>
     <div class="nav-status">
       <div class="status-dot"></div>
-      LIVE DATA
+      <span id="nav-last-updated">LIVE DATA</span>
     </div>
   </nav>
 
   <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker">
-      <!-- Duplicated for seamless loop -->
-      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val">$67,240</span><span class="t-up">+2.4%</span></span>
-      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val">623 EH/s</span><span class="t-up">+1.1%</span></span>
-      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val">88.1T</span><span class="t-up">+3.2%</span></span>
-      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val">142 MB</span><span class="t-down">-8%</span></span>
-      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val">~1,204 days</span></span>
-      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val">19.72M BTC</span></span>
-      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val">$1.33T</span><span class="t-up">+2.1%</span></span>
-      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val">12 sat/vB</span><span class="t-down">-18%</span></span>
-      <!-- Duplicate -->
-      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val">$67,240</span><span class="t-up">+2.4%</span></span>
-      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val">623 EH/s</span><span class="t-up">+1.1%</span></span>
-      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val">88.1T</span><span class="t-up">+3.2%</span></span>
-      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val">142 MB</span><span class="t-down">-8%</span></span>
-      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val">~1,204 days</span></span>
-      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val">19.72M BTC</span></span>
-      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val">$1.33T</span><span class="t-up">+2.1%</span></span>
-      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val">12 sat/vB</span><span class="t-down">-18%</span></span>
+      <!-- Duplicated for seamless loop — JS will update both sets -->
+      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val" id="tick-price">—</span><span id="tick-change-1" class="t-up">—</span></span>
+      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val" id="tick-hashrate">—</span></span>
+      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val" id="tick-difficulty">—</span></span>
+      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val" id="tick-mempool">—</span></span>
+      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val" id="tick-halving">—</span></span>
+      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val" id="tick-supply">—</span></span>
+      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val" id="tick-mcap">—</span><span id="tick-change-2" class="t-up">—</span></span>
+      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val" id="tick-fees">—</span></span>
+      <!-- Duplicate set -->
+      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val" id="tick-price-2">—</span><span id="tick-change-3" class="t-up">—</span></span>
+      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val" id="tick-hashrate-2">—</span></span>
+      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val" id="tick-difficulty-2">—</span></span>
+      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val" id="tick-mempool-2">—</span></span>
+      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val" id="tick-halving-2">—</span></span>
+      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val" id="tick-supply-2">—</span></span>
+      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val" id="tick-mcap-2">—</span><span id="tick-change-4" class="t-up">—</span></span>
+      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val" id="tick-fees-2">—</span></span>
     </div>
   </div>
 
@@ -554,24 +554,24 @@
     </div>
     <div class="hero-card fade-in delay-2">
       <div class="card-label">BTC / USD — Live</div>
-      <div class="card-price">$67,240</div>
-      <div class="card-change">▲ +2.4% &nbsp;(+$1,572) today</div>
+      <div class="card-price" id="hero-price">—</div>
+      <div class="card-change" id="hero-change">loading...</div>
       <div class="mini-stats">
         <div class="mini-stat">
           <div class="mini-stat-label">24h High</div>
-          <div class="mini-stat-val">$68,100</div>
+          <div class="mini-stat-val" id="hero-high">—</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-label">24h Low</div>
-          <div class="mini-stat-val">$65,430</div>
+          <div class="mini-stat-val" id="hero-low">—</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-label">Volume</div>
-          <div class="mini-stat-val">$42.1B</div>
+          <div class="mini-stat-val" id="hero-vol">—</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-label">Dominance</div>
-          <div class="mini-stat-val">54.2%</div>
+          <div class="mini-stat-val" id="hero-dom">—</div>
         </div>
       </div>
       <!-- Fake SVG Sparkline -->
@@ -603,23 +603,23 @@
       <div class="stats-grid fade-in">
         <div class="stat-box">
           <div class="stat-box-label">Market Cap</div>
-          <div class="stat-box-val">$1.33T</div>
-          <div class="stat-box-sub">+2.1% 24h</div>
+          <div class="stat-box-val" id="mkt-cap">—</div>
+          <div class="stat-box-sub" id="mkt-cap-sub">loading...</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">24h Volume</div>
-          <div class="stat-box-val">$42.1B</div>
+          <div class="stat-box-val" id="mkt-vol">—</div>
           <div class="stat-box-sub">across all exchanges</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Sats per Dollar</div>
-          <div class="stat-box-val">1,488</div>
+          <div class="stat-box-val" id="mkt-sats">—</div>
           <div class="stat-box-sub">sats per $1 USD</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">ATH Distance</div>
-          <div class="stat-box-val">−3.4%</div>
-          <div class="stat-box-sub">from $69,044 ATH</div>
+          <div class="stat-box-val" id="mkt-ath">—</div>
+          <div class="stat-box-sub" id="mkt-ath-sub">from ATH</div>
         </div>
       </div>
 
@@ -696,35 +696,28 @@
       <div class="stats-grid">
         <div class="stat-box">
           <div class="stat-box-label">Block Height</div>
-          <div class="stat-box-val">838,402</div>
-          <div class="stat-box-sub">~9 min since last</div>
+          <div class="stat-box-val" id="chain-height">—</div>
+          <div class="stat-box-sub" id="chain-height-sub">loading...</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Mempool Size</div>
-          <div class="stat-box-val">142 MB</div>
-          <div class="stat-box-sub">~4,100 pending txs</div>
+          <div class="stat-box-val" id="chain-mempool">—</div>
+          <div class="stat-box-sub" id="chain-mempool-sub">loading...</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Avg Fee</div>
-          <div class="stat-box-val">12 s/vB</div>
+          <div class="stat-box-val" id="chain-fee">—</div>
           <div class="stat-box-sub">sat per vbyte</div>
         </div>
         <div class="stat-box">
-          <div class="stat-box-label">Active Addresses</div>
-          <div class="stat-box-val">924K</div>
-          <div class="stat-box-sub">past 24 hours</div>
+          <div class="stat-box-label">Unconfirmed Txs</div>
+          <div class="stat-box-val" id="chain-txs">—</div>
+          <div class="stat-box-sub">in mempool</div>
         </div>
       </div>
 
-      <div class="terminal">
-        <span class="t-comment">// latest blocks</span><br/>
-        <span class="t-cmd">$ bitdepth query block --latest 5</span><br/><br/>
-        <span class="t-out">Block </span><span class="t-val">838,402</span><span class="t-out"> — 3,214 txs — fees: 0.382 BTC — size: 1.72 MB — mined by: AntPool</span><br/>
-        <span class="t-out">Block </span><span class="t-val">838,401</span><span class="t-out"> — 2,988 txs — fees: 0.341 BTC — size: 1.68 MB — mined by: Foundry USA</span><br/>
-        <span class="t-out">Block </span><span class="t-val">838,400</span><span class="t-out"> — 3,102 txs — fees: 0.357 BTC — size: 1.71 MB — mined by: F2Pool</span><br/>
-        <span class="t-out">Block </span><span class="t-val">838,399</span><span class="t-out"> — 2,741 txs — fees: 0.312 BTC — size: 1.59 MB — mined by: ViaBTC</span><br/>
-        <span class="t-out">Block </span><span class="t-val">838,398</span><span class="t-out"> — 3,450 txs — fees: 0.401 BTC — size: 1.82 MB — mined by: Binance Pool</span><br/><br/>
-        <span class="t-cmd">█</span>
+      <div class="terminal" id="block-terminal">
+        <span class="t-comment">// latest blocks — loading...</span>
       </div>
     </section>
   </div>
@@ -740,13 +733,13 @@
       <div class="stats-grid">
         <div class="stat-box">
           <div class="stat-box-label">Hash Rate</div>
-          <div class="stat-box-val">623 EH/s</div>
+          <div class="stat-box-val" id="mine-hashrate">—</div>
           <div class="stat-box-sub">7-day average</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Difficulty</div>
-          <div class="stat-box-val">88.1T</div>
-          <div class="stat-box-sub">next adj in 4 days</div>
+          <div class="stat-box-val" id="mine-difficulty">—</div>
+          <div class="stat-box-sub" id="mine-diff-sub">loading...</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Block Reward</div>
@@ -755,8 +748,8 @@
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Next Halving</div>
-          <div class="stat-box-val">~1,204d</div>
-          <div class="stat-box-sub">block 1,050,000</div>
+          <div class="stat-box-val" id="mine-halving">—</div>
+          <div class="stat-box-sub" id="mine-halving-sub">loading...</div>
         </div>
       </div>
 
@@ -770,49 +763,8 @@
             <th>Type</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Foundry USA</td>
-            <td>38</td>
-            <td>27.1%</td>
-            <td>168.9 EH/s</td>
-            <td><span class="tag tag-orange">FPPS</span></td>
-          </tr>
-          <tr>
-            <td>AntPool</td>
-            <td>29</td>
-            <td>20.7%</td>
-            <td>129.0 EH/s</td>
-            <td><span class="tag tag-orange">PPS+</span></td>
-          </tr>
-          <tr>
-            <td>F2Pool</td>
-            <td>21</td>
-            <td>15.0%</td>
-            <td>93.5 EH/s</td>
-            <td><span class="tag tag-orange">PPS+</span></td>
-          </tr>
-          <tr>
-            <td>ViaBTC</td>
-            <td>14</td>
-            <td>10.0%</td>
-            <td>62.3 EH/s</td>
-            <td><span class="tag tag-muted">PPLNS</span></td>
-          </tr>
-          <tr>
-            <td>Binance Pool</td>
-            <td>11</td>
-            <td>7.9%</td>
-            <td>48.9 EH/s</td>
-            <td><span class="tag tag-muted">FPPS</span></td>
-          </tr>
-          <tr>
-            <td>Unknown</td>
-            <td>27</td>
-            <td>19.3%</td>
-            <td>120.2 EH/s</td>
-            <td><span class="tag tag-muted">—</span></td>
-          </tr>
+        <tbody id="pool-table-body">
+          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr>
         </tbody>
       </table>
     </section>
@@ -871,7 +823,7 @@
   </footer>
 
   <script>
-    // Animate stats on scroll
+    // ─── SCROLL ANIMATIONS ───────────────────────────────────────────
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -888,27 +840,259 @@
       observer.observe(el);
     });
 
-    // Animate price counter
-    function animateCounter(el, target, prefix = '', suffix = '') {
-      const start = target * 0.97;
-      const duration = 1200;
-      const startTime = performance.now();
-      function update(now) {
-        const t = Math.min((now - startTime) / duration, 1);
-        const val = start + (target - start) * t;
-        el.textContent = prefix + val.toLocaleString('en-US', { maximumFractionDigits: 0 }) + suffix;
-        if (t < 1) requestAnimationFrame(update);
-      }
-      requestAnimationFrame(update);
+    // ─── HELPERS ─────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    function fmt(n, decimals = 0) {
+      return n.toLocaleString('en-US', { maximumFractionDigits: decimals });
     }
 
-    // Blink cursor in terminal
-    const cursor = document.querySelector('.t-cmd:last-child');
-    if (cursor) {
-      setInterval(() => {
-        cursor.textContent = cursor.textContent === '█' ? '' : '█';
-      }, 600);
+    function fmtUSD(n) {
+      if (n >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
+      if (n >= 1e9)  return '$' + (n / 1e9).toFixed(1) + 'B';
+      if (n >= 1e6)  return '$' + (n / 1e6).toFixed(1) + 'M';
+      return '$' + fmt(n);
     }
+
+    function fmtHash(hps) {
+      // hps comes in as hashes/sec from mempool
+      const ehs = hps / 1e18;
+      return ehs.toFixed(1) + ' EH/s';
+    }
+
+    function setChange(el, pct) {
+      const pos = pct >= 0;
+      el.textContent = (pos ? '▲ +' : '▼ ') + pct.toFixed(2) + '%';
+      el.className = 'card-change' + (pos ? '' : ' negative');
+    }
+
+    function setTickerChange(el, pct) {
+      const pos = pct >= 0;
+      el.textContent = (pos ? '+' : '') + pct.toFixed(2) + '%';
+      el.className = pos ? 't-up' : 't-down';
+    }
+
+    function updateTime() {
+      const now = new Date();
+      $('nav-last-updated').textContent = 'UPDATED ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    // ─── POOL TYPE LOOKUP ─────────────────────────────────────────────
+    const poolTypes = {
+      'Foundry USA': 'FPPS', 'AntPool': 'PPS+', 'F2Pool': 'PPS+',
+      'ViaBTC': 'PPLNS', 'Binance Pool': 'FPPS', 'Braiins Pool': 'FPPS',
+      'Luxor': 'FPPS', 'MARA Pool': 'FPPS', 'SpiderPool': 'PPS+',
+      'BTC.com': 'PPS', 'SBICrypto': 'PPS+', 'EMCDPool': 'PPLNS'
+    };
+
+    // ─── COINGECKO — Price & Market Data ────────────────────────────
+    async function fetchCoinGecko() {
+      try {
+        const res = await fetch(
+          'https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false'
+        );
+        const d = await res.json();
+        const md = d.market_data;
+
+        const price     = md.current_price.usd;
+        const change24h = md.price_change_percentage_24h;
+        const high24h   = md.high_24h.usd;
+        const low24h    = md.low_24h.usd;
+        const vol24h    = md.total_volume.usd;
+        const mcap      = md.market_cap.usd;
+        const dom       = md.market_cap_percentage ? md.market_cap_percentage : null;
+        const ath       = md.ath.usd;
+        const athPct    = md.ath_change_percentage.usd;
+        const supply    = md.circulating_supply;
+        const sats      = Math.round(1e8 / price);
+
+        // Hero card
+        $('hero-price').textContent = '$' + fmt(price);
+        const changeEl = $('hero-change');
+        const priceDelta = price * (change24h / 100);
+        changeEl.textContent = (change24h >= 0 ? '▲ +' : '▼ ') + change24h.toFixed(2) + '% (' + (change24h >= 0 ? '+' : '') + '$' + fmt(Math.abs(priceDelta)) + ') today';
+        changeEl.className = 'card-change' + (change24h < 0 ? ' negative' : '');
+        $('hero-high').textContent = '$' + fmt(high24h);
+        $('hero-low').textContent  = '$' + fmt(low24h);
+        $('hero-vol').textContent  = fmtUSD(vol24h);
+
+        // Market stats
+        $('mkt-cap').textContent     = fmtUSD(mcap);
+        $('mkt-cap-sub').textContent = (change24h >= 0 ? '+' : '') + change24h.toFixed(2) + '% 24h';
+        $('mkt-vol').textContent     = fmtUSD(vol24h);
+        $('mkt-sats').textContent    = fmt(sats);
+        $('mkt-ath').textContent     = athPct.toFixed(1) + '%';
+        $('mkt-ath-sub').textContent = 'from $' + fmt(ath) + ' ATH';
+
+        // Ticker
+        const tickPrice = '$' + fmt(price);
+        const tickMcap  = fmtUSD(mcap);
+        ['tick-price','tick-price-2'].forEach(id => $(id).textContent = tickPrice);
+        ['tick-supply','tick-supply-2'].forEach(id => $(id).textContent = (supply / 1e6).toFixed(2) + 'M BTC');
+        ['tick-mcap','tick-mcap-2'].forEach(id => $(id).textContent = tickMcap);
+        ['tick-change-1','tick-change-3'].forEach(id => setTickerChange($(id), change24h));
+        ['tick-change-2','tick-change-4'].forEach(id => setTickerChange($(id), change24h));
+
+        // Dominance (if available from market_cap_percentage on global endpoint — use approximation)
+        $('hero-dom').textContent = '—'; // requires global endpoint, loaded separately
+
+        updateTime();
+      } catch(e) {
+        console.error('CoinGecko error:', e);
+      }
+    }
+
+    // CoinGecko global endpoint for dominance
+    async function fetchCoinGeckoGlobal() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/global');
+        const d = await res.json();
+        const dom = d.data.market_cap_percentage.btc;
+        $('hero-dom').textContent = dom.toFixed(1) + '%';
+      } catch(e) {}
+    }
+
+    // ─── MEMPOOL.SPACE — On-Chain & Mining ──────────────────────────
+    async function fetchMempool() {
+      try {
+        // Fees
+        const feesRes = await fetch('https://mempool.space/api/v1/fees/recommended');
+        const fees = await feesRes.json();
+        const avgFee = fees.halfHourFee;
+        $('chain-fee').textContent = avgFee + ' s/vB';
+        ['tick-fees','tick-fees-2'].forEach(id => $(id).textContent = avgFee + ' sat/vB');
+
+        // Mempool stats
+        const mempoolRes = await fetch('https://mempool.space/api/mempool');
+        const mp = await mempoolRes.json();
+        const mbSize = (mp.vsize / 1e6).toFixed(1);
+        const txCount = fmt(mp.count);
+        $('chain-mempool').textContent     = mbSize + ' MB';
+        $('chain-mempool-sub').textContent = fmt(mp.count) + ' pending txs';
+        $('chain-txs').textContent         = txCount;
+        ['tick-mempool','tick-mempool-2'].forEach(id => $(id).textContent = mbSize + ' MB');
+
+      } catch(e) {
+        console.error('Mempool fees error:', e);
+      }
+
+      try {
+        // Latest blocks
+        const blocksRes = await fetch('https://mempool.space/api/v1/blocks');
+        const blocks = await blocksRes.json();
+        const latest = blocks.slice(0, 5);
+
+        // Block height
+        const height = latest[0].height;
+        $('chain-height').textContent     = fmt(height);
+        $('chain-height-sub').textContent = 'last block ~' + Math.round((Date.now()/1000 - latest[0].timestamp) / 60) + ' min ago';
+
+        // Halving calc
+        const HALVING_INTERVAL = 210000;
+        const nextHalving = Math.ceil(height / HALVING_INTERVAL) * HALVING_INTERVAL;
+        const blocksLeft = nextHalving - height;
+        const daysLeft = Math.round(blocksLeft * 10 / 1440);
+        const halvingStr = '~' + fmt(daysLeft) + 'd';
+        $('mine-halving').textContent     = halvingStr;
+        $('mine-halving-sub').textContent = 'block ' + fmt(nextHalving);
+        ['tick-halving','tick-halving-2'].forEach(id => $(id).textContent = halvingStr);
+
+        // Terminal block display
+        const terminal = $('block-terminal');
+        let html = '<span class="t-comment">// latest blocks — live from mempool.space</span><br/>';
+        html += '<span class="t-cmd">$ bitdepth query block --latest 5</span><br/><br/>';
+        latest.forEach(b => {
+          const feeBTC = (b.extras?.totalFees / 1e8).toFixed(3) || '—';
+          const sizeMB = (b.size / 1e6).toFixed(2);
+          const pool   = b.extras?.pool?.name || 'Unknown';
+          html += `<span class="t-out">Block </span><span class="t-val">${fmt(b.height)}</span>`;
+          html += `<span class="t-out"> — ${fmt(b.tx_count)} txs — fees: ${feeBTC} BTC — size: ${sizeMB} MB — mined by: ${pool}</span><br/>`;
+        });
+        html += '<br/><span class="t-cmd" id="blink-cursor">█</span>';
+        terminal.innerHTML = html;
+
+        // restart blink on new element
+        const cur = document.getElementById('blink-cursor');
+        if (cur) setInterval(() => { cur.textContent = cur.textContent === '█' ? '' : '█'; }, 600);
+
+      } catch(e) {
+        console.error('Mempool blocks error:', e);
+      }
+
+      try {
+        // Hashrate & difficulty
+        const hashrateRes = await fetch('https://mempool.space/api/v1/mining/hashrate/3d');
+        const hr = await hashrateRes.json();
+        if (hr.currentHashrate) {
+          const ehs = (hr.currentHashrate / 1e18).toFixed(1);
+          $('mine-hashrate').textContent = ehs + ' EH/s';
+          ['tick-hashrate','tick-hashrate-2'].forEach(id => $(id).textContent = ehs + ' EH/s');
+        }
+        if (hr.currentDifficulty) {
+          const diff = hr.currentDifficulty;
+          const diffT = (diff / 1e12).toFixed(1) + 'T';
+          $('mine-difficulty').textContent = diffT;
+          ['tick-difficulty','tick-difficulty-2'].forEach(id => $(id).textContent = diffT);
+        }
+      } catch(e) {
+        console.error('Mempool hashrate error:', e);
+      }
+
+      try {
+        // Mining pools
+        const poolsRes = await fetch('https://mempool.space/api/v1/mining/pools/24h');
+        const poolData = await poolsRes.json();
+        const tbody = $('pool-table-body');
+        const totalBlocks = poolData.pools.reduce((s, p) => s + p.blockCount, 0);
+
+        // Get total hashrate for estimation
+        const hashrateRes2 = await fetch('https://mempool.space/api/v1/mining/hashrate/3d');
+        const hr2 = await hashrateRes2.json();
+        const totalEH = hr2.currentHashrate ? hr2.currentHashrate / 1e18 : null;
+
+        let rows = '';
+        poolData.pools.slice(0, 8).forEach(pool => {
+          const share = ((pool.blockCount / totalBlocks) * 100).toFixed(1);
+          const estEH = totalEH ? ((pool.blockCount / totalBlocks) * totalEH).toFixed(1) + ' EH/s' : '—';
+          const type  = poolTypes[pool.name] || '—';
+          const tagClass = type !== '—' ? 'tag-orange' : 'tag-muted';
+          rows += `<tr>
+            <td>${pool.name}</td>
+            <td>${pool.blockCount}</td>
+            <td>${share}%</td>
+            <td>${estEH}</td>
+            <td><span class="tag ${tagClass}">${type}</span></td>
+          </tr>`;
+        });
+        tbody.innerHTML = rows || '<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
+
+        // Update diff sub
+        const diffAdj = await fetch('https://mempool.space/api/v1/difficulty-adjustment');
+        const da = await diffAdj.json();
+        if (da.remainingBlocks) {
+          $('mine-diff-sub').textContent = 'next adj in ~' + da.remainingBlocks + ' blocks';
+        }
+
+      } catch(e) {
+        console.error('Mempool pools error:', e);
+      }
+    }
+
+    // ─── INIT & REFRESH ──────────────────────────────────────────────
+    async function init() {
+      await Promise.allSettled([
+        fetchCoinGecko(),
+        fetchCoinGeckoGlobal(),
+        fetchMempool()
+      ]);
+    }
+
+    init();
+
+    // Refresh price every 60s, on-chain every 2 minutes
+    setInterval(fetchCoinGecko, 60_000);
+    setInterval(fetchCoinGeckoGlobal, 120_000);
+    setInterval(fetchMempool, 120_000);
   </script>
 </body>
 </html>
