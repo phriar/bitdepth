@@ -728,7 +728,7 @@
     </section>
   </div>
 
-  <!-- FEATURES / LEARN -->
+  <!-- FEATURES NAV CARDS -->
   <div id="learn">
     <section>
       <div class="section-header">
@@ -736,36 +736,202 @@
         <div class="section-tag">// everything</div>
       </div>
       <div class="feature-grid">
-        <div class="feature-card">
+        <a href="#markets" class="feature-card" style="text-decoration:none;cursor:pointer">
           <div class="feature-icon">📡</div>
           <div class="feature-title">Price & Markets</div>
-          <div class="feature-desc">Real-time BTC price across 30+ exchanges, order book depth, derivatives, futures curves, and funding rates.</div>
-        </div>
-        <div class="feature-card">
+          <div class="feature-desc">Live BTC price across major exchanges, 24h change, volume, market cap, and sats per dollar.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#onchain" class="feature-card" style="text-decoration:none;cursor:pointer">
           <div class="feature-icon">🔗</div>
           <div class="feature-title">On-Chain Analytics</div>
-          <div class="feature-desc">Block explorer, mempool visualizer, UTXO age bands, exchange flows, whale tracking, and HODL waves.</div>
-        </div>
-        <div class="feature-card">
+          <div class="feature-desc">Block explorer, mempool size, fee rates, unconfirmed transactions, and latest block data.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#mining" class="feature-card" style="text-decoration:none;cursor:pointer">
           <div class="feature-icon">⛏️</div>
           <div class="feature-title">Mining & Network</div>
-          <div class="feature-desc">Hash rate, difficulty adjustments, pool distribution, miner revenue, and energy consumption estimates.</div>
+          <div class="feature-desc">Hash rate, difficulty, pool distribution, block reward, and next halving countdown.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#lightning" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Lightning Network</div>
+          <div class="feature-desc">Live channel capacity, node count, total channels, and top nodes by connectivity.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#macro" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Macro & Cycles</div>
+          <div class="feature-desc">Mayer Multiple, 200-day moving average, price vs MA ratio, and cycle signal interpretation.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#bitcoin-101" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">📖</div>
+          <div class="feature-title">Learn Bitcoin</div>
+          <div class="feature-desc">Explainers on the UTXO model, halving mechanics, SegWit, Taproot, Lightning, and more.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">READ GUIDES →</div>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- LIGHTNING NETWORK SECTION -->
+  <div id="lightning">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Lightning Network</div>
+        <div class="section-tag">// layer 2 payments</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Total Capacity</div>
+          <div class="stat-box-val" id="ln-capacity">—</div>
+          <div class="stat-box-sub" id="ln-capacity-usd">loading...</div>
         </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Active Nodes</div>
+          <div class="stat-box-val" id="ln-nodes">—</div>
+          <div class="stat-box-sub">with active channels</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Total Channels</div>
+          <div class="stat-box-val" id="ln-channels">—</div>
+          <div class="stat-box-sub">active payment channels</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Avg Channel Size</div>
+          <div class="stat-box-val" id="ln-avg-size">—</div>
+          <div class="stat-box-sub">per channel</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Node Alias</th>
+            <th>Capacity</th>
+            <th>Channels</th>
+            <th>Avg Channel</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="ln-nodes-table">
+          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- MACRO & CYCLES SECTION -->
+  <div id="macro">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Macro & Cycles</div>
+        <div class="section-tag">// market intelligence</div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
+        <div class="stat-box">
+          <div class="stat-box-label">Current Price</div>
+          <div class="stat-box-val" id="macro-price">—</div>
+          <div class="stat-box-sub">BTC/USD</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">200-Day MA</div>
+          <div class="stat-box-val" id="macro-ma200">—</div>
+          <div class="stat-box-sub">200-day moving average</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Mayer Multiple</div>
+          <div class="stat-box-val" id="macro-mayer">—</div>
+          <div class="stat-box-sub" id="macro-mayer-sub">price ÷ 200-day MA</div>
+        </div>
+      </div>
+
+      <!-- Mayer Multiple signal bar -->
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem">
+        <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Mayer Multiple Signal</div>
+        <div style="position:relative;height:8px;background:linear-gradient(to right,#3b82f6,#00d68f,#f7931a,#ff4d4d);border-radius:0">
+          <div id="mayer-indicator" style="position:absolute;top:-4px;width:3px;height:16px;background:#fff;transition:left 0.8s ease;left:50%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.6rem;color:var(--muted)">
+          <span>Undervalued &lt;0.8</span>
+          <span>Fair Value ~1.0</span>
+          <span>Overheated &gt;2.4</span>
+        </div>
+        <div id="mayer-signal-text" style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">Loading signal...</div>
+      </div>
+
+      <!-- 200 MA context -->
+      <div class="terminal" id="macro-terminal">
+        <span class="t-comment">// macro analysis — loading...</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- LEARN / BITCOIN 101 SECTION -->
+  <div id="bitcoin-101">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Learn Bitcoin</div>
+        <div class="section-tag">// fundamentals</div>
+      </div>
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">₿</div>
+          <div class="feature-title">What is Bitcoin?</div>
+          <div class="feature-desc">Bitcoin is a decentralized digital currency with no central bank or single administrator. Transactions are verified by a peer-to-peer network and recorded on a public ledger called the blockchain. Created by the pseudonymous Satoshi Nakamoto in 2009, it was the first cryptocurrency.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">The UTXO Model</div>
+          <div class="feature-desc">Bitcoin doesn't use account balances. Instead it uses Unspent Transaction Outputs (UTXOs) — chunks of bitcoin tied to addresses. When you spend bitcoin, you consume UTXOs and create new ones as change. Your "balance" is just the sum of all UTXOs you control.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⛏️</div>
+          <div class="feature-title">Proof of Work</div>
+          <div class="feature-desc">Miners compete to solve a cryptographic puzzle by hashing block data with a random nonce. The first to find a valid hash wins the block reward. This process secures the network — rewriting history would require more computing power than all honest miners combined.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📉</div>
+          <div class="feature-title">The Halving</div>
+          <div class="feature-desc">Every 210,000 blocks (~4 years), the block reward paid to miners is cut in half. Bitcoin launched with a 50 BTC reward. It's now 3.125 BTC after four halvings. This programmatic supply reduction continues until ~2140, when all 21 million BTC will have been issued.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <div class="feature-title">SegWit & Taproot</div>
+          <div class="feature-desc">SegWit (2017) separated signature data from transaction data, fixing transaction malleability and increasing block capacity. Taproot (2021) added Schnorr signatures enabling more efficient multisig, better privacy, and smarter scripting — Bitcoin's biggest upgrade in years.</div>
+        </div>
+
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <div class="feature-title">Lightning Network</div>
-          <div class="feature-desc">Channel capacity, node counts, routing fees, growth trends, and top nodes by connectivity.</div>
+          <div class="feature-desc">A Layer 2 payment protocol built on top of Bitcoin. Two parties open a payment channel by locking funds on-chain, then transact instantly and cheaply off-chain. Only the final balance is settled on the blockchain. Enables microtransactions and instant global payments.</div>
         </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <div class="feature-title">Keys & Wallets</div>
+          <div class="feature-desc">A Bitcoin wallet stores private keys, not coins. Your private key proves ownership and signs transactions. The public key (and derived address) is what others send to. "Not your keys, not your coins" — if an exchange holds your keys, they control your bitcoin.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <div class="feature-title">Nodes & Consensus</div>
+          <div class="feature-desc">Full nodes download and verify every block and transaction, enforcing Bitcoin's rules independently. No authority controls the rules — consensus emerges from thousands of nodes worldwide agreeing. Running a node is the most sovereign way to use Bitcoin.</div>
+        </div>
+
         <div class="feature-card">
           <div class="feature-icon">📊</div>
-          <div class="feature-title">Macro & Cycles</div>
-          <div class="feature-desc">Stock-to-flow model, Mayer Multiple, MVRV Z-Score, realized cap, and historical cycle comparisons.</div>
+          <div class="feature-title">Reading the Mempool</div>
+          <div class="feature-desc">The mempool is a waiting room for unconfirmed transactions. Miners prioritize higher fee-rate transactions. When the mempool is congested, fees rise. When it clears, 1 sat/vB can get you confirmed. Watching mempool size helps you time transactions and save on fees.</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">📖</div>
-          <div class="feature-title">Learn Bitcoin</div>
-          <div class="feature-desc">Deep-dive guides on consensus, UTXO model, SegWit, Taproot, halving mechanics, and more.</div>
-        </div>
+
       </div>
     </section>
   </div>
@@ -1184,6 +1350,137 @@
       ).join('');
     }
 
+    // ─── LIGHTNING NETWORK ───────────────────────────────────────────
+    async function fetchLightning() {
+      try {
+        const res = await fetch('https://mempool.space/api/v1/lightning/statistics/latest');
+        const d = await res.json();
+
+        const capacityBTC = (d.latest.total_capacity / 1e8).toFixed(0);
+        const nodes       = d.latest.node_count.toLocaleString();
+        const channels    = d.latest.channel_count.toLocaleString();
+        const avgSats     = Math.round(d.latest.total_capacity / d.latest.channel_count);
+        const avgBTC      = (avgSats / 1e8).toFixed(4);
+
+        $('ln-capacity').textContent     = fmt(parseInt(capacityBTC)) + ' BTC';
+        $('ln-nodes').textContent        = nodes;
+        $('ln-channels').textContent     = channels;
+        $('ln-avg-size').textContent     = fmt(avgSats) + ' sats';
+
+        // Set USD value of capacity using cached price if available
+        const priceEl = $('hero-price');
+        if (priceEl && priceEl.textContent !== '—') {
+          const price = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
+          const capUSD = parseInt(capacityBTC) * price;
+          $('ln-capacity-usd').textContent = fmtUSD(capUSD) + ' USD';
+        } else {
+          $('ln-capacity-usd').textContent = avgBTC + ' avg channel';
+        }
+      } catch(e) {
+        console.error('Lightning stats error:', e);
+      }
+
+      try {
+        // Top nodes by capacity
+        const nodesRes = await fetch('https://mempool.space/api/v1/lightning/nodes/rankings/connectivity');
+        const nodes = await nodesRes.json();
+        const tbody = $('ln-nodes-table');
+
+        let rows = '';
+        nodes.slice(0, 8).forEach(node => {
+          const alias    = node.alias || node.public_key.slice(0, 16) + '...';
+          const capBTC   = (node.capacity / 1e8).toFixed(2);
+          const channels = node.channels.toLocaleString();
+          const avgCh    = fmt(Math.round(node.capacity / node.channels));
+          const country  = node.country?.en || '—';
+          rows += `<tr>
+            <td style="font-family:var(--mono);max-width:200px;overflow:hidden;text-overflow:ellipsis">${alias}</td>
+            <td>${capBTC} BTC</td>
+            <td>${channels}</td>
+            <td>${avgCh} sats</td>
+            <td>${country}</td>
+          </tr>`;
+        });
+        tbody.innerHTML = rows || '<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
+      } catch(e) {
+        console.error('Lightning nodes error:', e);
+      }
+    }
+
+    // ─── MACRO & CYCLES — Mayer Multiple via CoinGecko 200d MA ──────
+    async function fetchMacro() {
+      try {
+        // Get 200 days of daily prices
+        const res = await fetch(
+          'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200&interval=daily'
+        );
+        const d = await res.json();
+        const prices = d.prices.map(p => p[1]);
+
+        if (prices.length < 200) return;
+
+        const ma200       = prices.slice(-200).reduce((a, b) => a + b, 0) / 200;
+        const currentPrice = prices[prices.length - 1];
+        const mayer       = currentPrice / ma200;
+        const pctAboveMA  = ((currentPrice - ma200) / ma200 * 100).toFixed(1);
+
+        $('macro-price').textContent  = '$' + fmt(currentPrice);
+        $('macro-ma200').textContent  = '$' + fmt(Math.round(ma200));
+        $('macro-mayer').textContent  = mayer.toFixed(3);
+
+        // Mayer signal
+        let signal, signalColor, advice;
+        if (mayer < 0.8) {
+          signal = 'DEEPLY UNDERVALUED'; signalColor = '#3b82f6';
+          advice = 'Price is more than 20% below the 200-day MA. Historically a strong accumulation zone.';
+        } else if (mayer < 1.0) {
+          signal = 'BELOW AVERAGE'; signalColor = '#00d68f';
+          advice = 'Price is below the 200-day MA. Historically a favorable zone for long-term buyers.';
+        } else if (mayer < 1.5) {
+          signal = 'FAIR VALUE'; signalColor = '#f7931a';
+          advice = 'Price is near the 200-day MA. Neither cheap nor expensive by historical standards.';
+        } else if (mayer < 2.4) {
+          signal = 'ELEVATED'; signalColor = '#ff8c00';
+          advice = 'Price is significantly above the 200-day MA. Exercise caution — past cycles showed pullbacks from these levels.';
+        } else {
+          signal = 'OVERHEATED'; signalColor = '#ff4d4d';
+          advice = 'Mayer Multiple above 2.4 — historically a rare extreme. Previous cycle peaks occurred in this zone.';
+        }
+
+        $('macro-mayer-sub').textContent = signal;
+        $('macro-mayer-sub').style.color = signalColor;
+
+        // Move indicator on gradient bar (0 = 0.4 multiple, 1 = 3.0 multiple)
+        const minM = 0.4, maxM = 3.0;
+        const pct = Math.max(0, Math.min(1, (mayer - minM) / (maxM - minM))) * 100;
+        $('mayer-indicator').style.left = pct + '%';
+        $('mayer-signal-text').innerHTML =
+          `<span style="color:${signalColor};font-weight:700">${signal}</span> &nbsp;—&nbsp; ${advice}`;
+
+        // Terminal output
+        const sign = pctAboveMA >= 0 ? '+' : '';
+        $('macro-terminal').innerHTML = `
+          <span class="t-comment">// macro analysis — 200-day moving average</span><br/>
+          <span class="t-cmd">$ bitdepth macro --indicator mayer-multiple</span><br/><br/>
+          <span class="t-out">Current Price   </span><span class="t-val">$${fmt(currentPrice)}</span><br/>
+          <span class="t-out">200-Day MA      </span><span class="t-val">$${fmt(Math.round(ma200))}</span><br/>
+          <span class="t-out">% vs MA         </span><span style="color:${pctAboveMA >= 0 ? 'var(--green)' : 'var(--red)'}">${sign}${pctAboveMA}%</span><br/>
+          <span class="t-out">Mayer Multiple  </span><span class="t-val">${mayer.toFixed(4)}</span><br/>
+          <span class="t-out">Signal          </span><span style="color:${signalColor}">${signal}</span><br/><br/>
+          <span class="t-comment">// Mayer Multiple = Price / 200-Day MA</span><br/>
+          <span class="t-comment">// Values below 1.0 historically favor accumulation</span><br/>
+          <span class="t-comment">// Values above 2.4 historically coincide with cycle tops</span><br/><br/>
+          <span class="t-cmd" style="display:inline-block;width:0.6em" id="macro-cursor">█</span>
+        `;
+
+        const mc = document.getElementById('macro-cursor');
+        if (mc) setInterval(() => { mc.style.opacity = mc.style.opacity === '0' ? '1' : '0'; }, 600);
+
+      } catch(e) {
+        console.error('Macro error:', e);
+      }
+    }
+
     // ─── INIT & REFRESH ──────────────────────────────────────────────
     async function init() {
       await Promise.allSettled([
@@ -1191,18 +1488,22 @@
         fetchCoinGeckoGlobal(),
         fetchMempool(),
         fetchSparkline(),
-        fetchExchanges()
+        fetchExchanges(),
+        fetchLightning(),
+        fetchMacro()
       ]);
     }
 
     init();
 
-    // Price every 60s, on-chain every 2 min, exchanges every 30s, sparkline every 10 min
+    // Price every 60s, on-chain every 2 min, exchanges every 30s, sparkline/macro/lightning every 10 min
     setInterval(fetchCoinGecko, 60_000);
     setInterval(fetchCoinGeckoGlobal, 120_000);
     setInterval(fetchMempool, 120_000);
     setInterval(fetchExchanges, 30_000);
     setInterval(fetchSparkline, 600_000);
+    setInterval(fetchLightning, 600_000);
+    setInterval(fetchMacro, 600_000);
   </script>
 </body>
 </html>
