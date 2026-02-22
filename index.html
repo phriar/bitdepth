@@ -581,6 +581,8 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       margin-bottom: 1.5rem;
+      width: 100%;
+      min-width: 0;
     }
     .halving-stats {
       display: grid;
@@ -682,6 +684,16 @@
       color: var(--muted);
       margin-top: 0.75rem;
       text-align: right;
+    }
+    .obit-hidden { display: none; }
+    /* On desktop (3-col grid) show all, hide the button */
+    @media (min-width: 601px) {
+      .obit-hidden { display: block !important; }
+      #obits-show-more { display: none !important; }
+    }
+    /* On mobile show button if there are hidden items */
+    @media (max-width: 600px) {
+      #obits-show-more { display: block !important; }
     }
 
     /* ─── TOOL RESPONSIVE ─── */
@@ -785,8 +797,9 @@
     .clock-unit {
       background: var(--bg2);
       border: 1px solid var(--border);
-      padding: 1rem 0.5rem;
+      padding: 1rem 0.25rem;
       text-align: center;
+      min-width: 0;
     }
     .clock-val {
       font-family: var(--display);
@@ -797,7 +810,7 @@
     }
     .clock-label {
       font-size: 0.55rem;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
       color: var(--muted);
       margin-top: 0.3rem;
     }
@@ -2130,21 +2143,29 @@
                  : currentFeeTarget === '30min' ? feeData.halfHourFee
                  : feeData.hourFee;
 
+      if (!rate) return;
+
       $('fee-rate-val').textContent = rate;
 
+      // If all rates are same, mempool is very clear — note it
+      const allSame = feeData.fastestFee === feeData.hourFee;
+      const rateEl = $('fee-rate-val');
+      rateEl.style.color = rate <= 2 ? 'var(--green)' : rate <= 10 ? 'var(--orange)' : 'var(--red)';
+
       // Typical tx sizes in vBytes
-      const simple  = 141;  // P2PKH
-      const segwit  = 102;  // P2WPKH
-      const batch   = 350;  // multi-output
+      const simple = 141;   // P2PKH legacy
+      const segwit = 102;   // P2WPKH native segwit
+      const batch  = 350;   // multi-output batch
 
       if (btcPriceForTools > 0) {
-        const toUSD = (vb) => '$' + ((rate * vb / 1e8) * btcPriceForTools).toFixed(2);
+        const toUSD = (vb) => {
+          const usd = (rate * vb / 1e8) * btcPriceForTools;
+          return usd < 0.01 ? '<$0.01' : '$' + usd.toFixed(2);
+        };
         $('fee-cost-simple').textContent = toUSD(simple);
         $('fee-cost-segwit').textContent = toUSD(segwit);
         $('fee-cost-batch').textContent  = toUSD(batch);
       }
-      $('fee-mempool-note').textContent =
-        `Based on live mempool — ${feeData.fastestFee} / ${feeData.halfHourFee} / ${feeData.hourFee} sat/vB (next / 30min / 1hr)`;
     }
 
     document.querySelectorAll('.fee-btn').forEach(btn => {
@@ -2158,8 +2179,26 @@
 
     async function fetchFeeEstimator() {
       try {
-        const res = await fetch('https://mempool.space/api/v1/fees/recommended');
-        feeData = await res.json();
+        const [feesRes, mempoolRes] = await Promise.all([
+          fetch('https://mempool.space/api/v1/fees/recommended'),
+          fetch('https://mempool.space/api/mempool')
+        ]);
+        feeData = await feesRes.json();
+        const mempool = await mempoolRes.json();
+
+        // Show mempool congestion context
+        const vsize = mempool.vsize || 0;
+        const mb = (vsize / 1e6).toFixed(1);
+        let congestion, congColor;
+        if (vsize < 1e6)       { congestion = 'LOW — good time to send'; congColor = 'var(--green)'; }
+        else if (vsize < 5e6)  { congestion = 'MODERATE'; congColor = 'var(--orange)'; }
+        else if (vsize < 20e6) { congestion = 'BUSY'; congColor = '#ff8c00'; }
+        else                   { congestion = 'CONGESTED — fees elevated'; congColor = 'var(--red)'; }
+
+        $('fee-mempool-note').innerHTML =
+          `Mempool: <span style="color:${congColor}">${congestion}</span> (${mb} MB) &nbsp;·&nbsp; ` +
+          `Rates: <b>${feeData.fastestFee}</b> / <b>${feeData.halfHourFee}</b> / <b>${feeData.hourFee}</b> sat/vB`;
+
         updateFeeDisplay();
       } catch(e) { console.error('Fee estimator error:', e); }
     }
@@ -2275,13 +2314,25 @@
     ];
 
     const obitsGrid = $('obits-grid');
-    obitsGrid.innerHTML = obituaries.map(o => `
-      <div class="obit-card">
+    obitsGrid.innerHTML = obituaries.map((o, i) => `
+      <div class="obit-card${i >= 6 ? ' obit-hidden' : ''}">
         <div class="obit-year">${o.year} — BTC: ${o.price}</div>
         <div class="obit-headline">"${o.headline}"</div>
         <div class="obit-source">${o.source}</div>
       </div>
     `).join('');
+
+    // Show more button (only relevant on mobile where grid is 1-col)
+    const showMoreBtn = document.createElement('button');
+    showMoreBtn.id = 'obits-show-more';
+    showMoreBtn.textContent = 'Show all 12 obituaries ↓';
+    showMoreBtn.style.cssText = 'display:none;width:100%;margin-top:1px;background:var(--bg2);border:1px solid var(--border);color:var(--orange);font-family:var(--mono);font-size:0.72rem;padding:0.85rem;cursor:pointer;letter-spacing:0.1em';
+    obitsGrid.after(showMoreBtn);
+
+    showMoreBtn.addEventListener('click', function() {
+      document.querySelectorAll('.obit-hidden').forEach(el => el.classList.remove('obit-hidden'));
+      this.style.display = 'none';
+    });
 
     // ─── HOOK TOOLS INTO EXISTING DATA FETCHES ───────────────────────
     // Patch fetchCoinGecko to also update tools
