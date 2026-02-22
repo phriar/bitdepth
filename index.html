@@ -472,6 +472,35 @@
     .t-val { color: var(--green); }
     .t-comment { color: #444; }
 
+    /* ─── REGRET CALCULATOR ─── */
+    .regret-compare {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+    }
+    .regret-col { flex: 1; }
+    .regret-col-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .regret-col-val {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .regret-col-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
     /* ─── FOOTER ─── */
     footer {
       border-top: 1px solid var(--border);
@@ -1680,6 +1709,47 @@
 
             <div id="bsd-summary" class="bsd-summary">Calculating signal...</div>
             <div class="tool-note">Score 0–100. Each indicator scored independently and averaged. Not financial advice.</div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 10: BTC Regret Calculator ── -->
+        <div class="tool-card" id="tool-regret">
+          <div class="tool-badge">TOOL 10</div>
+          <div class="tool-title">😢 BTC Regret Calculator</div>
+          <div class="tool-desc">Enter how much you spent — and when. See what it was worth then, and what it would be worth today.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">Amount Spent (USD)</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix">$</span>
+                <input id="regret-usd" class="conv-input" type="number" placeholder="100" min="0" step="any" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="tool-section">
+              <div class="tool-label">Date of Purchase</div>
+              <input id="regret-date" class="conv-input" type="date" style="padding-left:1rem" />
+            </div>
+            <button id="regret-calc-btn" class="tool-action-btn" style="margin-top:0.5rem">Calculate My Regret →</button>
+
+            <div id="regret-result" style="display:none;margin-top:1.25rem">
+              <div class="regret-compare">
+                <div class="regret-col">
+                  <div class="regret-col-label">📅 BTC Price Then</div>
+                  <div id="regret-price-then" class="regret-col-val" style="color:var(--text)">—</div>
+                  <div id="regret-btc-then" class="regret-col-sub">— BTC</div>
+                </div>
+                <div class="inf-vs">→</div>
+                <div class="regret-col">
+                  <div class="regret-col-label">💰 Value Today</div>
+                  <div id="regret-value-now" class="regret-col-val" style="color:var(--green)">—</div>
+                  <div id="regret-gain" class="regret-col-sub" style="color:var(--green)">—</div>
+                </div>
+              </div>
+              <div id="regret-summary" class="inf-summary" style="margin-top:1rem"></div>
+            </div>
+
+            <div id="regret-error" class="tool-note" style="display:none;color:var(--red);margin-top:0.75rem"></div>
+            <div class="tool-note" style="margin-top:0.75rem">Uses CoinGecko historical price data. Not financial advice.</div>
           </div>
         </div>
 
@@ -3232,6 +3302,91 @@
     }
 
     init();
+
+    // ─── TOOL 10: BTC REGRET CALCULATOR ─────────────────────────────
+    $('regret-calc-btn').addEventListener('click', async function() {
+      const usd = parseFloat($('regret-usd').value);
+      const date = $('regret-date').value;
+
+      $('regret-result').style.display = 'none';
+      $('regret-error').style.display = 'none';
+
+      if (!usd || usd <= 0) {
+        $('regret-error').textContent = 'Please enter a valid USD amount.';
+        $('regret-error').style.display = 'block';
+        return;
+      }
+      if (!date) {
+        $('regret-error').textContent = 'Please select a date.';
+        $('regret-error').style.display = 'block';
+        return;
+      }
+
+      const chosen = new Date(date);
+      const earliest = new Date('2013-04-28');
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      if (chosen < earliest) {
+        $('regret-error').textContent = 'Date must be April 28, 2013 or later (earliest CoinGecko data).';
+        $('regret-error').style.display = 'block';
+        return;
+      }
+      if (chosen >= today) {
+        $('regret-error').textContent = 'Please pick a date in the past.';
+        $('regret-error').style.display = 'block';
+        return;
+      }
+
+      this.textContent = 'Fetching data...';
+      this.disabled = true;
+
+      try {
+        const [y, m, d2] = date.split('-');
+        const ddmmyyyy = `${d2}-${m}-${y}`;
+        const histRes = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/history?date=${ddmmyyyy}`);
+        const histData = await histRes.json();
+        const priceThen = histData?.market_data?.current_price?.usd;
+
+        if (!priceThen) throw new Error('Could not fetch historical price.');
+
+        const nowPrice = btcPriceForTools || 0;
+        if (!nowPrice) throw new Error('Current BTC price not loaded yet. Reload the page and try again.');
+
+        const btcBought = usd / priceThen;
+        const valueNow = btcBought * nowPrice;
+        const gain = valueNow - usd;
+        const mult = valueNow / usd;
+
+        $('regret-price-then').textContent = '$' + priceThen.toLocaleString('en-US', {maximumFractionDigits:2});
+        $('regret-btc-then').textContent = btcBought.toFixed(8) + ' BTC';
+        $('regret-value-now').textContent = '$' + valueNow.toLocaleString('en-US', {maximumFractionDigits:2});
+
+        const isGain = gain >= 0;
+        $('regret-gain').textContent = (isGain ? '+' : '') + '$' + gain.toLocaleString('en-US', {maximumFractionDigits:2}) + ' (' + mult.toFixed(1) + 'x)';
+        $('regret-gain').style.color = isGain ? 'var(--green)' : 'var(--red)';
+        $('regret-value-now').style.color = isGain ? 'var(--green)' : 'var(--red)';
+
+        const purchaseDate = chosen.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+        let summary;
+        if (mult >= 100) {
+          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. That stack would be worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — a ${mult.toFixed(0)}x return. 🚀`;
+        } else if (mult >= 2) {
+          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Today that's worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} — a ${mult.toFixed(1)}x gain. Not bad.`;
+        } else if (mult >= 1) {
+          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. You'd be up $${gain.toLocaleString('en-US',{maximumFractionDigits:0})} today. Holding pays.`;
+        } else {
+          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. At today's price that's $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} — down ${((1-mult)*100).toFixed(1)}%. Time heals all wounds... usually.`;
+        }
+        $('regret-summary').textContent = summary;
+        $('regret-result').style.display = 'block';
+      } catch(e) {
+        $('regret-error').textContent = 'Error: ' + (e.message || 'Could not fetch data. Try again.');
+        $('regret-error').style.display = 'block';
+      } finally {
+        this.textContent = 'Calculate My Regret →';
+        this.disabled = false;
+      }
+    });
 
     // Price every 60s, on-chain every 2 min, exchanges every 30s, sparkline/macro/lightning every 10 min
     setInterval(fetchCoinGecko, 60_000);
