@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   <title>BitDepth — Deep Bitcoin Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
@@ -487,16 +487,95 @@
     .delay-3 { animation-delay: 0.3s; }
 
     /* ─── RESPONSIVE ─── */
+
+    /* Prevent any element from causing horizontal scroll */
+    * { max-width: 100%; }
+
+    /* Tables scroll horizontally on small screens instead of breaking layout */
+    .data-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 3rem 1.5rem 2.5rem;
+      }
       .feature-grid { grid-template-columns: 1fr 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
+      section { padding: 3rem 1.5rem; }
     }
+
     @media (max-width: 600px) {
+      /* Nav */
       .nav-links { display: none; }
-      .feature-grid { grid-template-columns: 1fr; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-status { font-size: 0.6rem; }
+
+      /* Hero */
+      .hero { padding: 2.5rem 1.25rem 2rem; gap: 2rem; }
+      h1 { font-size: 2.8rem; }
+      .hero-desc { font-size: 0.8rem; }
+      .cta-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .btn-primary, .btn-ghost { width: 100%; text-align: center; }
+
+      /* Hero card */
+      .hero-card { padding: 1.25rem; }
+      .card-price { font-size: 2rem; }
+      .mini-stats { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+      /* Sections */
+      section { padding: 2.5rem 1.25rem; }
+      .section-title { font-size: 1.2rem; }
+
+      /* Stat boxes — 2 col on mobile */
       .stats-grid { grid-template-columns: 1fr 1fr; }
-      h1 { font-size: 2.4rem; }
+      .stat-box { padding: 1rem; }
+      .stat-box-val { font-size: 1.2rem; }
+      .stat-box-sub { font-size: 0.6rem; }
+
+      /* Feature grid — 1 col on mobile */
+      .feature-grid { grid-template-columns: 1fr; }
+
+      /* Terminal — prevent overflow */
+      .terminal {
+        padding: 1rem;
+        font-size: 0.65rem;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      /* Tables — horizontal scroll */
+      .data-table {
+        font-size: 0.7rem;
+        min-width: 480px;
+      }
+      .data-table th, .data-table td {
+        padding: 0.6rem 0.75rem;
+      }
+
+      /* Ticker */
+      .ticker-item { font-size: 0.65rem; }
+
+      /* Footer */
+      footer {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 1.5rem 1.25rem;
+      }
+
+      /* Macro signal bar */
+      #mayer-indicator { width: 2px; }
+    }
+
+    @media (max-width: 380px) {
+      h1 { font-size: 2.2rem; }
+      .stat-box-val { font-size: 1rem; }
+      .card-price { font-size: 1.7rem; }
     }
   </style>
 </head>
@@ -509,7 +588,10 @@
       <li><a href="#markets">Markets</a></li>
       <li><a href="#onchain">On-Chain</a></li>
       <li><a href="#mining">Mining</a></li>
-      <li><a href="#learn">Learn</a></li>
+      <li><a href="#lightning">Lightning</a></li>
+      <li><a href="#macro">Macro</a></li>
+      <li><a href="#bitcoin-101">Learn</a></li>
+      <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
     </ul>
     <div class="nav-status">
       <div class="status-dot"></div>
@@ -625,6 +707,7 @@
         <input class="search-input" type="text" placeholder="Search addresses, transactions, blocks..." />
       </div>
 
+      <div class="data-table-wrap">
       <table class="data-table">
         <thead>
           <tr>
@@ -640,6 +723,7 @@
           <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
   </div>
 
@@ -711,6 +795,7 @@
         </div>
       </div>
 
+      <div class="data-table-wrap">
       <table class="data-table">
         <thead>
           <tr>
@@ -725,6 +810,7 @@
           <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
   </div>
 
@@ -776,7 +862,24 @@
     </section>
   </div>
 
-  <!-- LIGHTNING NETWORK SECTION -->
+  <!-- X / TWITTER FOLLOW CARD -->
+  <div style="max-width:1200px;margin:0 auto;padding:0 2rem 3rem">
+    <div style="background:var(--bg2);border:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div style="display:flex;align-items:center;gap:1.5rem">
+        <div style="width:52px;height:52px;background:#000;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">𝕏</div>
+        <div>
+          <div style="font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-0.01em">@btc_journey</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">Bitcoin analysis, on-chain data, and market intelligence</div>
+        </div>
+      </div>
+      <a href="https://x.com/btc_journey" target="_blank" rel="noopener"
+         style="background:var(--orange);color:#000;padding:0.7rem 1.75rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background 0.2s"
+         onmouseover="this.style.background='#ffad3b'" onmouseout="this.style.background='var(--orange)'">
+        Follow on 𝕏
+      </a>
+    </div>
+  </div>
   <div id="lightning">
     <section>
       <div class="section-header">
@@ -806,6 +909,7 @@
         </div>
       </div>
 
+      <div class="data-table-wrap">
       <table class="data-table">
         <thead>
           <tr>
@@ -820,6 +924,7 @@
           <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr>
         </tbody>
       </table>
+      </div>
     </section>
   </div>
 
@@ -942,7 +1047,9 @@
       <strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Deep Bitcoin Intelligence
     </div>
     <div>
-      Data is for informational purposes only. Not financial advice. &nbsp;|&nbsp; <a href="#">GitHub</a> &nbsp;|&nbsp; <a href="#">API</a>
+      Data is for informational purposes only. Not financial advice. &nbsp;|&nbsp;
+      <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a> &nbsp;|&nbsp;
+      <a href="https://github.com/phriar" target="_blank" rel="noopener">GitHub</a>
     </div>
   </footer>
 
