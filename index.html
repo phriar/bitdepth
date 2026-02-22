@@ -696,7 +696,124 @@
       #obits-show-more { display: block !important; }
     }
 
-    /* ─── TOOL RESPONSIVE ─── */
+    /* ─── NEW TOOL STYLES ─── */
+    .tool-action-btn {
+      width: 100%;
+      background: var(--orange);
+      color: #000;
+      border: none;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.85rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+    .tool-action-btn:hover { background: #ffad3b; }
+
+    /* DCA / Sat Stack */
+    .dca-result {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .dca-result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      gap: 0.5rem;
+    }
+    .dca-result-row:last-child { border-bottom: none; }
+    .dca-result-label { color: var(--muted); white-space: nowrap; }
+    .dca-result-val { font-family: var(--mono); font-weight: 700; text-align: right; }
+
+    /* Address checker */
+    .addr-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.85rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-top: 0.4rem;
+      word-break: break-all;
+    }
+    .addr-input:focus { border-color: var(--orange); }
+    .addr-result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .addr-stat {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+    }
+    .addr-stat-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .addr-stat-val {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    /* Inflation comparison */
+    .inf-compare {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+    }
+    .inf-col { flex: 1; text-align: center; min-width: 0; }
+    .inf-col-label { font-size: 0.65rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .inf-col-val {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      word-break: break-all;
+    }
+    .inf-col-sub { font-size: 0.6rem; color: var(--muted); margin-top: 0.3rem; }
+    .inf-vs {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .inf-summary {
+      font-size: 0.75rem;
+      color: var(--text);
+      line-height: 1.7;
+      padding: 0.75rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+      min-height: 2rem;
+    }
+    @media (max-width: 600px) {
+      .inf-col-val { font-size: 1.2rem; }
+      .addr-result-grid { grid-template-columns: 1fr 1fr; }
+    }
     @media (max-width: 900px) {
       .tools-grid { grid-template-columns: 1fr; }
       .obits-grid { grid-template-columns: 1fr 1fr; }
@@ -1171,6 +1288,138 @@
               <div class="signal-legend-item" style="background:#2a0a0a;color:#ff4d4d">TOP ZONE<br/>&gt;2.4</div>
             </div>
             <div class="tool-note">Not financial advice. Historical signal only.</div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 5: Sat Stack Calculator ── -->
+        <div class="tool-card" id="tool-satstack">
+          <div class="tool-badge">TOOL 05</div>
+          <div class="tool-title">📈 Sat Stack Calculator</div>
+          <div class="tool-desc">How many sats would you have stacked with regular DCA? Enter your monthly buy and see how your stack grows.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">Monthly investment (USD)</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix">$</span>
+                <input id="dca-amount" class="conv-input" type="number" placeholder="100" min="1" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="tool-section">
+              <div class="tool-label">Duration</div>
+              <div class="fee-btn-grid">
+                <button class="fee-btn active" data-dca="1">1 Year</button>
+                <button class="fee-btn" data-dca="2">2 Years</button>
+                <button class="fee-btn" data-dca="4">4 Years</button>
+              </div>
+            </div>
+            <div class="tool-section">
+              <div class="tool-label">Assumed avg BTC price</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix">$</span>
+                <input id="dca-price" class="conv-input" type="number" placeholder="95000" min="1" inputmode="decimal" />
+              </div>
+              <div class="tool-note" style="margin-top:0.4rem">Uses today's price by default. Adjust to model different scenarios.</div>
+            </div>
+            <div class="dca-result" id="dca-result" style="display:none">
+              <div class="dca-result-row">
+                <span class="dca-result-label">Total invested</span>
+                <span id="dca-total-invested" class="dca-result-val">—</span>
+              </div>
+              <div class="dca-result-row">
+                <span class="dca-result-label">Sats accumulated</span>
+                <span id="dca-total-sats" class="dca-result-val" style="color:var(--orange)">—</span>
+              </div>
+              <div class="dca-result-row">
+                <span class="dca-result-label">BTC accumulated</span>
+                <span id="dca-total-btc" class="dca-result-val" style="color:var(--green)">—</span>
+              </div>
+              <div class="dca-result-row">
+                <span class="dca-result-label">Current value</span>
+                <span id="dca-current-val" class="dca-result-val">—</span>
+              </div>
+              <div class="dca-result-row">
+                <span class="dca-result-label">Sats per $1/day</span>
+                <span id="dca-per-day" class="dca-result-val" style="color:var(--muted)">—</span>
+              </div>
+            </div>
+            <button id="dca-calc-btn" class="tool-action-btn">Calculate Stack →</button>
+          </div>
+        </div>
+
+        <!-- ── TOOL 6: Address Balance Checker ── -->
+        <div class="tool-card" id="tool-address">
+          <div class="tool-badge">TOOL 06</div>
+          <div class="tool-title">🔍 Address Checker</div>
+          <div class="tool-desc">Paste any Bitcoin address to see its balance, transaction count, and total received. No login. No tracking.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">Bitcoin address</div>
+              <input id="addr-input" class="addr-input" type="text" placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf..." spellcheck="false" autocomplete="off" />
+            </div>
+            <button id="addr-check-btn" class="tool-action-btn">Check Address →</button>
+            <div id="addr-result" style="display:none">
+              <div class="addr-result-grid">
+                <div class="addr-stat">
+                  <div class="addr-stat-label">CONFIRMED BALANCE</div>
+                  <div id="addr-balance" class="addr-stat-val" style="color:var(--orange)">—</div>
+                </div>
+                <div class="addr-stat">
+                  <div class="addr-stat-label">UNCONFIRMED</div>
+                  <div id="addr-unconfirmed" class="addr-stat-val">—</div>
+                </div>
+                <div class="addr-stat">
+                  <div class="addr-stat-label">TOTAL RECEIVED</div>
+                  <div id="addr-received" class="addr-stat-val">—</div>
+                </div>
+                <div class="addr-stat">
+                  <div class="addr-stat-label">TRANSACTIONS</div>
+                  <div id="addr-txcount" class="addr-stat-val">—</div>
+                </div>
+              </div>
+              <div id="addr-usd-val" class="tool-note" style="margin-top:0.75rem;text-align:center"></div>
+              <a id="addr-mempool-link" href="#" target="_blank" rel="noopener"
+                 style="display:block;margin-top:0.75rem;text-align:center;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em;text-decoration:none">
+                VIEW ON MEMPOOL.SPACE →
+              </a>
+            </div>
+            <div id="addr-error" class="tool-note" style="display:none;color:var(--red)"></div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 7: Bitcoin vs Inflation ── -->
+        <div class="tool-card" id="tool-inflation">
+          <div class="tool-badge">TOOL 07</div>
+          <div class="tool-title">💸 Bitcoin vs Inflation</div>
+          <div class="tool-desc">What would $100 be worth today if you'd bought Bitcoin instead of holding dollars? Pick a year and find out.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">You had $100 in...</div>
+              <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr)">
+                <button class="fee-btn" data-inf-year="2015">2015</button>
+                <button class="fee-btn" data-inf-year="2017">2017</button>
+                <button class="fee-btn active" data-inf-year="2020">2020</button>
+              </div>
+              <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0.5rem">
+                <button class="fee-btn" data-inf-year="2021">2021</button>
+                <button class="fee-btn" data-inf-year="2022">2022</button>
+                <button class="fee-btn" data-inf-year="2023">2023</button>
+              </div>
+            </div>
+            <div class="inf-compare">
+              <div class="inf-col">
+                <div class="inf-col-label">💵 Held as USD</div>
+                <div id="inf-usd-val" class="inf-col-val" style="color:var(--red)">—</div>
+                <div id="inf-usd-sub" class="inf-col-sub">purchasing power today</div>
+              </div>
+              <div class="inf-vs">VS</div>
+              <div class="inf-col">
+                <div class="inf-col-label">₿ Bought Bitcoin</div>
+                <div id="inf-btc-val" class="inf-col-val" style="color:var(--green)">—</div>
+                <div id="inf-btc-sub" class="inf-col-sub">value at today's price</div>
+              </div>
+            </div>
+            <div id="inf-summary" class="inf-summary"></div>
+            <div class="tool-note">BTC prices are historical yearly averages. Inflation uses US CPI data. Not financial advice.</div>
           </div>
         </div>
 
@@ -2341,12 +2590,158 @@
       this.style.display = 'none';
     });
 
-    // ─── HOOK TOOLS INTO EXISTING DATA FETCHES ───────────────────────
+    // ─── TOOL 5: SAT STACK CALCULATOR ───────────────────────────────
+    let dcaYears = 1;
+
+    document.querySelectorAll('[data-dca]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-dca]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        dcaYears = parseInt(this.dataset.dca);
+      });
+    });
+
+    $('dca-calc-btn').addEventListener('click', function() {
+      const monthly = parseFloat($('dca-amount').value) || 100;
+      const price   = parseFloat($('dca-price').value) || btcPriceForTools || 95000;
+      const months  = dcaYears * 12;
+      const totalUSD = monthly * months;
+      const totalBTC  = totalUSD / price;
+      const totalSats = Math.round(totalBTC * 1e8);
+      const currentVal = btcPriceForTools ? totalBTC * btcPriceForTools : totalBTC * price;
+      const perDay = Math.round((monthly / 30) / price * 1e8);
+
+      $('dca-total-invested').textContent = '$' + fmt(totalUSD);
+      $('dca-total-sats').textContent     = fmt(totalSats) + ' sats';
+      $('dca-total-btc').textContent      = totalBTC.toFixed(6) + ' BTC';
+      $('dca-current-val').textContent    = '$' + fmt(Math.round(currentVal));
+      $('dca-per-day').textContent        = fmt(perDay) + ' sats/day';
+      $('dca-result').style.display = 'block';
+    });
+
+    // Pre-fill DCA price field with live price once available
+    function prefillDCAPrice(price) {
+      const field = $('dca-price');
+      if (field && !field.value) field.placeholder = fmt(Math.round(price));
+    }
+
+    // ─── TOOL 6: ADDRESS BALANCE CHECKER ────────────────────────────
+    async function checkAddress() {
+      const addr = $('addr-input').value.trim();
+      const errEl = $('addr-error');
+      const resEl = $('addr-result');
+
+      errEl.style.display = 'none';
+      resEl.style.display = 'none';
+
+      if (!addr) { errEl.textContent = 'Please enter a Bitcoin address.'; errEl.style.display = 'block'; return; }
+
+      // Basic format check
+      const validAddr = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(addr) || /^bc1[a-z0-9]{6,87}$/i.test(addr);
+      if (!validAddr) { errEl.textContent = 'Invalid Bitcoin address format.'; errEl.style.display = 'block'; return; }
+
+      const btn = $('addr-check-btn');
+      btn.textContent = 'Checking...';
+      btn.disabled = true;
+
+      try {
+        const res  = await fetch(`https://mempool.space/api/address/${addr}`);
+        if (!res.ok) throw new Error('Address not found');
+        const d = await res.json();
+
+        const confirmed   = d.chain_stats.funded_txo_sum - d.chain_stats.spent_txo_sum;
+        const unconfirmed = d.mempool_stats.funded_txo_sum - d.mempool_stats.spent_txo_sum;
+        const received    = d.chain_stats.funded_txo_sum;
+        const txCount     = d.chain_stats.tx_count + d.mempool_stats.tx_count;
+
+        const satsToBTC = (s) => (s / 1e8).toFixed(8) + ' BTC';
+        const satsToK   = (s) => s >= 1e8 ? (s/1e8).toFixed(4) + ' BTC' : fmt(s) + ' sats';
+
+        $('addr-balance').textContent     = satsToK(confirmed);
+        $('addr-unconfirmed').textContent = unconfirmed !== 0 ? satsToK(unconfirmed) : '0';
+        $('addr-received').textContent    = satsToK(received);
+        $('addr-txcount').textContent     = fmt(txCount) + ' txs';
+
+        if (btcPriceForTools && confirmed > 0) {
+          const usd = ((confirmed / 1e8) * btcPriceForTools).toFixed(2);
+          $('addr-usd-val').textContent = `≈ $${fmt(parseFloat(usd))} USD at current price`;
+        } else {
+          $('addr-usd-val').textContent = '';
+        }
+
+        $('addr-mempool-link').href = `https://mempool.space/address/${addr}`;
+        resEl.style.display = 'block';
+      } catch(e) {
+        errEl.textContent = 'Could not fetch address data. Check the address and try again.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Check Address →';
+        btn.disabled = false;
+      }
+    }
+
+    $('addr-check-btn').addEventListener('click', checkAddress);
+    $('addr-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkAddress(); });
+
+    // ─── TOOL 7: BITCOIN VS INFLATION ───────────────────────────────
+    // Historical yearly average BTC prices (USD)
+    const btcHistoricalPrices = {
+      2015: 272,  2016: 568,  2017: 4000, 2018: 7600,
+      2019: 7200, 2020: 11000, 2021: 47000, 2022: 28000,
+      2023: 26000, 2024: 65000
+    };
+
+    // Cumulative USD inflation since each year (approximate CPI-based purchasing power loss)
+    const inflationLoss = {
+      2015: 0.272, 2016: 0.238, 2017: 0.207, 2018: 0.178,
+      2019: 0.155, 2020: 0.132, 2021: 0.093, 2022: 0.042,
+      2023: 0.016, 2024: 0.003
+    };
+
+    let infYear = 2020;
+
+    function calcInflation() {
+      const startPrice = btcHistoricalPrices[infYear];
+      const currentPrice = btcPriceForTools || 95000;
+      const loss = inflationLoss[infYear] || 0;
+
+      // $100 in USD — worth less due to inflation
+      const usdNow = (100 * (1 - loss)).toFixed(2);
+
+      // $100 in BTC — how many sats bought, what are they worth now
+      const satsBought = (100 / startPrice) * 1e8;
+      const btcVal = (satsBought / 1e8) * currentPrice;
+
+      $('inf-usd-val').textContent = '$' + usdNow;
+      $('inf-btc-val').textContent = '$' + fmt(Math.round(btcVal));
+      $('inf-usd-sub').textContent = `~${(loss * 100).toFixed(1)}% lost to inflation`;
+      $('inf-btc-sub').textContent = `at $${fmt(Math.round(currentPrice))} today`;
+
+      const multiplier = (btcVal / 100).toFixed(1);
+      const pct = ((btcVal - 100) / 100 * 100).toFixed(0);
+      const sign = btcVal > 100 ? '+' : '';
+
+      $('inf-summary').innerHTML = `$100 in Bitcoin in <b>${infYear}</b> is worth <span style="color:var(--green)">$${fmt(Math.round(btcVal))}</span> today — a <span style="color:var(--green)">${sign}${pct}%</span> return (${multiplier}×). The same $100 in dollars now has the purchasing power of <span style="color:var(--red)">$${usdNow}</span>.`;
+    }
+
+    document.querySelectorAll('[data-inf-year]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-inf-year]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        infYear = parseInt(this.dataset.infYear);
+        calcInflation();
+      });
+    });
+
+    // Run inflation calc once price is loaded
+    function initInflationTool(price) {
+      prefillDCAPrice(price);
+      calcInflation();
+    }
     // Patch fetchCoinGecko to also update tools
     const _origFetchCG = fetchCoinGecko;
     fetchCoinGecko = async function() {
       await _origFetchCG();
-      // Get price from hero card after it's set
       const priceEl = $('hero-price');
       if (priceEl && priceEl.textContent !== '—') {
         const p = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
@@ -2355,6 +2750,7 @@
           convPrice = p;
           initConverter(p);
           updateFeeDisplay();
+          initInflationTool(p);
         }
       }
     };
