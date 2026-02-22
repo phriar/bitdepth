@@ -704,7 +704,6 @@
     @media (max-width: 600px) {
       .tools-grid { grid-template-columns: 1fr; }
       .obits-grid { grid-template-columns: 1fr; }
-      .clock-val { font-size: 1.4rem; }
       .fee-rate-num { font-size: 1.8rem; }
       .signal-ring { width: 130px; height: 130px; }
       .signal-ring-num { font-size: 1.8rem; }
@@ -807,6 +806,14 @@
       font-weight: 800;
       color: var(--orange);
       line-height: 1;
+    }
+    @media (max-width: 600px) {
+      .clock-val { font-size: 1.3rem; }
+      .clock-unit { padding: 0.75rem 0.25rem; }
+      .clock-label { font-size: 0.5rem; letter-spacing: 0.08em; }
+    }
+    @media (max-width: 380px) {
+      .clock-val { font-size: 1.1rem; }
     }
     .clock-label {
       font-size: 0.55rem;
