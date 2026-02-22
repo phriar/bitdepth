@@ -81,7 +81,7 @@
 
       <div id="regret-error" style="display:none;color:var(--red);font-size:0.75rem;margin-top:1rem;padding:0.75rem;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2)"></div>
 
-      <div class="tool-note" style="margin-top:1.5rem">Uses Coindesk historical BTC price API. Current price via CoinGecko. Not financial advice.</div>
+      <div class="tool-note" style="margin-top:1.5rem">Uses Kraken historical OHLC data (back to Oct 2013). Current price via CoinGecko. Not financial advice.</div>
     </div>
 
     <!-- Related tools -->
@@ -139,14 +139,14 @@
         errEl.style.display = 'block'; return;
       }
 
-      // Date validation — Coindesk goes back to July 18, 2010
+      // Date validation — Kraken goes back to late 2013
       const chosen = new Date(dateVal + 'T12:00:00Z');
-      const earliest = new Date('2010-07-17T12:00:00Z');
+      const earliest = new Date('2013-10-01T12:00:00Z');
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 
       if (chosen < earliest) {
-        errEl.textContent = 'Date must be July 18, 2010 or later (earliest available price data).';
+        errEl.textContent = 'Date must be October 2013 or later (earliest available price data).';
         errEl.style.display = 'block'; return;
       }
       if (chosen > yesterday) {
@@ -158,16 +158,26 @@
       this.disabled = true;
 
       try {
-        // Coindesk historical API — proper CORS headers, totally free
-        const [y, m, d] = dateVal.split('-');
-        const formatted = `${y}-${m}-${d}`;
-        const url = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${formatted}&end=${formatted}&currency=USD`;
+        // Kraken OHLC API — free, proper CORS, data back to Oct 2013
+        // Fetch daily candles (interval=1440) since the chosen date
+        const since = Math.floor(chosen.getTime() / 1000) - 86400;
+        const url = `https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440&since=${since}`;
 
         const res = await fetch(url);
         if (!res.ok) throw new Error(`API returned ${res.status}`);
         const data = await res.json();
+        if (data.error && data.error.length) throw new Error(data.error[0]);
 
-        const priceThen = data.bpi[formatted];
+        const candles = data.result?.XXBTZUSD || data.result?.XBTUSD;
+        if (!candles || candles.length === 0) throw new Error('No price data returned. Try a nearby date.');
+
+        // Find the candle closest to chosen date
+        const targetTs = chosen.getTime() / 1000;
+        const closest = candles.reduce((a, b) =>
+          Math.abs(b[0] - targetTs) < Math.abs(a[0] - targetTs) ? b : a
+        );
+        // Use close price (index 4)
+        const priceThen = parseFloat(closest[4]);
         if (!priceThen) throw new Error('No price data found for that date. Try a nearby date.');
 
         // Get current price
