@@ -966,12 +966,14 @@
           html += `<span class="t-out">Block </span><span class="t-val">${fmt(b.height)}</span>`;
           html += `<span class="t-out"> — ${fmt(b.tx_count)} txs — fees: ${feeBTC} BTC — size: ${sizeMB} MB — mined by: ${pool}</span><br/>`;
         });
-        html += '<br/><span class="t-cmd" id="blink-cursor">█</span>';
+        html += '<br/><span class="t-cmd" id="blink-cursor" style="display:inline-block;width:0.6em;transition:opacity 0.1s">█</span>';
         terminal.innerHTML = html;
 
-        // restart blink on new element
+        // restart blink on new element — use opacity so layout doesn't shift
         const cur = document.getElementById('blink-cursor');
-        if (cur) setInterval(() => { cur.textContent = cur.textContent === '█' ? '' : '█'; }, 600);
+        if (cur) setInterval(() => {
+          cur.style.opacity = cur.style.opacity === '0' ? '1' : '0';
+        }, 600);
 
       } catch(e) {
         console.error('Mempool blocks error:', e);
