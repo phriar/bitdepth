@@ -3341,13 +3341,47 @@
       this.disabled = true;
 
       try {
-        const [y, m, d2] = date.split('-');
-        const ddmmyyyy = `${d2}-${m}-${y}`;
-        const histRes = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/history?date=${ddmmyyyy}`);
-        const histData = await histRes.json();
-        const priceThen = histData?.market_data?.current_price?.usd;
+        // Use market_chart/range to get price for the selected date
+        // We fetch a 2-day window around the date to ensure we get a data point
+        const ts = chosen.getTime();
+        const from = Math.floor((ts - 86400000) / 1000);
+        const to   = Math.floor((ts + 2 * 86400000) / 1000);
 
-        if (!priceThen) throw new Error('Could not fetch historical price.');
+        let priceThen = null;
+
+        // Try CoinGecko market_chart range first
+        try {
+          const histRes = await fetch(
+            `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
+          );
+          if (histRes.ok) {
+            const histData = await histRes.json();
+            const prices = histData?.prices;
+            if (prices && prices.length > 0) {
+              // Find the closest data point to the chosen date
+              let closest = prices[0];
+              for (const p of prices) {
+                if (Math.abs(p[0] - ts) < Math.abs(closest[0] - ts)) closest = p;
+              }
+              priceThen = closest[1];
+            }
+          }
+        } catch(e) {}
+
+        // Fallback: CoinGecko /history endpoint via corsproxy.io
+        if (!priceThen) {
+          const [y, m, d2] = date.split('-');
+          const ddmmyyyy = `${d2}-${m}-${y}`;
+          const proxyRes = await fetch(
+            `https://corsproxy.io/?url=${encodeURIComponent('https://api.coingecko.com/api/v3/coins/bitcoin/history?date=' + ddmmyyyy)}`
+          );
+          if (proxyRes.ok) {
+            const proxyData = await proxyRes.json();
+            priceThen = proxyData?.market_data?.current_price?.usd;
+          }
+        }
+
+        if (!priceThen) throw new Error('Could not fetch historical price. CoinGecko may be rate-limiting — try again in a moment.');
 
         const nowPrice = btcPriceForTools || 0;
         if (!nowPrice) throw new Error('Current BTC price not loaded yet. Reload the page and try again.');
