@@ -491,6 +491,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
+      min-width: 0;
+      width: 100%;
     }
     .tool-section { margin-bottom: 1rem; }
     .tool-note {
@@ -558,12 +560,16 @@
       background: var(--bg);
       border: 1px solid var(--border);
       padding: 1rem;
+      width: 100%;
+      min-width: 0;
     }
     .conv-rate-row {
       display: flex;
       justify-content: space-between;
       font-size: 0.72rem;
       margin-bottom: 0.4rem;
+      gap: 0.5rem;
+      min-width: 0;
     }
     .conv-rate-row:last-child { margin-bottom: 0; }
     .conv-rate-label { color: var(--muted); }
@@ -692,6 +698,13 @@
       .signal-ring-num { font-size: 1.8rem; }
       .signal-verdict { font-size: 1.1rem; }
       .signal-legend { grid-template-columns: repeat(5, 1fr); font-size: 0.5rem; }
+      .tool-card { padding: 1.25rem; }
+      .conv-input { font-size: 0.9rem; padding: 0.65rem 0.65rem 0.65rem 2rem; }
+      .conv-prefix { font-size: 0.75rem; left: 0.65rem; }
+      .fee-cost-grid { gap: 0.35rem; }
+      .fee-cost-box { padding: 0.5rem; }
+      .halving-stats { gap: 0.35rem; }
+      .halving-stat { padding: 0.5rem; }
     }
     .tool-card {
       background: var(--bg);
@@ -701,6 +714,8 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      overflow: hidden;
+      min-width: 0;
     }
     .tool-card::before {
       content: '';
@@ -752,6 +767,7 @@
     .fee-btn.active { border-color: var(--orange); color: var(--orange); background: rgba(247,147,26,0.08); }
     .conv-input {
       width: 100%;
+      box-sizing: border-box;
       background: var(--bg2);
       border: 1px solid var(--border);
       color: var(--text);
@@ -761,6 +777,7 @@
       outline: none;
       transition: border-color 0.2s;
       -moz-appearance: textfield;
+      min-width: 0;
     }
     .conv-input::-webkit-outer-spin-button,
     .conv-input::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -806,6 +823,7 @@
     }
 
     /* Prevent any element from causing horizontal scroll */
+    *, *::before, *::after { box-sizing: border-box; }
     * { max-width: 100%; }
 
     /* Tables scroll horizontally on small screens instead of breaking layout */
