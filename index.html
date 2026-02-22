@@ -574,21 +574,18 @@
           <div class="mini-stat-val" id="hero-dom">—</div>
         </div>
       </div>
-      <!-- Fake SVG Sparkline -->
-      <svg class="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
+      <!-- Live SVG Sparkline — populated by CoinGecko 7d OHLC -->
+      <svg id="sparkline-svg" class="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
         <defs>
           <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#f7931a" stop-opacity="0.3"/>
             <stop offset="100%" stop-color="#f7931a" stop-opacity="0"/>
           </linearGradient>
         </defs>
-        <polyline
-          points="0,50 20,45 40,48 60,30 80,35 100,20 120,25 140,18 160,22 180,15 200,20 220,10 240,14 260,8 280,12 300,5"
-          fill="none" stroke="#f7931a" stroke-width="1.5"/>
-        <polygon
-          points="0,50 20,45 40,48 60,30 80,35 100,20 120,25 140,18 160,22 180,15 200,20 220,10 240,14 260,8 280,12 300,5 300,60 0,60"
-          fill="url(#sparkGrad)"/>
+        <polyline id="spark-line" points="" fill="none" stroke="#f7931a" stroke-width="1.5"/>
+        <polygon id="spark-fill" points="" fill="url(#sparkGrad)"/>
       </svg>
+      <div id="spark-label" style="font-size:0.6rem;color:var(--muted);text-align:right;margin-top:0.25rem">7-day price chart — loading...</div>
     </div>
   </div>
 
@@ -639,47 +636,8 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Coinbase</td>
-            <td>$67,244</td>
-            <td style="color:var(--green)">+2.41%</td>
-            <td>$8.2B</td>
-            <td>$0.12</td>
-            <td><span class="tag tag-green">Active</span></td>
-          </tr>
-          <tr>
-            <td>Binance</td>
-            <td>$67,231</td>
-            <td style="color:var(--green)">+2.38%</td>
-            <td>$18.7B</td>
-            <td>$0.08</td>
-            <td><span class="tag tag-green">Active</span></td>
-          </tr>
-          <tr>
-            <td>Kraken</td>
-            <td>$67,250</td>
-            <td style="color:var(--green)">+2.43%</td>
-            <td>$3.1B</td>
-            <td>$0.15</td>
-            <td><span class="tag tag-green">Active</span></td>
-          </tr>
-          <tr>
-            <td>Bitstamp</td>
-            <td>$67,218</td>
-            <td style="color:var(--green)">+2.36%</td>
-            <td>$1.4B</td>
-            <td>$0.22</td>
-            <td><span class="tag tag-green">Active</span></td>
-          </tr>
-          <tr>
-            <td>OKX</td>
-            <td>$67,255</td>
-            <td style="color:var(--green)">+2.44%</td>
-            <td>$6.8B</td>
-            <td>$0.10</td>
-            <td><span class="tag tag-green">Active</span></td>
-          </tr>
+        <tbody id="exchange-table-body">
+          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr>
         </tbody>
       </table>
     </section>
@@ -1078,21 +1036,171 @@
       }
     }
 
+    // ─── SPARKLINE — CoinGecko 7d OHLC ──────────────────────────────
+    async function fetchSparkline() {
+      try {
+        const res = await fetch(
+          'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=7'
+        );
+        const ohlc = await res.json();
+        // Use close prices (index 4)
+        const prices = ohlc.map(d => d[4]);
+        const minP = Math.min(...prices);
+        const maxP = Math.max(...prices);
+        const W = 300, H = 60, PAD = 4;
+
+        const toX = (i) => (i / (prices.length - 1)) * W;
+        const toY = (p) => PAD + ((maxP - p) / (maxP - minP)) * (H - PAD * 2);
+
+        const pts = prices.map((p, i) => `${toX(i).toFixed(1)},${toY(p).toFixed(1)}`).join(' ');
+        const fillPts = pts + ` ${W},${H} 0,${H}`;
+
+        document.getElementById('spark-line').setAttribute('points', pts);
+        document.getElementById('spark-fill').setAttribute('points', fillPts);
+
+        const pctChange = ((prices[prices.length - 1] - prices[0]) / prices[0] * 100).toFixed(1);
+        const sign = pctChange >= 0 ? '+' : '';
+        const color = pctChange >= 0 ? 'var(--green)' : 'var(--red)';
+        document.getElementById('spark-label').innerHTML =
+          `7-day price chart &nbsp;<span style="color:${color}">${sign}${pctChange}%</span>`;
+      } catch(e) {
+        console.error('Sparkline error:', e);
+        document.getElementById('spark-label').textContent = '7-day chart unavailable';
+      }
+    }
+
+    // ─── EXCHANGE TABLE — per-exchange public APIs ───────────────────
+    async function fetchExchanges() {
+      const tbody = document.getElementById('exchange-table-body');
+      const results = [];
+
+      // Helper to build a row
+      function makeRow(name, price, change, vol, spread, ok) {
+        const changeColor = change >= 0 ? 'var(--green)' : 'var(--red)';
+        const changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+        const volStr = vol ? fmtUSD(vol) : '—';
+        const spreadStr = spread ? '$' + spread.toFixed(2) : '—';
+        return `<tr>
+          <td>${name}</td>
+          <td>$${fmt(price)}</td>
+          <td style="color:${changeColor}">${changeStr}</td>
+          <td>${volStr}</td>
+          <td>${spreadStr}</td>
+          <td><span class="tag ${ok ? 'tag-green' : 'tag-muted'}">${ok ? 'Active' : 'Error'}</span></td>
+        </tr>`;
+      }
+
+      // Run all fetches in parallel, fail gracefully per exchange
+      const fetches = await Promise.allSettled([
+
+        // Coinbase — public product stats
+        fetch('https://api.exchange.coinbase.com/products/BTC-USD/stats')
+          .then(r => r.json())
+          .then(d => results.push({
+            name: 'Coinbase',
+            price: parseFloat(d.last),
+            change: ((parseFloat(d.last) - parseFloat(d.open)) / parseFloat(d.open)) * 100,
+            vol: parseFloat(d.volume) * parseFloat(d.last),
+            spread: null,
+            ok: true
+          })),
+
+        // Binance — 24hr ticker
+        fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
+          .then(r => r.json())
+          .then(d => results.push({
+            name: 'Binance',
+            price: parseFloat(d.lastPrice),
+            change: parseFloat(d.priceChangePercent),
+            vol: parseFloat(d.quoteVolume),
+            spread: parseFloat(d.askPrice) - parseFloat(d.bidPrice),
+            ok: true
+          })),
+
+        // Kraken — ticker
+        fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD')
+          .then(r => r.json())
+          .then(d => {
+            const t = d.result.XXBTZUSD;
+            const price = parseFloat(t.c[0]);
+            const open  = parseFloat(t.o);
+            results.push({
+              name: 'Kraken',
+              price,
+              change: ((price - open) / open) * 100,
+              vol: parseFloat(t.v[1]) * price,
+              spread: parseFloat(t.a[0]) - parseFloat(t.b[0]),
+              ok: true
+            });
+          }),
+
+        // Bitstamp — ticker
+        fetch('https://www.bitstamp.net/api/v2/ticker/btcusd/')
+          .then(r => r.json())
+          .then(d => {
+            const price = parseFloat(d.last);
+            const open  = parseFloat(d.open);
+            results.push({
+              name: 'Bitstamp',
+              price,
+              change: ((price - open) / open) * 100,
+              vol: parseFloat(d.volume) * price,
+              spread: parseFloat(d.ask) - parseFloat(d.bid),
+              ok: true
+            });
+          }),
+
+        // OKX — ticker
+        fetch('https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT')
+          .then(r => r.json())
+          .then(d => {
+            const t = d.data[0];
+            const price = parseFloat(t.last);
+            const open  = parseFloat(t.open24h);
+            results.push({
+              name: 'OKX',
+              price,
+              change: ((price - open) / open) * 100,
+              vol: parseFloat(t.volCcy24h) * price,
+              spread: parseFloat(t.askPx) - parseFloat(t.bidPx),
+              ok: true
+            });
+          })
+      ]);
+
+      // Sort by name order
+      const order = ['Binance','Coinbase','Kraken','OKX','Bitstamp'];
+      results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+
+      if (results.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:1rem">Could not load exchange data</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = results.map(r =>
+        makeRow(r.name, r.price, r.change, r.vol, r.spread, r.ok)
+      ).join('');
+    }
+
     // ─── INIT & REFRESH ──────────────────────────────────────────────
     async function init() {
       await Promise.allSettled([
         fetchCoinGecko(),
         fetchCoinGeckoGlobal(),
-        fetchMempool()
+        fetchMempool(),
+        fetchSparkline(),
+        fetchExchanges()
       ]);
     }
 
     init();
 
-    // Refresh price every 60s, on-chain every 2 minutes
+    // Price every 60s, on-chain every 2 min, exchanges every 30s, sparkline every 10 min
     setInterval(fetchCoinGecko, 60_000);
     setInterval(fetchCoinGeckoGlobal, 120_000);
     setInterval(fetchMempool, 120_000);
+    setInterval(fetchExchanges, 30_000);
+    setInterval(fetchSparkline, 600_000);
   </script>
 </body>
 </html>
