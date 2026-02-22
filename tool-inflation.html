@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin vs Inflation — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 03</div>
+      <div class="tool-page-title">💸 Bitcoin vs Inflation</div>
+      <p class="tool-page-desc">What would $100 be worth today if you had bought Bitcoin instead of holding dollars?</p>
+      <div class="tool-section">
+        <div class="tool-label">You had $100 in...</div>
+        <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr)"><button class="fee-btn" data-inf-year="2015">2015</button><button class="fee-btn" data-inf-year="2017">2017</button><button class="fee-btn active" data-inf-year="2020">2020</button></div>
+        <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0.5rem"><button class="fee-btn" data-inf-year="2021">2021</button><button class="fee-btn" data-inf-year="2022">2022</button><button class="fee-btn" data-inf-year="2023">2023</button></div>
+      </div>
+      <div class="inf-compare">
+        <div class="inf-col"><div class="inf-col-label">💵 Held as USD</div><div id="inf-usd-val" class="inf-col-val" style="color:var(--red)">—</div><div id="inf-usd-sub" class="inf-col-sub">purchasing power today</div></div>
+        <div class="inf-vs">VS</div>
+        <div class="inf-col"><div class="inf-col-label">₿ Bought Bitcoin</div><div id="inf-btc-val" class="inf-col-val" style="color:var(--green)">—</div><div id="inf-btc-sub" class="inf-col-sub">value at today's price</div></div>
+      </div>
+      <div id="inf-summary" class="inf-summary"></div>
+      <div class="tool-note">BTC prices are historical yearly averages. Inflation uses US CPI data. Not financial advice.</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    const btcHistoricalPrices={2015:272,2016:568,2017:4000,2018:7600,2019:7200,2020:11000,2021:47000,2022:28000,2023:26000,2024:65000};
+    const inflationLoss={2015:0.272,2016:0.238,2017:0.207,2018:0.178,2019:0.155,2020:0.132,2021:0.093,2022:0.042,2023:0.016,2024:0.003};
+    let infYear=2020,livePrice=0;
+    function calcInflation(){const sp=btcHistoricalPrices[infYear];const cp=livePrice||95000;const loss=inflationLoss[infYear]||0;const usdNow=(100*(1-loss)).toFixed(2);const btcVal=(100/sp)*cp;$('inf-usd-val').textContent='$'+usdNow;$('inf-btc-val').textContent='$'+fmt(Math.round(btcVal));$('inf-usd-sub').textContent='~'+(loss*100).toFixed(1)+'% lost to inflation';$('inf-btc-sub').textContent='at $'+fmt(Math.round(cp))+' today';const mult=(btcVal/100).toFixed(1);const pct=((btcVal-100)/100*100).toFixed(0);$('inf-summary').innerHTML='$100 in Bitcoin in <b>'+infYear+'</b> is worth <span style="color:var(--green)">$'+fmt(Math.round(btcVal))+'</span> today — a <span style="color:var(--green)'+(btcVal>100?'">':('" style="color:var(--red)">'))+(btcVal>100?'+':'')+pct+'%</span> return ('+mult+'x). The same $100 in dollars now has the purchasing power of <span style="color:var(--red)">$'+usdNow+'</span>.';}
+    document.querySelectorAll('[data-inf-year]').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('[data-inf-year]').forEach(b=>b.classList.remove('active'));this.classList.add('active');infYear=parseInt(this.dataset.infYear);calcInflation();});});
+    async function init(){livePrice=await fetchBtcPriceMini();calcInflation();updateNavTime();}
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fee Estimator — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 04</div>
+      <div class="tool-page-title">⛽ Fee Estimator</div>
+      <p class="tool-page-desc">Live mempool fee rates from Mempool.space. Pick your urgency level to see the recommended sat/vByte and estimated USD cost.</p>
+      <div class="tool-section">
+        <div class="tool-label">Confirmation target</div>
+        <div class="fee-btn-grid">
+          <button class="fee-btn active" data-target="next"><b>Next Block</b><div class="fee-btn-sub">~10 min</div></button>
+          <button class="fee-btn" data-target="30min"><b>30 Minutes</b><div class="fee-btn-sub">~3 blocks</div></button>
+          <button class="fee-btn" data-target="1hr"><b>1 Hour</b><div class="fee-btn-sub">~6 blocks</div></button>
+        </div>
+      </div>
+      <div class="fee-rate-box">
+        <div class="fee-rate-label">Recommended fee rate</div>
+        <div class="fee-rate-row"><div id="fee-rate-val" class="fee-rate-num">—</div><div class="fee-rate-unit">sat / vByte</div></div>
+      </div>
+      <div class="tool-label" style="margin-bottom:0.5rem">Estimated cost by transaction type</div>
+      <div class="fee-cost-grid">
+        <div class="fee-cost-box"><div class="fee-cost-label">Legacy (P2PKH)</div><div id="fee-cost-simple" class="fee-cost-val">—</div><div class="fee-cost-label" style="margin-top:0.25rem">141 vB</div></div>
+        <div class="fee-cost-box"><div class="fee-cost-label">SegWit (P2WPKH)</div><div id="fee-cost-segwit" class="fee-cost-val">—</div><div class="fee-cost-label" style="margin-top:0.25rem">102 vB</div></div>
+        <div class="fee-cost-box"><div class="fee-cost-label">Batch (multi-out)</div><div id="fee-cost-batch" class="fee-cost-val">—</div><div class="fee-cost-label" style="margin-top:0.25rem">350 vB</div></div>
+      </div>
+      <div id="fee-mempool-note" class="tool-note" style="margin-top:1rem">Loading mempool data...</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    let feeData={fastestFee:0,halfHourFee:0,hourFee:0},currentTarget='next',livePrice=0;
+    function updateFeeDisplay(){
+      const rate=currentTarget==='next'?feeData.fastestFee:currentTarget==='30min'?feeData.halfHourFee:feeData.hourFee;
+      if(!rate)return;
+      const el=$('fee-rate-val');
+      el.textContent=rate;
+      el.style.color=rate<=2?'var(--green)':rate<=10?'var(--orange)':'var(--red)';
+      if(livePrice>0){
+        const toUSD=vb=>{const usd=(rate*vb/1e8)*livePrice;return usd<0.01?'<$0.01':'$'+usd.toFixed(2);};
+        $('fee-cost-simple').textContent=toUSD(141);
+        $('fee-cost-segwit').textContent=toUSD(102);
+        $('fee-cost-batch').textContent=toUSD(350);
+      }
+    }
+    document.querySelectorAll('[data-target]').forEach(btn=>{
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('[data-target]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        currentTarget=this.dataset.target;
+        updateFeeDisplay();
+      });
+    });
+    async function init(){
+      livePrice=await fetchBtcPriceMini();
+      try{
+        const [fr,mr]=await Promise.all([fetch('https://mempool.space/api/v1/fees/recommended'),fetch('https://mempool.space/api/mempool')]);
+        feeData=await fr.json();
+        const mp=await mr.json();
+        const mb=(mp.vsize/1e6).toFixed(1);
+        let cong,col;
+        if(mp.vsize<1e6){cong='LOW — good time to send';col='var(--green)';}
+        else if(mp.vsize<5e6){cong='MODERATE';col='var(--orange)';}
+        else if(mp.vsize<20e6){cong='BUSY';col='#ff8c00';}
+        else{cong='CONGESTED — fees elevated';col='var(--red)';}
+        $('fee-mempool-note').innerHTML='Mempool: <span style="color:'+col+'">'+cong+'</span> ('+mb+' MB) &nbsp;·&nbsp; Rates: <b>'+feeData.fastestFee+'</b> / <b>'+feeData.halfHourFee+'</b> / <b>'+feeData.hourFee+'</b> sat/vB';
+        updateFeeDisplay();
+      }catch(e){$('fee-mempool-note').textContent='Could not load fee data. Try refreshing.';}
+      updateNavTime();
+    }
+    init();
+    setInterval(async()=>{
+      try{const fr=await fetch('https://mempool.space/api/v1/fees/recommended');feeData=await fr.json();updateFeeDisplay();}catch(e){}
+    },30000);
+  </script>
+</body>
+</html>

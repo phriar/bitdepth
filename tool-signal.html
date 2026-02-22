@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin Signal Dashboard — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 09</div>
+      <div class="tool-page-title">📡 Bitcoin Signal Dashboard</div>
+      <p class="tool-page-desc">Four on-chain and market indicators scored 0–100 and averaged into a single signal. Updated live.</p>
+      <div class="bsd-score-wrap">
+        <svg class="bsd-arc-svg" viewBox="0 0 200 110">
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#222" stroke-width="12" stroke-linecap="round"/>
+          <path id="bsd-arc-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f7931a" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 251" style="transition:stroke-dasharray 1s ease,stroke 0.8s"/>
+        </svg>
+        <div class="bsd-score-inner">
+          <div id="bsd-score" class="bsd-score-num" style="color:var(--muted)">—</div>
+          <div id="bsd-score-label" class="bsd-score-label">Calculating...</div>
+        </div>
+      </div>
+      <div class="bsd-indicators">
+        <div class="bsd-ind">
+          <div class="bsd-ind-left"><div id="bsd-dot-mayer" class="bsd-ind-dot"></div><div><div class="bsd-ind-name">Mayer Multiple</div><div id="bsd-val-mayer" class="bsd-ind-val">loading...</div></div></div>
+          <div id="bsd-score-mayer" class="bsd-ind-score" style="color:var(--muted)">—</div>
+        </div>
+        <div class="bsd-ind">
+          <div class="bsd-ind-left"><div id="bsd-dot-mempool" class="bsd-ind-dot"></div><div><div class="bsd-ind-name">Mempool Pressure</div><div id="bsd-val-mempool" class="bsd-ind-val">loading...</div></div></div>
+          <div id="bsd-score-mempool" class="bsd-ind-score" style="color:var(--muted)">—</div>
+        </div>
+        <div class="bsd-ind">
+          <div class="bsd-ind-left"><div id="bsd-dot-hashrate" class="bsd-ind-dot"></div><div><div class="bsd-ind-name">Hashrate Security</div><div id="bsd-val-hashrate" class="bsd-ind-val">loading...</div></div></div>
+          <div id="bsd-score-hashrate" class="bsd-ind-score" style="color:var(--muted)">—</div>
+        </div>
+        <div class="bsd-ind" style="border-bottom:none">
+          <div class="bsd-ind-left"><div id="bsd-dot-dominance" class="bsd-ind-dot"></div><div><div class="bsd-ind-name">BTC Dominance</div><div id="bsd-val-dominance" class="bsd-ind-val">loading...</div></div></div>
+          <div id="bsd-score-dominance" class="bsd-ind-score" style="color:var(--muted)">—</div>
+        </div>
+      </div>
+      <div id="bsd-summary" class="bsd-summary">Calculating signal...</div>
+      <div class="tool-note">Score 0–100. Each indicator scored independently and averaged. Not financial advice.</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    let bsdData={mayer:null,mempoolVsize:null,hashrate:null,dominance:null};
+    function scoreColor(s){return s>=70?'#00d68f':s>=50?'#f7931a':s>=30?'#ff8c00':'#ff4d4d';}
+    function scoreMayer(m){if(!m)return null;if(m<0.5)return{score:95,label:'Extreme Low',detail:m.toFixed(2)+' (historic buy zone)'};if(m<0.8)return{score:80,label:'Undervalued',detail:m.toFixed(2)+' (below 200d MA)'};if(m<1.2)return{score:65,label:'Fair Value',detail:m.toFixed(2)+' (near 200d MA)'};if(m<1.7)return{score:45,label:'Elevated',detail:m.toFixed(2)+' (above average)'};if(m<2.4)return{score:25,label:'High',detail:m.toFixed(2)+' (caution zone)'};return{score:10,label:'Overheated',detail:m.toFixed(2)+' (historical top range)'};}
+    function scoreMempool(v){if(v===null)return null;const mb=v/1e6;if(mb<1)return{score:90,label:'Clear',detail:mb.toFixed(1)+' MB (very low fees)'};if(mb<5)return{score:70,label:'Moderate',detail:mb.toFixed(1)+' MB (normal)'};if(mb<20)return{score:50,label:'Busy',detail:mb.toFixed(1)+' MB (fees rising)'};if(mb<100)return{score:30,label:'Congested',detail:mb.toFixed(1)+' MB (high fees)'};return{score:10,label:'Overwhelmed',detail:mb.toFixed(1)+' MB (very high fees)'};}
+    function scoreHashrate(e){if(!e)return null;if(e>800)return{score:90,label:'ATH Territory',detail:Math.round(e)+' EH/s'};if(e>600)return{score:75,label:'Very Strong',detail:Math.round(e)+' EH/s'};if(e>400)return{score:60,label:'Strong',detail:Math.round(e)+' EH/s'};if(e>200)return{score:45,label:'Moderate',detail:Math.round(e)+' EH/s'};return{score:25,label:'Weak',detail:Math.round(e)+' EH/s'};}
+    function scoreDominance(p){if(!p)return null;if(p>60)return{score:85,label:'Very High',detail:p.toFixed(1)+'% (Bitcoin leading)'};if(p>55)return{score:70,label:'High',detail:p.toFixed(1)+'% (strong cycle)'};if(p>50)return{score:55,label:'Moderate',detail:p.toFixed(1)+'% (altcoins competing)'};if(p>45)return{score:35,label:'Low',detail:p.toFixed(1)+'% (alt season risk)'};return{score:20,label:'Very Low',detail:p.toFixed(1)+'% (altcoin season)'};}
+    function updateDashboard(){
+      const results=[{key:'mayer',fn:scoreMayer,data:bsdData.mayer},{key:'mempool',fn:scoreMempool,data:bsdData.mempoolVsize},{key:'hashrate',fn:scoreHashrate,data:bsdData.hashrate},{key:'dominance',fn:scoreDominance,data:bsdData.dominance}];
+      let total=0,count=0;
+      results.forEach(({key,fn,data})=>{
+        const r=fn(data);if(!r)return;count++;total+=r.score;
+        const col=scoreColor(r.score);
+        $('bsd-dot-'+key).style.background=col;$('bsd-val-'+key).textContent=r.detail;$('bsd-score-'+key).textContent=r.score;$('bsd-score-'+key).style.color=col;
+      });
+      if(!count)return;
+      const avg=Math.round(total/count);
+      const col=scoreColor(avg);
+      const arcEl=$('bsd-arc-fill');
+      arcEl.setAttribute('stroke-dasharray',((avg/100)*251)+' 251');arcEl.setAttribute('stroke',col);
+      $('bsd-score').textContent=avg;$('bsd-score').style.color=col;
+      let verdict,summary;
+      if(avg>=75){verdict='ACCUMULATE';summary='Signal score '+avg+'/100 — All indicators aligned bullishly. Mayer Multiple suggests undervaluation, mempool is clear, hashrate is securing the network, and Bitcoin dominance is strong.';}
+      else if(avg>=55){verdict='NEUTRAL';summary='Signal score '+avg+'/100 — Mixed signals. Some indicators are favorable but others suggest caution. Not a clear buy or sell signal.';}
+      else if(avg>=35){verdict='CAUTION';summary='Signal score '+avg+'/100 — Multiple indicators are elevated or unfavorable. Price may be stretched relative to fundamentals.';}
+      else{verdict='HIGH RISK';summary='Signal score '+avg+'/100 — Most indicators are in historically unfavorable territory. Exercise caution with new positions.';}
+      $('bsd-score-label').textContent=verdict;$('bsd-score-label').style.color=col;$('bsd-summary').textContent=summary;
+    }
+    async function init(){
+      await Promise.allSettled([
+        (async()=>{const d=await (await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200&interval=daily')).json();const prices=d.prices.map(p=>p[1]);if(prices.length>=200){const ma200=prices.slice(-200).reduce((a,b)=>a+b,0)/200;bsdData.mayer=prices[prices.length-1]/ma200;updateDashboard();}})(),
+        (async()=>{const d=await (await fetch('https://mempool.space/api/mempool')).json();bsdData.mempoolVsize=d.vsize;updateDashboard();})(),
+        (async()=>{const d=await (await fetch('https://mempool.space/api/v1/mining/hashrate/3d')).json();if(d.currentHashrate)bsdData.hashrate=d.currentHashrate/1e18;updateDashboard();})(),
+        (async()=>{const d=await (await fetch('https://api.coingecko.com/api/v3/global')).json();bsdData.dominance=d.data?.market_cap_percentage?.btc;updateDashboard();})()
+      ]);
+      updateNavTime();
+    }
+    init();
+  </script>
+</body>
+</html>

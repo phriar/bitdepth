@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fee Alarm — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 08</div>
+      <div class="tool-page-title">🔔 Fee Alarm</div>
+      <p class="tool-page-desc">Set a target fee rate and get an audio alert the moment mempool fees drop to your threshold. Checked every 30 seconds.</p>
+      <div class="tool-section">
+        <div class="tool-label">Alert me when fees drop to</div>
+        <div class="alarm-input-row">
+          <div class="conv-wrap" style="flex:1;margin-top:0"><span class="conv-prefix" style="font-size:0.7rem;left:0.75rem">TARGET</span><input id="alarm-target" class="conv-input" type="number" placeholder="10" min="1" max="500" style="padding-left:5rem" inputmode="numeric" /></div>
+          <div class="alarm-unit">sat/vByte</div>
+        </div>
+      </div>
+      <div class="alarm-current-row">
+        <span style="color:var(--muted);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase">Current fastest fee</span>
+        <span id="alarm-current-fee" class="alarm-current-val">loading...</span>
+      </div>
+      <button id="alarm-toggle-btn" class="tool-action-btn" style="margin-top:0.75rem">🔔 Start Watching</button>
+      <div id="alarm-status" class="alarm-status" style="display:none">
+        <div class="alarm-status-dot"></div>
+        <span id="alarm-status-text">Watching...</span>
+      </div>
+      <div id="alarm-triggered" class="alarm-triggered" style="display:none">
+        <div class="alarm-triggered-icon">🔔</div>
+        <div class="alarm-triggered-title">FEES DROPPED!</div>
+        <div id="alarm-triggered-detail" class="alarm-triggered-detail"></div>
+        <button onclick="resetAlarm()" style="margin-top:1rem;background:transparent;border:1px solid var(--orange);color:var(--orange);font-family:var(--mono);font-size:0.7rem;padding:0.5rem 1rem;cursor:pointer;letter-spacing:0.1em">Reset Alarm</button>
+      </div>
+      <div class="tool-note" style="margin-top:1rem">Checks mempool.space every 30 seconds. Keep this tab open for the alarm to work. Audio requires a browser interaction first.</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div><a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    let alarmActive=false,alarmInterval=null,alarmTriggered=false;
+    function playAlarmSound(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();[0,0.25,0.5].forEach(t=>{const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.setValueAtTime(880,ctx.currentTime+t);osc.frequency.setValueAtTime(1100,ctx.currentTime+t+0.1);gain.gain.setValueAtTime(0.3,ctx.currentTime+t);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.2);osc.start(ctx.currentTime+t);osc.stop(ctx.currentTime+t+0.2);});}catch(e){}}
+    async function checkAlarm(){
+      if(!alarmActive||alarmTriggered)return;
+      try{
+        const d=await (await fetch('https://mempool.space/api/v1/fees/recommended')).json();
+        const current=d.fastestFee;
+        const target=parseInt($('alarm-target').value)||10;
+        $('alarm-current-fee').textContent=current+' sat/vB';
+        $('alarm-current-fee').style.color=current<=target?'var(--green)':'var(--orange)';
+        $('alarm-status-text').textContent='Watching · last checked '+new Date().toLocaleTimeString()+' · current: '+current+' sat/vB';
+        if(current<=target){
+          alarmTriggered=true;alarmActive=false;clearInterval(alarmInterval);
+          playAlarmSound();
+          $('alarm-status').style.display='none';$('alarm-toggle-btn').style.display='none';$('alarm-triggered').style.display='block';
+          $('alarm-triggered-detail').textContent='Fees dropped to '+current+' sat/vB — below your target of '+target+' sat/vB. Good time to send!';
+        }
+      }catch(e){}
+    }
+    function resetAlarm(){alarmActive=false;alarmTriggered=false;clearInterval(alarmInterval);$('alarm-triggered').style.display='none';$('alarm-status').style.display='none';$('alarm-toggle-btn').style.display='block';$('alarm-toggle-btn').textContent='🔔 Start Watching';$('alarm-toggle-btn').style.background='var(--orange)';$('alarm-toggle-btn').style.color='#000';}
+    $('alarm-toggle-btn').addEventListener('click',function(){
+      if(alarmActive){alarmActive=false;clearInterval(alarmInterval);$('alarm-status').style.display='none';this.textContent='🔔 Start Watching';this.style.background='var(--orange)';this.style.color='#000';}
+      else{alarmTriggered=false;alarmActive=true;$('alarm-status').style.display='flex';$('alarm-triggered').style.display='none';this.textContent='🔕 Stop Watching';this.style.background='var(--bg2)';this.style.color='var(--orange)';checkAlarm();clearInterval(alarmInterval);alarmInterval=setInterval(checkAlarm,30000);}
+    });
+    async function init(){
+      try{const d=await (await fetch('https://mempool.space/api/v1/fees/recommended')).json();$('alarm-current-fee').textContent=d.fastestFee+' sat/vB';}catch(e){}
+      updateNavTime();
+    }
+    init();
+  </script>
+</body>
+</html>

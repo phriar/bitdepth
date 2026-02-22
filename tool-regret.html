@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTC Regret Calculator — BitDepth</title>
+  <meta name="description" content="Enter how much you spent and on what date. See what it was worth in Bitcoin then vs now." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+
+  <nav>
+    <a class="logo" href="index.html">Bit<span>Depth</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li>
+      <li><a href="index.html#markets">Markets</a></li>
+      <li><a href="index.html#onchain">On-Chain</a></li>
+      <li><a href="index.html#macro">Macro</a></li>
+      <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
+    </ul>
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      <span id="nav-last-updated">LIVE DATA</span>
+    </div>
+  </nav>
+
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 10</div>
+      <div class="tool-page-title">😢 BTC Regret Calculator</div>
+      <p class="tool-page-desc">Enter how much you spent — and on what date. See exactly what that money would buy in Bitcoin back then, and what that stack would be worth at today's live price.</p>
+
+      <div class="tool-section">
+        <div class="tool-label">Amount Spent (USD)</div>
+        <div class="conv-wrap">
+          <span class="conv-prefix">$</span>
+          <input id="regret-usd" class="conv-input" type="number" placeholder="100" min="0" step="any" inputmode="decimal" />
+        </div>
+      </div>
+
+      <div class="tool-section">
+        <div class="tool-label">Date of Purchase</div>
+        <input id="regret-date" class="conv-input" type="date" style="padding-left:1rem" />
+        <div class="tool-note" style="margin-top:0.4rem">Supports dates from July 2010 onwards using Coindesk historical data.</div>
+      </div>
+
+      <button id="regret-calc-btn" class="tool-action-btn">Calculate My Regret →</button>
+
+      <div id="regret-result" style="display:none;margin-top:1.5rem">
+        <div class="inf-compare">
+          <div class="inf-col">
+            <div class="inf-col-label">📅 BTC Price Then</div>
+            <div id="regret-price-then" class="inf-col-val" style="color:var(--text)">—</div>
+            <div id="regret-btc-then" class="inf-col-sub">loading...</div>
+          </div>
+          <div class="inf-vs">→</div>
+          <div class="inf-col">
+            <div class="inf-col-label">💰 Value Today</div>
+            <div id="regret-value-now" class="inf-col-val">—</div>
+            <div id="regret-gain" class="inf-col-sub">loading...</div>
+          </div>
+        </div>
+
+        <div id="regret-summary" class="inf-summary"></div>
+
+        <div id="regret-extra" style="background:var(--bg);border:1px solid var(--border);padding:1rem;margin-top:0.75rem">
+          <div style="font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">BREAKDOWN</div>
+          <div class="dca-result-row"><span class="dca-result-label">Amount spent</span><span id="re-spent" class="dca-result-val">—</span></div>
+          <div class="dca-result-row"><span class="dca-result-label">BTC price on date</span><span id="re-price" class="dca-result-val">—</span></div>
+          <div class="dca-result-row"><span class="dca-result-label">BTC you would have</span><span id="re-btc" class="dca-result-val" style="color:var(--orange)">—</span></div>
+          <div class="dca-result-row"><span class="dca-result-label">Satoshis</span><span id="re-sats" class="dca-result-val" style="color:var(--orange)">—</span></div>
+          <div class="dca-result-row"><span class="dca-result-label">Current BTC price</span><span id="re-now-price" class="dca-result-val">—</span></div>
+          <div class="dca-result-row"><span class="dca-result-label">Value today</span><span id="re-value" class="dca-result-val" style="color:var(--green)">—</span></div>
+          <div class="dca-result-row" style="border:none"><span class="dca-result-label">Gain / Loss</span><span id="re-gain" class="dca-result-val">—</span></div>
+        </div>
+      </div>
+
+      <div id="regret-error" style="display:none;color:var(--red);font-size:0.75rem;margin-top:1rem;padding:0.75rem;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2)"></div>
+
+      <div class="tool-note" style="margin-top:1.5rem">Uses Coindesk historical BTC price API. Current price via CoinGecko. Not financial advice.</div>
+    </div>
+
+    <!-- Related tools -->
+    <div style="margin-top:2rem">
+      <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Also try</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)">
+        <a href="tool-inflation.html" style="background:var(--bg);padding:1.25rem;text-decoration:none;transition:background 0.2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg)'">
+          <div style="font-size:0.6rem;color:var(--orange);letter-spacing:0.15em;text-transform:uppercase">Tool 03</div>
+          <div style="font-family:var(--display);font-weight:800;font-size:0.95rem;color:var(--text);margin-top:0.25rem">💸 Bitcoin vs Inflation</div>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:0.25rem">$100 in BTC vs holding dollars</div>
+        </a>
+        <a href="tool-satstack.html" style="background:var(--bg);padding:1.25rem;text-decoration:none;transition:background 0.2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg)'">
+          <div style="font-size:0.6rem;color:var(--orange);letter-spacing:0.15em;text-transform:uppercase">Tool 01</div>
+          <div style="font-family:var(--display);font-weight:800;font-size:0.95rem;color:var(--text);margin-top:0.25rem">📈 Sat Stack Calculator</div>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:0.25rem">Model your DCA strategy</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div><strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Bitcoin Tools & Live Market Intel</div>
+    <div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    // Load current BTC price from cache or fresh
+    let currentPrice = 0;
+
+    async function loadCurrentPrice() {
+      currentPrice = await fetchBtcPriceMini();
+      if (currentPrice > 0) {
+        $('re-now-price').textContent = '$' + fmt(currentPrice);
+        updateNavTime();
+      }
+    }
+
+    $('regret-calc-btn').addEventListener('click', async function() {
+      const usdVal = $('regret-usd').value;
+      const dateVal = $('regret-date').value;
+      const errEl = $('regret-error');
+      const resEl = $('regret-result');
+
+      errEl.style.display = 'none';
+      resEl.style.display = 'none';
+
+      const usd = parseFloat(usdVal);
+      if (!usd || usd <= 0) {
+        errEl.textContent = 'Please enter a valid USD amount greater than zero.';
+        errEl.style.display = 'block'; return;
+      }
+      if (!dateVal) {
+        errEl.textContent = 'Please select a date.';
+        errEl.style.display = 'block'; return;
+      }
+
+      // Date validation — Coindesk goes back to July 18, 2010
+      const chosen = new Date(dateVal + 'T12:00:00Z');
+      const earliest = new Date('2010-07-17T12:00:00Z');
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (chosen < earliest) {
+        errEl.textContent = 'Date must be July 18, 2010 or later (earliest available price data).';
+        errEl.style.display = 'block'; return;
+      }
+      if (chosen > yesterday) {
+        errEl.textContent = 'Please pick a date in the past (at least yesterday).';
+        errEl.style.display = 'block'; return;
+      }
+
+      this.textContent = 'Fetching price data...';
+      this.disabled = true;
+
+      try {
+        // Coindesk historical API — proper CORS headers, totally free
+        const [y, m, d] = dateVal.split('-');
+        const formatted = `${y}-${m}-${d}`;
+        const url = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${formatted}&end=${formatted}&currency=USD`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API returned ${res.status}`);
+        const data = await res.json();
+
+        const priceThen = data.bpi[formatted];
+        if (!priceThen) throw new Error('No price data found for that date. Try a nearby date.');
+
+        // Get current price
+        if (!currentPrice || currentPrice === 0) {
+          currentPrice = await fetchBtcPriceMini();
+        }
+        if (!currentPrice) throw new Error('Could not load current BTC price. Refresh the page and try again.');
+
+        // Calculate
+        const btcBought = usd / priceThen;
+        const sats = Math.round(btcBought * 1e8);
+        const valueNow = btcBought * currentPrice;
+        const gain = valueNow - usd;
+        const mult = valueNow / usd;
+        const isGain = gain >= 0;
+
+        const purchaseDate = chosen.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+        // Main display
+        $('regret-price-then').textContent = '$' + priceThen.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        $('regret-btc-then').textContent = btcBought.toFixed(8) + ' BTC';
+        $('regret-value-now').textContent = '$' + valueNow.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        $('regret-value-now').style.color = isGain ? 'var(--green)' : 'var(--red)';
+        $('regret-gain').textContent = (isGain ? '+' : '') + '$' + gain.toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' (' + mult.toFixed(1) + 'x)';
+        $('regret-gain').style.color = isGain ? 'var(--green)' : 'var(--red)';
+
+        // Summary line
+        let summary;
+        if (mult >= 1000) summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. That stack is worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — a ${mult.toFixed(0)}x return. This is why people don't sell. 🚀`;
+        else if (mult >= 100) summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today. A ${mult.toFixed(0)}x return. The regret is real.`;
+        else if (mult >= 10) summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — a ${mult.toFixed(1)}x gain.`;
+        else if (mult >= 2)  summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — a ${mult.toFixed(1)}x gain. Not bad.`;
+        else if (mult >= 1)  summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. You'd be up $${gain.toLocaleString('en-US',{maximumFractionDigits:0})} today. Holding pays.`;
+        else summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — down ${((1-mult)*100).toFixed(1)}%. Time heals all wounds... usually.`;
+        $('regret-summary').textContent = summary;
+
+        // Breakdown
+        $('re-spent').textContent = '$' + usd.toLocaleString('en-US', {maximumFractionDigits:2});
+        $('re-price').textContent = '$' + priceThen.toLocaleString('en-US', {maximumFractionDigits:2});
+        $('re-btc').textContent = btcBought.toFixed(8) + ' BTC';
+        $('re-sats').textContent = sats.toLocaleString() + ' sats';
+        $('re-now-price').textContent = '$' + fmt(Math.round(currentPrice));
+        $('re-value').textContent = '$' + valueNow.toLocaleString('en-US', {maximumFractionDigits:2});
+        $('re-value').style.color = isGain ? 'var(--green)' : 'var(--red)';
+        $('re-gain').textContent = (isGain ? '+' : '') + '$' + gain.toLocaleString('en-US', {maximumFractionDigits:2}) + ' (' + mult.toFixed(2) + 'x)';
+        $('re-gain').style.color = isGain ? 'var(--green)' : 'var(--red)';
+
+        resEl.style.display = 'block';
+
+      } catch(e) {
+        errEl.textContent = 'Error: ' + (e.message || 'Something went wrong. Try again.');
+        errEl.style.display = 'block';
+      } finally {
+        this.textContent = 'Calculate My Regret →';
+        this.disabled = false;
+      }
+    });
+
+    // Allow Enter key on inputs
+    ['regret-usd', 'regret-date'].forEach(id => {
+      $(id).addEventListener('keydown', e => { if (e.key === 'Enter') $('regret-calc-btn').click(); });
+    });
+
+    loadCurrentPrice();
+  </script>
+</body>
+</html>

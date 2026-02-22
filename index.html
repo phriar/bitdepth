@@ -4,118 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   <title>BitDepth — Bitcoin Tools & Live Market Intel</title>
-  <meta name="description" content="Free Bitcoin tools: sat stack calculator, address checker, fee estimator, halving countdown, inflation comparison, and live on-chain data. Built for bitcoiners." />
+  <meta name="description" content="Free Bitcoin tools: sat stack calculator, address checker, fee estimator, halving countdown, inflation comparison, regret calculator, and live on-chain data. Built for bitcoiners." />
   <meta property="og:title" content="BitDepth — Bitcoin Tools & Live Market Intel" />
-  <meta property="og:description" content="Free Bitcoin tools: sat stack calculator, address checker, fee estimator, halving countdown, inflation comparison, and live on-chain data." />
+  <meta property="og:description" content="Free Bitcoin tools built for bitcoiners." />
   <meta property="og:url" content="https://bitdepth.app" />
-  <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="BitDepth — Bitcoin Tools & Live Market Intel" />
-  <meta name="twitter:description" content="Free Bitcoin tools: sat stack calculator, address checker, fee estimator, halving countdown, and live on-chain data. Built for bitcoiners." />
   <meta name="twitter:site" content="@btc_journey" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --bg2: #111111;
-      --bg3: #181818;
-      --border: #222222;
-      --orange: #f7931a;
-      --orange-dim: #c97515;
-      --orange-glow: rgba(247,147,26,0.15);
-      --text: #e8e8e8;
-      --muted: #666666;
-      --green: #00d68f;
-      --red: #ff4d4d;
-      --mono: 'Space Mono', monospace;
-      --display: 'Syne', sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Scanline overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 1000;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 2rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(12px);
-      z-index: 100;
-    }
-
-    .logo {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 1.4rem;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-    .logo span { color: var(--orange); }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--orange); }
-
-    .nav-status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-    .status-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
     /* ─── HERO ─── */
     .hero {
       padding: 5rem 2rem 4rem;
@@ -126,1120 +24,113 @@
       gap: 4rem;
       align-items: center;
     }
+    .hero-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 1.5rem; }
+    h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2.8rem, 5vw, 4.5rem); line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    h1 em { font-style: normal; color: var(--orange); display: block; }
+    .hero-desc { font-size: 0.85rem; line-height: 1.8; color: var(--muted); max-width: 420px; margin-bottom: 2.5rem; }
+    .cta-row { display: flex; gap: 1rem; align-items: center; }
 
-    .hero-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: clamp(2.8rem, 5vw, 4.5rem);
-      line-height: 1.0;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.5rem;
-    }
-    h1 em {
-      font-style: normal;
-      color: var(--orange);
-      display: block;
-    }
-
-    .hero-desc {
-      font-size: 0.85rem;
-      line-height: 1.8;
-      color: var(--muted);
-      max-width: 420px;
-      margin-bottom: 2.5rem;
-    }
-
-    .cta-row {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .btn-primary {
-      background: var(--orange);
-      color: #000;
-      border: none;
-      padding: 0.75rem 1.75rem;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.1s;
-      display: inline-block;
-    }
-    .btn-primary:hover { background: #ffad3b; transform: translateY(-1px); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.75rem 1.75rem;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
-      display: inline-block;
-    }
-    .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
-
-    /* ─── PRICE CARD (hero right) ─── */
+    /* Hero price card */
     .hero-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 2rem;
-      position: relative;
-      animation: fadeUp 0.8s ease both 0.2s;
+      background: var(--bg2); border: 1px solid var(--border); padding: 2rem;
+      position: relative; animation: fadeUp 0.8s ease both 0.2s;
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .hero-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--orange);
-    }
+    .hero-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--orange); }
+    .card-label { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+    .card-price { font-family:var(--display); font-size:2.8rem; font-weight:800; letter-spacing:-0.02em; color:var(--text); margin-bottom:0.25rem; }
+    .card-change { font-size:0.8rem; color:var(--green); margin-bottom:2rem; }
+    .card-change.negative { color:var(--red); }
+    .mini-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+    .mini-stat-label { font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem; }
+    .mini-stat-val { font-size:0.9rem; color:var(--text); }
+    .sparkline { width:100%; height:60px; margin-top:1rem; }
 
-    .card-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-    .card-price {
-      font-family: var(--display);
-      font-size: 2.8rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 0.25rem;
-    }
-    .card-change {
-      font-size: 0.8rem;
-      color: var(--green);
-      margin-bottom: 2rem;
-    }
-    .card-change.negative { color: var(--red); }
-
-    .mini-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .mini-stat { }
-    .mini-stat-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-    .mini-stat-val {
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-
-    /* fake sparkline */
-    .sparkline {
-      width: 100%;
-      height: 60px;
-      margin-top: 1rem;
-    }
-
-    /* ─── TICKER BAR ─── */
-    .ticker-wrap {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--bg2);
-      overflow: hidden;
-      padding: 0.6rem 0;
-    }
-    .ticker {
-      display: flex;
-      gap: 3rem;
-      animation: ticker 25s linear infinite;
-      white-space: nowrap;
-      width: max-content;
-    }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .ticker-item {
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    .ticker-item .t-label { color: var(--muted); }
-    .ticker-item .t-val { color: var(--text); }
-    .ticker-item .t-up { color: var(--green); }
-    .ticker-item .t-down { color: var(--red); }
-
-    /* ─── SECTIONS ─── */
-    section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1rem;
+    /* ─── TOOLS MENU ─── */
+    .tools-section {
+      background: var(--bg3);
+      border-top: 2px solid var(--orange);
       border-bottom: 1px solid var(--border);
     }
-    .section-title {
-      font-family: var(--display);
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .section-tag {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--orange);
-    }
+    .tools-intro { font-size:0.8rem; color:var(--muted); margin-bottom:3rem; max-width:600px; line-height:1.8; }
 
-    /* ─── FEATURE GRID ─── */
-    .feature-grid {
+    .tools-menu {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-    .feature-card {
-      background: var(--bg);
-      padding: 2rem;
-      transition: background 0.2s;
-    }
-    .feature-card:hover { background: var(--bg3); }
-
-    .feature-icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .feature-title {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    .feature-desc {
-      font-size: 0.75rem;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-
-    /* ─── DATA TABLE ─── */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-    }
-    .data-table th {
-      text-align: left;
-      padding: 0.6rem 1rem;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-    }
-    .data-table td {
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
-    }
-    .data-table tr:hover td { background: var(--bg2); }
-    .tag {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border: 1px solid;
-    }
-    .tag-orange { border-color: var(--orange); color: var(--orange); }
-    .tag-green { border-color: var(--green); color: var(--green); }
-    .tag-muted { border-color: var(--border); color: var(--muted); }
-
-    /* ─── SEARCH ─── */
-    .search-wrap {
-      position: relative;
-      margin-bottom: 2rem;
-    }
-    .search-input {
-      width: 100%;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      padding: 1rem 1rem 1rem 3rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .search-input:focus { border-color: var(--orange); }
-    .search-input::placeholder { color: var(--muted); }
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    /* ─── STATS GRID ─── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
       margin-bottom: 3rem;
     }
-    .stat-box {
+    .tool-menu-item {
       background: var(--bg);
-      padding: 1.5rem;
-    }
-    .stat-box-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .stat-box-val {
-      font-family: var(--display);
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-    .stat-box-sub {
-      font-size: 0.68rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-
-    /* ─── TERMINAL BLOCK ─── */
-    .terminal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      font-size: 0.75rem;
-      line-height: 1.9;
+      padding: 1.75rem 2rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.2s;
       position: relative;
+      overflow: hidden;
     }
-    .terminal::before {
-      content: '● ● ●';
-      display: block;
-      color: var(--muted);
-      font-size: 0.6rem;
-      letter-spacing: 0.4em;
-      margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .t-cmd { color: var(--orange); }
-    .t-out { color: var(--muted); }
-    .t-val { color: var(--green); }
-    .t-comment { color: #444; }
-
-    /* ─── REGRET CALCULATOR ─── */
-    .regret-compare {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-    }
-    .regret-col { flex: 1; }
-    .regret-col-label {
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .regret-col-val {
-      font-family: var(--display);
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .regret-col-sub {
-      font-size: 0.68rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.68rem;
-      color: var(--muted);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    footer a { color: var(--orange); text-decoration: none; }
-
-    /* ─── ANIMATIONS ─── */
-    .fade-in {
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards;
-    }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-
-    /* ─── TOOLS LAYOUT ─── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      min-width: 0;
-      width: 100%;
-    }
-    .tool-section { margin-bottom: 1rem; }
-    .tool-note {
-      font-size: 0.65rem;
-      color: var(--muted);
-      margin-top: 0.75rem;
-      line-height: 1.6;
-    }
-
-    /* Fee tool */
-    .fee-btn-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .fee-btn-sub { font-size: 0.62rem; color: var(--muted); }
-    .fee-rate-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-    }
-    .fee-rate-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .fee-rate-row { display: flex; align-items: baseline; gap: 0.5rem; }
-    .fee-rate-num {
-      font-family: var(--display);
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--orange);
-    }
-    .fee-rate-unit { color: var(--muted); font-size: 0.75rem; }
-    .fee-cost-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-    }
-    .fee-cost-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-      text-align: center;
-    }
-    .fee-cost-label { font-size: 0.6rem; color: var(--muted); margin-bottom: 0.25rem; }
-    .fee-cost-val { font-size: 0.72rem; color: var(--text); }
-
-    /* Converter tool */
-    .conv-wrap { position: relative; margin-top: 0.4rem; }
-    .conv-prefix {
+    .tool-menu-item::after {
+      content: '→';
       position: absolute;
-      left: 1rem;
+      right: 1.25rem;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 0.85rem;
-      pointer-events: none;
-    }
-    .conv-rates {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      width: 100%;
-      min-width: 0;
-    }
-    .conv-rate-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      margin-bottom: 0.4rem;
-      gap: 0.5rem;
-      min-width: 0;
-    }
-    .conv-rate-row:last-child { margin-bottom: 0; }
-    .conv-rate-label { color: var(--muted); }
-    .conv-rate-val { color: var(--text); }
-
-    /* Halving tool */
-    .clock-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      width: 100%;
-      min-width: 0;
-    }
-    .halving-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .halving-stat {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-    }
-    .halving-stat-label {
-      font-size: 0.6rem;
-      color: var(--muted);
-      margin-bottom: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-    .halving-stat-val { font-size: 0.72rem; color: var(--text); }
-
-    /* Signal / Cheap tool */
-    .signal-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .signal-ring {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 3px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 1rem auto 1.5rem;
-      flex-shrink: 0;
-      transition: border-color 0.6s, box-shadow 0.6s;
-    }
-    .signal-ring-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.25rem;
-    }
-    .signal-ring-num {
-      font-family: var(--display);
-      font-size: 2.2rem;
-      font-weight: 800;
-      line-height: 1;
-      transition: color 0.6s;
-    }
-    .signal-ring-sub { font-size: 0.62rem; color: var(--muted); margin-top: 0.25rem; }
-    .signal-verdict {
-      font-family: var(--display);
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-    .signal-detail {
-      font-size: 0.72rem;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 280px;
-      margin-bottom: 1.25rem;
-    }
-    .signal-legend {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 2px;
-      width: 100%;
-      font-size: 0.55rem;
-      text-align: center;
-    }
-    .signal-legend-item { padding: 0.4rem 0.2rem; line-height: 1.4; }
-
-    /* Obituaries */
-    .obits-section { margin-top: 3rem; }
-    .obits-title {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    .obits-sub { font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .obits-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-    .obits-source {
-      font-size: 0.65rem;
-      color: var(--muted);
-      margin-top: 0.75rem;
-      text-align: right;
-    }
-    .obit-hidden { display: none; }
-    /* On desktop (3-col grid) show all, hide the button */
-    @media (min-width: 601px) {
-      .obit-hidden { display: block !important; }
-      #obits-show-more { display: none !important; }
-    }
-    /* On mobile show button if there are hidden items */
-    @media (max-width: 600px) {
-      #obits-show-more { display: block !important; }
-    }
-
-    /* ─── FEE ALARM ─── */
-    .alarm-input-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 0.4rem;
-    }
-    .alarm-unit {
-      font-size: 0.75rem;
-      color: var(--muted);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .alarm-current-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 0.75rem 1rem;
-      font-size: 0.72rem;
-      margin-top: 0.5rem;
-    }
-    .alarm-current-val {
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--orange);
-    }
-    .alarm-status {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      margin-top: 0.75rem;
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
-    .alarm-status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    .alarm-triggered {
-      background: rgba(247,147,26,0.08);
-      border: 2px solid var(--orange);
-      padding: 1.5rem;
-      text-align: center;
-      margin-top: 0.75rem;
-      animation: glow 1s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { box-shadow: 0 0 10px rgba(247,147,26,0.2); }
-      to   { box-shadow: 0 0 25px rgba(247,147,26,0.5); }
-    }
-    .alarm-triggered-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .alarm-triggered-title {
-      font-family: var(--display);
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--orange);
-      letter-spacing: 0.05em;
-    }
-    .alarm-triggered-detail { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
-
-    /* ─── SIGNAL DASHBOARD ─── */
-    .bsd-score-wrap {
-      position: relative;
-      width: 200px;
-      margin: 0 auto 1.25rem;
-    }
-    .bsd-arc-svg { width: 100%; display: block; }
-    .bsd-score-inner {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      text-align: center;
-      padding-bottom: 0.5rem;
-    }
-    .bsd-score-num {
-      font-family: var(--display);
-      font-size: 2.8rem;
-      font-weight: 800;
-      line-height: 1;
-      transition: color 0.8s;
-    }
-    .bsd-score-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 0.2rem;
-      transition: color 0.8s;
-    }
-    .bsd-indicators {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      margin-bottom: 1rem;
-    }
-    .bsd-ind {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border);
-      gap: 0.5rem;
-    }
-    .bsd-ind-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      min-width: 0;
-    }
-    .bsd-ind-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: var(--muted);
-      transition: background 0.5s;
-    }
-    .bsd-ind-name { font-size: 0.72rem; color: var(--text); }
-    .bsd-ind-val  { font-size: 0.62rem; color: var(--muted); margin-top: 0.1rem; }
-    .bsd-ind-score {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .bsd-summary {
-      font-size: 0.75rem;
-      color: var(--text);
-      line-height: 1.7;
-      padding: 0.75rem 1rem;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      margin-bottom: 1rem;
-    }
-    .tool-action-btn {
-      width: 100%;
-      background: var(--orange);
-      color: #000;
-      border: none;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 0.85rem;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.2s;
-    }
-    .tool-action-btn:hover { background: #ffad3b; }
-
-    /* DCA / Sat Stack */
-    .dca-result {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-    .dca-result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.75rem;
-      gap: 0.5rem;
-    }
-    .dca-result-row:last-child { border-bottom: none; }
-    .dca-result-label { color: var(--muted); white-space: nowrap; }
-    .dca-result-val { font-family: var(--mono); font-weight: 700; text-align: right; }
-
-    /* Address checker */
-    .addr-input {
-      width: 100%;
-      box-sizing: border-box;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      padding: 0.85rem 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-top: 0.4rem;
-      word-break: break-all;
-    }
-    .addr-input:focus { border-color: var(--orange); }
-    .addr-result-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .addr-stat {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-    }
-    .addr-stat-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
-    }
-    .addr-stat-val {
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      font-weight: 700;
-      word-break: break-all;
-    }
-
-    /* Inflation comparison */
-    .inf-compare {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 1.25rem 0;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-    }
-    .inf-col { flex: 1; text-align: center; min-width: 0; }
-    .inf-col-label { font-size: 0.65rem; color: var(--muted); margin-bottom: 0.5rem; }
-    .inf-col-val {
-      font-family: var(--display);
-      font-size: 1.5rem;
-      font-weight: 800;
-      line-height: 1.1;
-      word-break: break-all;
-    }
-    .inf-col-sub { font-size: 0.6rem; color: var(--muted); margin-top: 0.3rem; }
-    .inf-vs {
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-    .inf-summary {
-      font-size: 0.75rem;
-      color: var(--text);
-      line-height: 1.7;
-      padding: 0.75rem;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      margin-bottom: 1rem;
-      min-height: 2rem;
-    }
-    @media (max-width: 600px) {
-      .inf-col-val { font-size: 1.2rem; }
-      .addr-result-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 900px) {
-      .tools-grid { grid-template-columns: 1fr; }
-      .obits-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 600px) {
-      .tools-grid { grid-template-columns: 1fr; }
-      .obits-grid { grid-template-columns: 1fr; }
-      .fee-rate-num { font-size: 1.8rem; }
-      .signal-ring { width: 130px; height: 130px; }
-      .signal-ring-num { font-size: 1.8rem; }
-      .signal-verdict { font-size: 1.1rem; }
-      .signal-legend { grid-template-columns: repeat(5, 1fr); font-size: 0.5rem; }
-      .tool-card { padding: 1.25rem; }
-      .conv-input { font-size: 0.9rem; padding: 0.65rem 0.65rem 0.65rem 2rem; }
-      .conv-prefix { font-size: 0.75rem; left: 0.65rem; }
-      .fee-cost-grid { gap: 0.35rem; }
-      .fee-cost-box { padding: 0.5rem; }
-      .halving-stats { gap: 0.35rem; }
-      .halving-stat { padding: 0.5rem; }
-    }
-    .tool-card {
-      background: var(--bg);
-      border: 1px solid var(--orange);
-      padding: 2rem;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      overflow: hidden;
-      min-width: 0;
-    }
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at top left, rgba(247,147,26,0.04) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .tool-badge {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--orange);
-      font-family: var(--mono);
-    }
-    .tool-title {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 1.2rem;
-      letter-spacing: -0.01em;
-    }
-    .tool-desc {
-      font-size: 0.75rem;
-      color: var(--muted);
-      line-height: 1.7;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .tool-body { flex: 1; }
-    .tool-label {
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .fee-btn {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      padding: 0.6rem 0.5rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      line-height: 1.4;
-      text-align: center;
-    }
-    .fee-btn:hover { border-color: var(--orange); color: var(--text); }
-    .fee-btn.active { border-color: var(--orange); color: var(--orange); background: rgba(247,147,26,0.08); }
-    .conv-input {
-      width: 100%;
-      box-sizing: border-box;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--mono);
+      color: var(--border);
       font-size: 1rem;
-      padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-      outline: none;
-      transition: border-color 0.2s;
-      -moz-appearance: textfield;
-      min-width: 0;
+      transition: color 0.2s, right 0.2s;
     }
-    .conv-input::-webkit-outer-spin-button,
-    .conv-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-    .conv-input:focus { border-color: var(--orange); }
-    .clock-unit {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      padding: 1rem 0.25rem;
-      text-align: center;
-      min-width: 0;
-    }
-    .clock-val {
-      font-family: var(--display);
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--orange);
-      line-height: 1;
-    }
-    @media (max-width: 600px) {
-      .clock-val { font-size: 1.3rem; }
-      .clock-unit { padding: 0.75rem 0.25rem; }
-      .clock-label { font-size: 0.5rem; letter-spacing: 0.08em; }
-    }
-    @media (max-width: 380px) {
-      .clock-val { font-size: 1.1rem; }
-    }
-    .clock-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-top: 0.3rem;
-    }
-    .obit-card {
-      background: var(--bg);
-      padding: 1.25rem;
-    }
-    .obit-year {
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--orange);
-      margin-bottom: 0.4rem;
-    }
-    .obit-headline {
-      font-size: 0.75rem;
-      color: var(--text);
-      line-height: 1.5;
-      margin-bottom: 0.4rem;
-    }
-    .obit-source {
-      font-size: 0.62rem;
-      color: var(--muted);
-    }
+    .tool-menu-item:hover { background: var(--bg3); }
+    .tool-menu-item:hover::after { color: var(--orange); right: 1rem; }
+    .tool-menu-item:hover .tmi-num { color: var(--orange); }
+    .tmi-num { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); transition: color 0.2s; }
+    .tmi-icon { font-size: 1.4rem; margin: 0.25rem 0; }
+    .tmi-name { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--text); letter-spacing: -0.01em; }
+    .tmi-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.5; max-width: 220px; }
 
-    /* Prevent any element from causing horizontal scroll */
-    *, *::before, *::after { box-sizing: border-box; }
-    * { max-width: 100%; }
-
-    /* Tables scroll horizontally on small screens instead of breaking layout */
-    .data-table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+    /* ─── MARKET DATA ─── */
+    .search-wrap { position: relative; margin-bottom: 2rem; }
+    .search-input {
+      width: 100%; background: var(--bg2); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--mono); font-size: 0.85rem;
+      padding: 1rem 1rem 1rem 3rem; outline: none; transition: border-color 0.2s;
     }
+    .search-input:focus { border-color: var(--orange); }
+    .search-input::placeholder { color: var(--muted); }
+    .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 1rem; }
+
+    /* Feature grid (learn section) */
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .feature-card { background: var(--bg); padding: 2rem; transition: background 0.2s; }
+    .feature-card:hover { background: var(--bg3); }
+    .feature-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+    .feature-title { font-family: var(--display); font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+    .feature-desc { font-size: 0.75rem; line-height: 1.7; color: var(--muted); }
 
     @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-        padding: 3rem 1.5rem 2.5rem;
-      }
+      .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 1.5rem 2.5rem; }
+      .tools-menu { grid-template-columns: 1fr 1fr; }
       .feature-grid { grid-template-columns: 1fr 1fr; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      section { padding: 3rem 1.5rem; }
     }
-
     @media (max-width: 600px) {
-      /* Nav */
-      .nav-links { display: none; }
-      nav { padding: 1rem 1.25rem; }
-      .nav-status { font-size: 0.6rem; }
-
-      /* Hero */
       .hero { padding: 2.5rem 1.25rem 2rem; gap: 2rem; }
       h1 { font-size: 2.8rem; }
       .hero-desc { font-size: 0.8rem; }
       .cta-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
       .btn-primary, .btn-ghost { width: 100%; text-align: center; }
-
-      /* Hero card */
       .hero-card { padding: 1.25rem; }
       .card-price { font-size: 2rem; }
-      .mini-stats { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-
-      /* Sections */
-      section { padding: 2.5rem 1.25rem; }
-      .section-title { font-size: 1.2rem; }
-
-      /* Stat boxes — 2 col on mobile */
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .stat-box { padding: 1rem; }
-      .stat-box-val { font-size: 1.2rem; }
-      .stat-box-sub { font-size: 0.6rem; }
-
-      /* Feature grid — 1 col on mobile */
+      .tools-menu { grid-template-columns: 1fr; }
       .feature-grid { grid-template-columns: 1fr; }
-
-      /* Terminal — prevent overflow */
-      .terminal {
-        padding: 1rem;
-        font-size: 0.65rem;
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-
-      /* Tables — horizontal scroll */
-      .data-table {
-        font-size: 0.7rem;
-        min-width: 480px;
-      }
-      .data-table th, .data-table td {
-        padding: 0.6rem 0.75rem;
-      }
-
-      /* Ticker */
-      .ticker-item { font-size: 0.65rem; }
-
-      /* Footer */
-      footer {
-        flex-direction: column;
-        gap: 0.75rem;
-        text-align: center;
-        padding: 1.5rem 1.25rem;
-      }
-
-      /* Macro signal bar */
-      #mayer-indicator { width: 2px; }
-    }
-
-    @media (max-width: 380px) {
-      h1 { font-size: 2.2rem; }
-      .stat-box-val { font-size: 1rem; }
-      .card-price { font-size: 1.7rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
-    <div class="logo">Bit<span>Depth</span></div>
+    <a class="logo" href="index.html">Bit<span>Depth</span></a>
     <ul class="nav-links">
       <li><a href="#tools" style="color:var(--orange)">⚙ Tools</a></li>
       <li><a href="#markets">Markets</a></li>
@@ -1256,10 +147,8 @@
     </div>
   </nav>
 
-  <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker">
-      <!-- Duplicated for seamless loop — JS will update both sets -->
       <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val" id="tick-price">—</span><span id="tick-change-1" class="t-up">—</span></span>
       <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val" id="tick-hashrate">—</span></span>
       <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val" id="tick-difficulty">—</span></span>
@@ -1268,7 +157,6 @@
       <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val" id="tick-supply">—</span></span>
       <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val" id="tick-mcap">—</span><span id="tick-change-2" class="t-up">—</span></span>
       <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val" id="tick-fees">—</span></span>
-      <!-- Duplicate set -->
       <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val" id="tick-price-2">—</span><span id="tick-change-3" class="t-up">—</span></span>
       <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val" id="tick-hashrate-2">—</span></span>
       <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val" id="tick-difficulty-2">—</span></span>
@@ -1287,8 +175,8 @@
       <h1>Go<br/>deeper<br/><em>than the chart.</em></h1>
       <p class="hero-desc">BitDepth aggregates on-chain data, market structure, mining metrics, and network fundamentals into one terminal-grade research environment. Built for people who want to actually understand Bitcoin.</p>
       <div class="cta-row">
-        <a href="#markets" class="btn-primary">Explore Data</a>
-        <a href="#learn" class="btn-ghost">Learn Bitcoin</a>
+        <a href="#tools" class="btn-primary">Explore Tools</a>
+        <a href="#bitcoin-101" class="btn-ghost">Learn Bitcoin</a>
       </div>
     </div>
     <div class="hero-card fade-in delay-2">
@@ -1296,31 +184,13 @@
       <div class="card-price" id="hero-price">—</div>
       <div class="card-change" id="hero-change">loading...</div>
       <div class="mini-stats">
-        <div class="mini-stat">
-          <div class="mini-stat-label">24h High</div>
-          <div class="mini-stat-val" id="hero-high">—</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-label">24h Low</div>
-          <div class="mini-stat-val" id="hero-low">—</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-label">Volume</div>
-          <div class="mini-stat-val" id="hero-vol">—</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-label">Dominance</div>
-          <div class="mini-stat-val" id="hero-dom">—</div>
-        </div>
+        <div class="mini-stat"><div class="mini-stat-label">24h High</div><div class="mini-stat-val" id="hero-high">—</div></div>
+        <div class="mini-stat"><div class="mini-stat-label">24h Low</div><div class="mini-stat-val" id="hero-low">—</div></div>
+        <div class="mini-stat"><div class="mini-stat-label">Volume</div><div class="mini-stat-val" id="hero-vol">—</div></div>
+        <div class="mini-stat"><div class="mini-stat-label">Dominance</div><div class="mini-stat-val" id="hero-dom">—</div></div>
       </div>
-      <!-- Live SVG Sparkline — populated by CoinGecko 7d OHLC -->
       <svg id="sparkline-svg" class="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#f7931a" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#f7931a" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
+        <defs><linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7931a" stop-opacity="0.3"/><stop offset="100%" stop-color="#f7931a" stop-opacity="0"/></linearGradient></defs>
         <polyline id="spark-line" points="" fill="none" stroke="#f7931a" stroke-width="1.5"/>
         <polygon id="spark-fill" points="" fill="url(#sparkGrad)"/>
       </svg>
@@ -1328,447 +198,79 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       BITDEPTH TOOLS — interactive utilities
-  ════════════════════════════════════════════════════════════════ -->
-  <div id="tools" style="background:var(--bg3);border-top:2px solid var(--orange);border-bottom:1px solid var(--border)">
+  <!-- TOOLS MENU -->
+  <div id="tools" class="tools-section">
     <section>
       <div class="section-header" style="border-bottom-color:var(--orange)">
         <div class="section-title" style="color:var(--orange)">BitDepth Tools</div>
         <div class="section-tag" style="color:var(--muted)">// interactive utilities — built different</div>
       </div>
-      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:3rem;max-width:600px;line-height:1.8">These tools don't exist on CoinGecko or Mempool.space. Use them to make smarter decisions with live Bitcoin data.</p>
+      <p class="tools-intro">These tools don't exist on CoinGecko or Mempool.space. Use them to make smarter decisions with live Bitcoin data.</p>
 
-      <div class="tools-grid" id="tools-grid">
-
-        <!-- ── TOOL 5: Sat Stack Calculator ── -->
-        <div class="tool-card" id="tool-satstack">
-          <div class="tool-badge">TOOL 01</div>
-          <div class="tool-title">📈 Sat Stack Calculator</div>
-          <div class="tool-desc">How many sats would you have stacked with regular DCA? Enter your monthly buy and see how your stack grows.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Monthly investment (USD)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">$</span>
-                <input id="dca-amount" class="conv-input" type="number" placeholder="100" min="1" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Duration</div>
-              <div class="fee-btn-grid">
-                <button class="fee-btn active" data-dca="1">1 Year</button>
-                <button class="fee-btn" data-dca="2">2 Years</button>
-                <button class="fee-btn" data-dca="4">4 Years</button>
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Assumed avg BTC price</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">$</span>
-                <input id="dca-price" class="conv-input" type="number" placeholder="95000" min="1" inputmode="decimal" />
-              </div>
-              <div class="tool-note" style="margin-top:0.4rem">Uses today's price by default. Adjust to model different scenarios.</div>
-            </div>
-            <div class="dca-result" id="dca-result" style="display:none">
-              <div class="dca-result-row">
-                <span class="dca-result-label">Total invested</span>
-                <span id="dca-total-invested" class="dca-result-val">—</span>
-              </div>
-              <div class="dca-result-row">
-                <span class="dca-result-label">Sats accumulated</span>
-                <span id="dca-total-sats" class="dca-result-val" style="color:var(--orange)">—</span>
-              </div>
-              <div class="dca-result-row">
-                <span class="dca-result-label">BTC accumulated</span>
-                <span id="dca-total-btc" class="dca-result-val" style="color:var(--green)">—</span>
-              </div>
-              <div class="dca-result-row">
-                <span class="dca-result-label">Current value</span>
-                <span id="dca-current-val" class="dca-result-val">—</span>
-              </div>
-              <div class="dca-result-row">
-                <span class="dca-result-label">Sats per $1/day</span>
-                <span id="dca-per-day" class="dca-result-val" style="color:var(--muted)">—</span>
-              </div>
-            </div>
-            <button id="dca-calc-btn" class="tool-action-btn">Calculate Stack →</button>
-          </div>
-        </div>
-
-        <!-- ── TOOL 6: Address Balance Checker ── -->
-        <div class="tool-card" id="tool-address">
-          <div class="tool-badge">TOOL 02</div>
-          <div class="tool-title">🔍 Address Checker</div>
-          <div class="tool-desc">Paste any Bitcoin address to see its balance, transaction count, and total received. No login. No tracking.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Bitcoin address</div>
-              <input id="addr-input" class="addr-input" type="text" placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf..." spellcheck="false" autocomplete="off" />
-            </div>
-            <button id="addr-check-btn" class="tool-action-btn">Check Address →</button>
-            <div id="addr-result" style="display:none">
-              <div class="addr-result-grid">
-                <div class="addr-stat">
-                  <div class="addr-stat-label">CONFIRMED BALANCE</div>
-                  <div id="addr-balance" class="addr-stat-val" style="color:var(--orange)">—</div>
-                </div>
-                <div class="addr-stat">
-                  <div class="addr-stat-label">UNCONFIRMED</div>
-                  <div id="addr-unconfirmed" class="addr-stat-val">—</div>
-                </div>
-                <div class="addr-stat">
-                  <div class="addr-stat-label">TOTAL RECEIVED</div>
-                  <div id="addr-received" class="addr-stat-val">—</div>
-                </div>
-                <div class="addr-stat">
-                  <div class="addr-stat-label">TRANSACTIONS</div>
-                  <div id="addr-txcount" class="addr-stat-val">—</div>
-                </div>
-              </div>
-              <div id="addr-usd-val" class="tool-note" style="margin-top:0.75rem;text-align:center"></div>
-              <a id="addr-mempool-link" href="#" target="_blank" rel="noopener"
-                 style="display:block;margin-top:0.75rem;text-align:center;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em;text-decoration:none">
-                VIEW ON MEMPOOL.SPACE →
-              </a>
-            </div>
-            <div id="addr-error" class="tool-note" style="display:none;color:var(--red)"></div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 7: Bitcoin vs Inflation ── -->
-        <div class="tool-card" id="tool-inflation">
-          <div class="tool-badge">TOOL 03</div>
-          <div class="tool-title">💸 Bitcoin vs Inflation</div>
-          <div class="tool-desc">What would $100 be worth today if you'd bought Bitcoin instead of holding dollars? Pick a year and find out.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">You had $100 in...</div>
-              <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr)">
-                <button class="fee-btn" data-inf-year="2015">2015</button>
-                <button class="fee-btn" data-inf-year="2017">2017</button>
-                <button class="fee-btn active" data-inf-year="2020">2020</button>
-              </div>
-              <div class="fee-btn-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0.5rem">
-                <button class="fee-btn" data-inf-year="2021">2021</button>
-                <button class="fee-btn" data-inf-year="2022">2022</button>
-                <button class="fee-btn" data-inf-year="2023">2023</button>
-              </div>
-            </div>
-            <div class="inf-compare">
-              <div class="inf-col">
-                <div class="inf-col-label">💵 Held as USD</div>
-                <div id="inf-usd-val" class="inf-col-val" style="color:var(--red)">—</div>
-                <div id="inf-usd-sub" class="inf-col-sub">purchasing power today</div>
-              </div>
-              <div class="inf-vs">VS</div>
-              <div class="inf-col">
-                <div class="inf-col-label">₿ Bought Bitcoin</div>
-                <div id="inf-btc-val" class="inf-col-val" style="color:var(--green)">—</div>
-                <div id="inf-btc-sub" class="inf-col-sub">value at today's price</div>
-              </div>
-            </div>
-            <div id="inf-summary" class="inf-summary"></div>
-            <div class="tool-note">BTC prices are historical yearly averages. Inflation uses US CPI data. Not financial advice.</div>
-          </div>
-        </div>
-        <!-- ── TOOL 1: Fee Estimator ── -->
-        <div class="tool-card" id="tool-fee">
-          <div class="tool-badge">TOOL 04</div>
-          <div class="tool-title">⛽ Fee Estimator</div>
-          <div class="tool-desc">How long will your transaction take? Pick your urgency and get the exact fee rate to use right now.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Target confirmation time</div>
-              <div class="fee-btn-grid">
-                <button class="fee-btn active" data-target="next">Next Block<br/><span class="fee-btn-sub">~10 min</span></button>
-                <button class="fee-btn" data-target="30min">3 Blocks<br/><span class="fee-btn-sub">~30 min</span></button>
-                <button class="fee-btn" data-target="hour">6 Blocks<br/><span class="fee-btn-sub">~1 hour</span></button>
-              </div>
-            </div>
-            <div class="fee-rate-box">
-              <div class="fee-rate-label">Recommended Fee Rate</div>
-              <div class="fee-rate-row">
-                <span id="fee-rate-val" class="fee-rate-num">—</span>
-                <span class="fee-rate-unit">sat/vByte</span>
-              </div>
-            </div>
-            <div class="fee-cost-grid">
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">SIMPLE TX</div>
-                <div id="fee-cost-simple" class="fee-cost-val">—</div>
-              </div>
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">SEGWIT TX</div>
-                <div id="fee-cost-segwit" class="fee-cost-val">—</div>
-              </div>
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">BATCH TX</div>
-                <div id="fee-cost-batch" class="fee-cost-val">—</div>
-              </div>
-            </div>
-            <div class="tool-note" id="fee-mempool-note">Fetching mempool data...</div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 2: Sats Converter ── -->
-        <div class="tool-card" id="tool-sats">
-          <div class="tool-badge">TOOL 05</div>
-          <div class="tool-title">🔄 Sats Converter</div>
-          <div class="tool-desc">Instantly convert between USD, BTC, and satoshis. Type in any field to update the others.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">US Dollars (USD)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">$</span>
-                <input id="conv-usd" class="conv-input" type="number" placeholder="0.00" step="any" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Bitcoin (BTC)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix" style="color:var(--orange)">₿</span>
-                <input id="conv-btc" class="conv-input" type="number" placeholder="0.00000000" step="any" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Satoshis (sats)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">⚡</span>
-                <input id="conv-sats" class="conv-input" type="number" placeholder="0" step="1" inputmode="numeric" />
-              </div>
-            </div>
-            <div class="conv-rates">
-              <div class="conv-rate-row"><span class="conv-rate-label">1 BTC =</span><span id="conv-rate-btc" class="conv-rate-val">—</span></div>
-              <div class="conv-rate-row"><span class="conv-rate-label">1 sat =</span><span id="conv-rate-sat" class="conv-rate-val">—</span></div>
-              <div class="conv-rate-row"><span class="conv-rate-label">$1 USD =</span><span id="conv-rate-usd" class="conv-rate-val">—</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 3: Halving Countdown ── -->
-        <div class="tool-card" id="tool-halving">
-          <div class="tool-badge">TOOL 06</div>
-          <div class="tool-title">📉 Halving Countdown</div>
-          <div class="tool-desc">Bitcoin's next supply shock, live to the second. Each halving cuts the block reward in half — permanently.</div>
-          <div class="tool-body">
-            <div class="clock-grid">
-              <div class="clock-unit"><div class="clock-val" id="hc-days">—</div><div class="clock-label">DAYS</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-hours">—</div><div class="clock-label">HRS</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-mins">—</div><div class="clock-label">MIN</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-secs">—</div><div class="clock-label">SEC</div></div>
-            </div>
-            <div class="halving-stats">
-              <div class="halving-stat">
-                <div class="halving-stat-label">CURRENT HEIGHT</div>
-                <div id="hc-current-block" class="halving-stat-val">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">HALVING BLOCK</div>
-                <div id="hc-target-block" class="halving-stat-val" style="color:var(--orange)">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">BLOCKS LEFT</div>
-                <div id="hc-blocks-left" class="halving-stat-val">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">NEXT REWARD</div>
-                <div class="halving-stat-val" style="color:var(--green)">1.5625 BTC</div>
-              </div>
-            </div>
-            <div class="tool-note" style="border-top:1px solid var(--border);padding-top:0.75rem">
-              Past halvings: <span style="color:var(--text)">Nov 2012</span> → <span style="color:var(--text)">Jul 2016</span> → <span style="color:var(--text)">May 2020</span> → <span style="color:var(--text)">Apr 2024</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 4: Is Bitcoin Cheap? ── -->
-        <div class="tool-card" id="tool-signal">
-          <div class="tool-badge">TOOL 07</div>
-          <div class="tool-title">🎯 Is Bitcoin Cheap?</div>
-          <div class="tool-desc">One signal. No noise. Based on the Mayer Multiple — price divided by 200-day moving average.</div>
-          <div class="tool-body signal-body">
-            <div class="signal-ring" id="signal-ring">
-              <div class="signal-ring-label">MAYER MULTIPLE</div>
-              <div id="signal-mayer-num" class="signal-ring-num">—</div>
-              <div class="signal-ring-sub">vs 200d MA</div>
-            </div>
-            <div id="signal-verdict" class="signal-verdict">Loading...</div>
-            <div id="signal-detail" class="signal-detail">Fetching data...</div>
-            <div class="signal-legend">
-              <div class="signal-legend-item" style="background:#1a2a4a;color:#3b82f6">EXTREME LOW<br/>&lt;0.5</div>
-              <div class="signal-legend-item" style="background:#0a2a1a;color:#00d68f">BUY ZONE<br/>0.5–1.0</div>
-              <div class="signal-legend-item" style="background:#2a2010;color:#f7931a">FAIR VALUE<br/>1.0–1.5</div>
-              <div class="signal-legend-item" style="background:#2a1a00;color:#ff8c00">ELEVATED<br/>1.5–2.4</div>
-              <div class="signal-legend-item" style="background:#2a0a0a;color:#ff4d4d">TOP ZONE<br/>&gt;2.4</div>
-            </div>
-            <div class="tool-note">Not financial advice. Historical signal only.</div>
-          </div>
-        </div>
-
-
-        <!-- ── TOOL 8: Fee Alarm ── -->
-        <div class="tool-card" id="tool-fee-alarm">
-          <div class="tool-badge">TOOL 08</div>
-          <div class="tool-title">🔔 Fee Alarm</div>
-          <div class="tool-desc">Set a target fee rate. This page will alert you the moment mempool fees drop below it — so you never overpay again.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Alert me when fees drop below</div>
-              <div class="alarm-input-row">
-                <input id="alarm-target" class="conv-input" type="number" value="10" min="1" max="500" inputmode="numeric" style="flex:1" />
-                <span class="alarm-unit">sat/vB</span>
-              </div>
-            </div>
-
-            <div class="alarm-current-row">
-              <span class="tool-label">Current fastest fee:</span>
-              <span id="alarm-current-fee" class="alarm-current-val">— sat/vB</span>
-            </div>
-
-            <button id="alarm-toggle-btn" class="tool-action-btn">🔔 Start Watching</button>
-
-            <div id="alarm-status" class="alarm-status" style="display:none">
-              <div class="alarm-status-dot" id="alarm-dot"></div>
-              <span id="alarm-status-text">Watching...</span>
-            </div>
-
-            <div id="alarm-triggered" class="alarm-triggered" style="display:none">
-              <div class="alarm-triggered-icon">🔔</div>
-              <div class="alarm-triggered-title">FEES ARE LOW!</div>
-              <div id="alarm-triggered-detail" class="alarm-triggered-detail"></div>
-              <button class="tool-action-btn" onclick="resetAlarm()" style="margin-top:0.75rem;background:var(--bg2);color:var(--orange);border:1px solid var(--orange)">Reset Alarm</button>
-            </div>
-
-            <div class="tool-note" style="margin-top:0.75rem">Keep this tab open. Checks every 30 seconds. Sound plays when target is reached.</div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 9: Bitcoin Signal Dashboard ── -->
-        <div class="tool-card" id="tool-signal-dash">
-          <div class="tool-badge">TOOL 09</div>
-          <div class="tool-title">📡 Bitcoin Signal</div>
-          <div class="tool-desc">Four on-chain indicators combined into one score. Green means accumulate. Red means caution. Updated live.</div>
-          <div class="tool-body">
-
-            <!-- Big score display -->
-            <div class="bsd-score-wrap">
-              <svg class="bsd-arc-svg" viewBox="0 0 200 110">
-                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
-                <path id="bsd-arc-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f7931a" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 251"/>
-              </svg>
-              <div class="bsd-score-inner">
-                <div class="bsd-score-num" id="bsd-score">—</div>
-                <div class="bsd-score-label" id="bsd-score-label">Loading</div>
-              </div>
-            </div>
-
-            <!-- Four indicator rows -->
-            <div class="bsd-indicators">
-              <div class="bsd-ind">
-                <div class="bsd-ind-left">
-                  <div class="bsd-ind-dot" id="bsd-dot-mayer"></div>
-                  <div>
-                    <div class="bsd-ind-name">Mayer Multiple</div>
-                    <div class="bsd-ind-val" id="bsd-val-mayer">—</div>
-                  </div>
-                </div>
-                <div class="bsd-ind-score" id="bsd-score-mayer">—</div>
-              </div>
-              <div class="bsd-ind">
-                <div class="bsd-ind-left">
-                  <div class="bsd-ind-dot" id="bsd-dot-mempool"></div>
-                  <div>
-                    <div class="bsd-ind-name">Mempool Health</div>
-                    <div class="bsd-ind-val" id="bsd-val-mempool">—</div>
-                  </div>
-                </div>
-                <div class="bsd-ind-score" id="bsd-score-mempool">—</div>
-              </div>
-              <div class="bsd-ind">
-                <div class="bsd-ind-left">
-                  <div class="bsd-ind-dot" id="bsd-dot-hashrate"></div>
-                  <div>
-                    <div class="bsd-ind-name">Hashrate Trend</div>
-                    <div class="bsd-ind-val" id="bsd-val-hashrate">—</div>
-                  </div>
-                </div>
-                <div class="bsd-ind-score" id="bsd-score-hashrate">—</div>
-              </div>
-              <div class="bsd-ind" style="border:none">
-                <div class="bsd-ind-left">
-                  <div class="bsd-ind-dot" id="bsd-dot-dominance"></div>
-                  <div>
-                    <div class="bsd-ind-name">BTC Dominance</div>
-                    <div class="bsd-ind-val" id="bsd-val-dominance">—</div>
-                  </div>
-                </div>
-                <div class="bsd-ind-score" id="bsd-score-dominance">—</div>
-              </div>
-            </div>
-
-            <div id="bsd-summary" class="bsd-summary">Calculating signal...</div>
-            <div class="tool-note">Score 0–100. Each indicator scored independently and averaged. Not financial advice.</div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 10: BTC Regret Calculator ── -->
-        <div class="tool-card" id="tool-regret">
-          <div class="tool-badge">TOOL 10</div>
-          <div class="tool-title">😢 BTC Regret Calculator</div>
-          <div class="tool-desc">Enter how much you spent — and when. See what it was worth then, and what it would be worth today.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Amount Spent (USD)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">$</span>
-                <input id="regret-usd" class="conv-input" type="number" placeholder="100" min="0" step="any" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Date of Purchase</div>
-              <input id="regret-date" class="conv-input" type="date" style="padding-left:1rem" />
-            </div>
-            <button id="regret-calc-btn" class="tool-action-btn" style="margin-top:0.5rem">Calculate My Regret →</button>
-
-            <div id="regret-result" style="display:none;margin-top:1.25rem">
-              <div class="regret-compare">
-                <div class="regret-col">
-                  <div class="regret-col-label">📅 BTC Price Then</div>
-                  <div id="regret-price-then" class="regret-col-val" style="color:var(--text)">—</div>
-                  <div id="regret-btc-then" class="regret-col-sub">— BTC</div>
-                </div>
-                <div class="inf-vs">→</div>
-                <div class="regret-col">
-                  <div class="regret-col-label">💰 Value Today</div>
-                  <div id="regret-value-now" class="regret-col-val" style="color:var(--green)">—</div>
-                  <div id="regret-gain" class="regret-col-sub" style="color:var(--green)">—</div>
-                </div>
-              </div>
-              <div id="regret-summary" class="inf-summary" style="margin-top:1rem"></div>
-            </div>
-
-            <div id="regret-error" class="tool-note" style="display:none;color:var(--red);margin-top:0.75rem"></div>
-            <div class="tool-note" style="margin-top:0.75rem">Uses CoinGecko historical price data. Not financial advice.</div>
-          </div>
-        </div>
-
-      </div><!-- /tools-grid -->
-
-      <!-- Bitcoin Obituaries -->
-      <div class="obits-section">
-        <div class="obits-title">💀 Bitcoin Obituaries</div>
-        <div class="obits-sub">Every time the media declared Bitcoin dead. It's still here.</div>
-        <div class="obits-grid" id="obits-grid"></div>
-        <div class="obits-source">
-          Source: <a href="https://99bitcoins.com/bitcoin-obituaries/" target="_blank" rel="noopener" style="color:var(--orange)">99Bitcoins.com</a>
-        </div>
+      <div class="tools-menu">
+        <a class="tool-menu-item" href="tool-satstack.html">
+          <div class="tmi-num">Tool 01</div>
+          <div class="tmi-icon">📈</div>
+          <div class="tmi-name">Sat Stack Calculator</div>
+          <div class="tmi-desc">How many sats would you have stacked with regular DCA?</div>
+        </a>
+        <a class="tool-menu-item" href="tool-address.html">
+          <div class="tmi-num">Tool 02</div>
+          <div class="tmi-icon">🔍</div>
+          <div class="tmi-name">Address Checker</div>
+          <div class="tmi-desc">Check any Bitcoin address balance and transaction history.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-inflation.html">
+          <div class="tmi-num">Tool 03</div>
+          <div class="tmi-icon">💸</div>
+          <div class="tmi-name">Bitcoin vs Inflation</div>
+          <div class="tmi-desc">What would $100 be worth today if you'd bought Bitcoin instead?</div>
+        </a>
+        <a class="tool-menu-item" href="tool-fee.html">
+          <div class="tmi-num">Tool 04</div>
+          <div class="tmi-icon">⛽</div>
+          <div class="tmi-name">Fee Estimator</div>
+          <div class="tmi-desc">Live mempool fee rates. Pick urgency, get exact sat/vByte.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-converter.html">
+          <div class="tmi-num">Tool 05</div>
+          <div class="tmi-icon">🔄</div>
+          <div class="tmi-name">Sats Converter</div>
+          <div class="tmi-desc">Instantly convert between USD, BTC, and satoshis.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-halving.html">
+          <div class="tmi-num">Tool 06</div>
+          <div class="tmi-icon">📉</div>
+          <div class="tmi-name">Halving Countdown</div>
+          <div class="tmi-desc">Bitcoin's next supply shock, live to the second.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-cheap.html">
+          <div class="tmi-num">Tool 07</div>
+          <div class="tmi-icon">🎯</div>
+          <div class="tmi-name">Is Bitcoin Cheap?</div>
+          <div class="tmi-desc">One signal. No noise. Based on the Mayer Multiple.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-alarm.html">
+          <div class="tmi-num">Tool 08</div>
+          <div class="tmi-icon">🔔</div>
+          <div class="tmi-name">Fee Alarm</div>
+          <div class="tmi-desc">Get alerted the moment mempool fees drop to your target.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-signal.html">
+          <div class="tmi-num">Tool 09</div>
+          <div class="tmi-icon">📡</div>
+          <div class="tmi-name">Bitcoin Signal</div>
+          <div class="tmi-desc">Four on-chain indicators into one score. Updated live.</div>
+        </a>
+        <a class="tool-menu-item" href="tool-regret.html">
+          <div class="tmi-num">Tool 10</div>
+          <div class="tmi-icon">😢</div>
+          <div class="tmi-name">Regret Calculator</div>
+          <div class="tmi-desc">What would your spend be worth in Bitcoin today?</div>
+        </a>
       </div>
-
     </section>
   </div>
-
-
 
   <!-- MARKETS SECTION -->
   <div id="markets">
@@ -1777,1652 +279,349 @@
         <div class="section-title">Market Overview</div>
         <div class="section-tag">// real-time</div>
       </div>
-
       <div class="stats-grid fade-in">
-        <div class="stat-box">
-          <div class="stat-box-label">Market Cap</div>
-          <div class="stat-box-val" id="mkt-cap">—</div>
-          <div class="stat-box-sub" id="mkt-cap-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">24h Volume</div>
-          <div class="stat-box-val" id="mkt-vol">—</div>
-          <div class="stat-box-sub">across all exchanges</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Sats per Dollar</div>
-          <div class="stat-box-val" id="mkt-sats">—</div>
-          <div class="stat-box-sub">sats per $1 USD</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">ATH Distance</div>
-          <div class="stat-box-val" id="mkt-ath">—</div>
-          <div class="stat-box-sub" id="mkt-ath-sub">from ATH</div>
-        </div>
+        <div class="stat-box"><div class="stat-box-label">Market Cap</div><div class="stat-box-val" id="mkt-cap">—</div><div class="stat-box-sub" id="mkt-cap-sub">loading...</div></div>
+        <div class="stat-box"><div class="stat-box-label">24h Volume</div><div class="stat-box-val" id="mkt-vol">—</div><div class="stat-box-sub">across all exchanges</div></div>
+        <div class="stat-box"><div class="stat-box-label">Sats per Dollar</div><div class="stat-box-val" id="mkt-sats">—</div><div class="stat-box-sub">sats per $1 USD</div></div>
+        <div class="stat-box"><div class="stat-box-label">ATH Distance</div><div class="stat-box-val" id="mkt-ath">—</div><div class="stat-box-sub" id="mkt-ath-sub">from ATH</div></div>
       </div>
-
       <div class="search-wrap">
         <span class="search-icon">⌕</span>
         <input class="search-input" id="explorer-search" type="text" placeholder="Search address, transaction ID, or block height..." />
       </div>
-
       <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Exchange</th>
-            <th>BTC/USD</th>
-            <th>24h Change</th>
-            <th>Volume</th>
-            <th>Spread</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="exchange-table-body">
-          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr>
-        </tbody>
-      </table>
+        <table class="data-table">
+          <thead><tr><th>Exchange</th><th>BTC/USD</th><th>24h Change</th><th>Volume</th><th>Spread</th><th>Status</th></tr></thead>
+          <tbody id="exchange-table-body"><tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr></tbody>
+        </table>
       </div>
     </section>
   </div>
 
-  <!-- ON-CHAIN SECTION -->
+  <!-- ON-CHAIN -->
   <div id="onchain">
     <section>
-      <div class="section-header">
-        <div class="section-title">On-Chain Metrics</div>
-        <div class="section-tag">// blockchain data</div>
-      </div>
-
+      <div class="section-header"><div class="section-title">On-Chain Metrics</div><div class="section-tag">// blockchain data</div></div>
       <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Block Height</div>
-          <div class="stat-box-val" id="chain-height">—</div>
-          <div class="stat-box-sub" id="chain-height-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Mempool Size</div>
-          <div class="stat-box-val" id="chain-mempool">—</div>
-          <div class="stat-box-sub" id="chain-mempool-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Avg Fee</div>
-          <div class="stat-box-val" id="chain-fee">—</div>
-          <div class="stat-box-sub">sat per vbyte</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Unconfirmed Txs</div>
-          <div class="stat-box-val" id="chain-txs">—</div>
-          <div class="stat-box-sub">in mempool</div>
-        </div>
+        <div class="stat-box"><div class="stat-box-label">Block Height</div><div class="stat-box-val" id="chain-height">—</div><div class="stat-box-sub" id="chain-height-sub">loading...</div></div>
+        <div class="stat-box"><div class="stat-box-label">Mempool Size</div><div class="stat-box-val" id="chain-mempool">—</div><div class="stat-box-sub" id="chain-mempool-sub">loading...</div></div>
+        <div class="stat-box"><div class="stat-box-label">Avg Fee</div><div class="stat-box-val" id="chain-fee">—</div><div class="stat-box-sub">sat per vbyte</div></div>
+        <div class="stat-box"><div class="stat-box-label">Unconfirmed Txs</div><div class="stat-box-val" id="chain-txs">—</div><div class="stat-box-sub">in mempool</div></div>
       </div>
-
-      <div class="terminal" id="block-terminal">
-        <span class="t-comment">// latest blocks — loading...</span>
-      </div>
+      <div class="terminal" id="block-terminal"><span class="t-comment">// latest blocks — loading...</span></div>
     </section>
   </div>
 
-  <!-- MINING SECTION -->
+  <!-- MINING -->
   <div id="mining">
     <section>
-      <div class="section-header">
-        <div class="section-title">Mining Intelligence</div>
-        <div class="section-tag">// network security</div>
-      </div>
-
+      <div class="section-header"><div class="section-title">Mining Intelligence</div><div class="section-tag">// network security</div></div>
       <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Hash Rate</div>
-          <div class="stat-box-val" id="mine-hashrate">—</div>
-          <div class="stat-box-sub">7-day average</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Difficulty</div>
-          <div class="stat-box-val" id="mine-difficulty">—</div>
-          <div class="stat-box-sub" id="mine-diff-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Block Reward</div>
-          <div class="stat-box-val">3.125</div>
-          <div class="stat-box-sub">BTC per block</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Next Halving</div>
-          <div class="stat-box-val" id="mine-halving">—</div>
-          <div class="stat-box-sub" id="mine-halving-sub">loading...</div>
-        </div>
+        <div class="stat-box"><div class="stat-box-label">Hash Rate</div><div class="stat-box-val" id="mine-hashrate">—</div><div class="stat-box-sub">7-day average</div></div>
+        <div class="stat-box"><div class="stat-box-label">Difficulty</div><div class="stat-box-val" id="mine-difficulty">—</div><div class="stat-box-sub" id="mine-diff-sub">loading...</div></div>
+        <div class="stat-box"><div class="stat-box-label">Block Reward</div><div class="stat-box-val">3.125</div><div class="stat-box-sub">BTC per block</div></div>
+        <div class="stat-box"><div class="stat-box-label">Next Halving</div><div class="stat-box-val" id="mine-halving">—</div><div class="stat-box-sub" id="mine-halving-sub">loading...</div></div>
       </div>
-
       <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Mining Pool</th>
-            <th>Blocks (24h)</th>
-            <th>Hash Share</th>
-            <th>Estimated Hashrate</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody id="pool-table-body">
-          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr>
-        </tbody>
-      </table>
+        <table class="data-table">
+          <thead><tr><th>Mining Pool</th><th>Blocks (24h)</th><th>Hash Share</th><th>Estimated Hashrate</th><th>Type</th></tr></thead>
+          <tbody id="pool-table-body"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr></tbody>
+        </table>
       </div>
     </section>
   </div>
 
+  <!-- LIGHTNING -->
   <div id="lightning">
     <section>
-      <div class="section-header">
-        <div class="section-title">Lightning Network</div>
-        <div class="section-tag">// layer 2 payments</div>
-      </div>
+      <div class="section-header"><div class="section-title">Lightning Network</div><div class="section-tag">// layer 2 payments</div></div>
       <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Total Capacity</div>
-          <div class="stat-box-val" id="ln-capacity">—</div>
-          <div class="stat-box-sub" id="ln-capacity-usd">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Active Nodes</div>
-          <div class="stat-box-val" id="ln-nodes">—</div>
-          <div class="stat-box-sub">with active channels</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Total Channels</div>
-          <div class="stat-box-val" id="ln-channels">—</div>
-          <div class="stat-box-sub">active payment channels</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Avg Channel Size</div>
-          <div class="stat-box-val" id="ln-avg-size">—</div>
-          <div class="stat-box-sub">per channel</div>
-        </div>
+        <div class="stat-box"><div class="stat-box-label">Total Capacity</div><div class="stat-box-val" id="ln-capacity">—</div><div class="stat-box-sub" id="ln-capacity-usd">loading...</div></div>
+        <div class="stat-box"><div class="stat-box-label">Active Nodes</div><div class="stat-box-val" id="ln-nodes">—</div><div class="stat-box-sub">with active channels</div></div>
+        <div class="stat-box"><div class="stat-box-label">Total Channels</div><div class="stat-box-val" id="ln-channels">—</div><div class="stat-box-sub">active payment channels</div></div>
+        <div class="stat-box"><div class="stat-box-label">Avg Channel Size</div><div class="stat-box-val" id="ln-avg-size">—</div><div class="stat-box-sub">per channel</div></div>
       </div>
-
       <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Node Alias</th>
-            <th>Capacity</th>
-            <th>Channels</th>
-            <th>Avg Channel</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody id="ln-nodes-table">
-          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr>
-        </tbody>
-      </table>
+        <table class="data-table">
+          <thead><tr><th>Node Alias</th><th>Capacity</th><th>Channels</th><th>Avg Channel</th><th>Location</th></tr></thead>
+          <tbody id="ln-nodes-table"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr></tbody>
+        </table>
       </div>
     </section>
   </div>
 
-  <!-- MACRO & CYCLES SECTION -->
+  <!-- MACRO -->
   <div id="macro">
     <section>
-      <div class="section-header">
-        <div class="section-title">Macro & Cycles</div>
-        <div class="section-tag">// market intelligence</div>
+      <div class="section-header"><div class="section-title">Macro & Cycles</div><div class="section-tag">// market intelligence</div></div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-box"><div class="stat-box-label">Current Price</div><div class="stat-box-val" id="macro-price">—</div><div class="stat-box-sub">BTC/USD</div></div>
+        <div class="stat-box"><div class="stat-box-label">200-Day MA</div><div class="stat-box-val" id="macro-ma200">—</div><div class="stat-box-sub">200-day moving average</div></div>
+        <div class="stat-box"><div class="stat-box-label">Mayer Multiple</div><div class="stat-box-val" id="macro-mayer">—</div><div class="stat-box-sub" id="macro-mayer-sub">price ÷ 200-day MA</div></div>
       </div>
-      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
-        <div class="stat-box">
-          <div class="stat-box-label">Current Price</div>
-          <div class="stat-box-val" id="macro-price">—</div>
-          <div class="stat-box-sub">BTC/USD</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">200-Day MA</div>
-          <div class="stat-box-val" id="macro-ma200">—</div>
-          <div class="stat-box-sub">200-day moving average</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Mayer Multiple</div>
-          <div class="stat-box-val" id="macro-mayer">—</div>
-          <div class="stat-box-sub" id="macro-mayer-sub">price ÷ 200-day MA</div>
-        </div>
-      </div>
-
-      <!-- Mayer Multiple signal bar -->
       <div style="background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem">
         <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Mayer Multiple Signal</div>
-        <div style="position:relative;height:8px;background:linear-gradient(to right,#3b82f6,#00d68f,#f7931a,#ff4d4d);border-radius:0">
+        <div style="position:relative;height:8px;background:linear-gradient(to right,#3b82f6,#00d68f,#f7931a,#ff4d4d)">
           <div id="mayer-indicator" style="position:absolute;top:-4px;width:3px;height:16px;background:#fff;transition:left 0.8s ease;left:50%"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.6rem;color:var(--muted)">
-          <span>Undervalued &lt;0.8</span>
-          <span>Fair Value ~1.0</span>
-          <span>Overheated &gt;2.4</span>
+          <span>Undervalued &lt;0.8</span><span>Fair Value ~1.0</span><span>Overheated &gt;2.4</span>
         </div>
         <div id="mayer-signal-text" style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">Loading signal...</div>
       </div>
-
-      <!-- 200 MA context -->
-      <div class="terminal" id="macro-terminal">
-        <span class="t-comment">// macro analysis — loading...</span>
-      </div>
+      <div class="terminal" id="macro-terminal"><span class="t-comment">// macro analysis — loading...</span></div>
     </section>
   </div>
 
-  <!-- LEARN / BITCOIN 101 SECTION -->
+  <!-- LEARN -->
   <div id="bitcoin-101">
     <section>
-      <div class="section-header">
-        <div class="section-title">Learn Bitcoin</div>
-        <div class="section-tag">// fundamentals</div>
-      </div>
+      <div class="section-header"><div class="section-title">Learn Bitcoin</div><div class="section-tag">// fundamentals</div></div>
       <div class="feature-grid">
-
-        <div class="feature-card">
-          <div class="feature-icon">₿</div>
-          <div class="feature-title">What is Bitcoin?</div>
-          <div class="feature-desc">Bitcoin is a decentralized digital currency with no central bank or single administrator. Transactions are verified by a peer-to-peer network and recorded on a public ledger called the blockchain. Created by the pseudonymous Satoshi Nakamoto in 2009, it was the first cryptocurrency.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <div class="feature-title">The UTXO Model</div>
-          <div class="feature-desc">Bitcoin doesn't use account balances. Instead it uses Unspent Transaction Outputs (UTXOs) — chunks of bitcoin tied to addresses. When you spend bitcoin, you consume UTXOs and create new ones as change. Your "balance" is just the sum of all UTXOs you control.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⛏️</div>
-          <div class="feature-title">Proof of Work</div>
-          <div class="feature-desc">Miners compete to solve a cryptographic puzzle by hashing block data with a random nonce. The first to find a valid hash wins the block reward. This process secures the network — rewriting history would require more computing power than all honest miners combined.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📉</div>
-          <div class="feature-title">The Halving</div>
-          <div class="feature-desc">Every 210,000 blocks (~4 years), the block reward paid to miners is cut in half. Bitcoin launched with a 50 BTC reward. It's now 3.125 BTC after four halvings. This programmatic supply reduction continues until ~2140, when all 21 million BTC will have been issued.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📦</div>
-          <div class="feature-title">SegWit & Taproot</div>
-          <div class="feature-desc">SegWit (2017) separated signature data from transaction data, fixing transaction malleability and increasing block capacity. Taproot (2021) added Schnorr signatures enabling more efficient multisig, better privacy, and smarter scripting — Bitcoin's biggest upgrade in years.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-title">Lightning Network</div>
-          <div class="feature-desc">A Layer 2 payment protocol built on top of Bitcoin. Two parties open a payment channel by locking funds on-chain, then transact instantly and cheaply off-chain. Only the final balance is settled on the blockchain. Enables microtransactions and instant global payments.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🔑</div>
-          <div class="feature-title">Keys & Wallets</div>
-          <div class="feature-desc">A Bitcoin wallet stores private keys, not coins. Your private key proves ownership and signs transactions. The public key (and derived address) is what others send to. "Not your keys, not your coins" — if an exchange holds your keys, they control your bitcoin.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <div class="feature-title">Nodes & Consensus</div>
-          <div class="feature-desc">Full nodes download and verify every block and transaction, enforcing Bitcoin's rules independently. No authority controls the rules — consensus emerges from thousands of nodes worldwide agreeing. Running a node is the most sovereign way to use Bitcoin.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <div class="feature-title">Reading the Mempool</div>
-          <div class="feature-desc">The mempool is a waiting room for unconfirmed transactions. Miners prioritize higher fee-rate transactions. When the mempool is congested, fees rise. When it clears, 1 sat/vB can get you confirmed. Watching mempool size helps you time transactions and save on fees.</div>
-        </div>
-
+        <div class="feature-card"><div class="feature-icon">₿</div><div class="feature-title">What is Bitcoin?</div><div class="feature-desc">Bitcoin is a decentralized digital currency with no central bank or single administrator. Transactions are verified by a peer-to-peer network and recorded on a public ledger called the blockchain. Created by the pseudonymous Satoshi Nakamoto in 2009, it was the first cryptocurrency.</div></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">The UTXO Model</div><div class="feature-desc">Bitcoin doesn't use account balances. Instead it uses Unspent Transaction Outputs (UTXOs) — chunks of bitcoin tied to addresses. When you spend bitcoin, you consume UTXOs and create new ones as change. Your "balance" is just the sum of all UTXOs you control.</div></div>
+        <div class="feature-card"><div class="feature-icon">⛏️</div><div class="feature-title">Proof of Work</div><div class="feature-desc">Miners compete to solve a cryptographic puzzle by hashing block data with a random nonce. The first to find a valid hash wins the block reward. This process secures the network — rewriting history would require more computing power than all honest miners combined.</div></div>
+        <div class="feature-card"><div class="feature-icon">📉</div><div class="feature-title">The Halving</div><div class="feature-desc">Every 210,000 blocks (~4 years), the block reward paid to miners is cut in half. Bitcoin launched with a 50 BTC reward. It's now 3.125 BTC after four halvings. This programmatic supply reduction continues until ~2140, when all 21 million BTC will have been issued.</div></div>
+        <div class="feature-card"><div class="feature-icon">📦</div><div class="feature-title">SegWit & Taproot</div><div class="feature-desc">SegWit (2017) separated signature data from transaction data, fixing transaction malleability and increasing block capacity. Taproot (2021) added Schnorr signatures enabling more efficient multisig, better privacy, and smarter scripting — Bitcoin's biggest upgrade in years.</div></div>
+        <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Lightning Network</div><div class="feature-desc">A Layer 2 payment protocol built on top of Bitcoin. Two parties open a payment channel by locking funds on-chain, then transact instantly and cheaply off-chain. Only the final balance is settled on the blockchain. Enables microtransactions and instant global payments.</div></div>
+        <div class="feature-card"><div class="feature-icon">🔑</div><div class="feature-title">Keys & Wallets</div><div class="feature-desc">A Bitcoin wallet stores private keys, not coins. Your private key proves ownership and signs transactions. The public key (and derived address) is what others send to. "Not your keys, not your coins" — if an exchange holds your keys, they control your bitcoin.</div></div>
+        <div class="feature-card"><div class="feature-icon">🌐</div><div class="feature-title">Nodes & Consensus</div><div class="feature-desc">Full nodes download and verify every block and transaction, enforcing Bitcoin's rules independently. No authority controls the rules — consensus emerges from thousands of nodes worldwide agreeing. Running a node is the most sovereign way to use Bitcoin.</div></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Reading the Mempool</div><div class="feature-desc">The mempool is a waiting room for unconfirmed transactions. Miners prioritize higher fee-rate transactions. When the mempool is congested, fees rise. When it clears, 1 sat/vB can get you confirmed. Watching mempool size helps you time transactions and save on fees.</div></div>
       </div>
     </section>
   </div>
 
-
-  <!-- X / TWITTER FOLLOW CARD -->
+  <!-- X FOLLOW CARD -->
   <div style="max-width:1200px;margin:0 auto;padding:0 2rem 3rem">
     <div style="background:var(--bg2);border:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
       <div style="display:flex;align-items:center;gap:1.5rem">
         <div style="width:52px;height:52px;background:#000;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">𝕏</div>
         <div>
-          <div style="font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-0.01em">@btc_journey</div>
+          <div style="font-family:var(--display);font-weight:800;font-size:1.1rem">@btc_journey</div>
           <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">Bitcoin analysis, on-chain data, and market intelligence</div>
         </div>
       </div>
-      <a href="https://x.com/btc_journey" target="_blank" rel="noopener"
-         style="background:var(--orange);color:#000;padding:0.7rem 1.75rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background 0.2s"
-         onmouseover="this.style.background='#ffad3b'" onmouseout="this.style.background='var(--orange)'">
-        Follow on 𝕏
-      </a>
+      <a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="background:var(--orange);color:#000;padding:0.7rem 1.75rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none" onmouseover="this.style.background='#ffad3b'" onmouseout="this.style.background='var(--orange)'">Follow on 𝕏</a>
     </div>
   </div>
-  <!-- FOOTER -->
+
   <footer>
-    <div>
-      <strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Bitcoin Tools & Live Market Intel
-    </div>
-    <div>
-      Data is for informational purposes only. Not financial advice. &nbsp;|&nbsp;
-      <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a> &nbsp;|&nbsp;
-      <a href="https://github.com/phriar" target="_blank" rel="noopener">GitHub</a>
-    </div>
+    <div><strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Bitcoin Tools & Live Market Intel</div>
+    <div>Data is for informational purposes only. Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a> &nbsp;|&nbsp; <a href="https://github.com/phriar" target="_blank" rel="noopener">GitHub</a></div>
   </footer>
 
+  <script src="shared.js"></script>
   <script>
-    // ─── SCROLL ANIMATIONS ───────────────────────────────────────────
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.style.opacity = '1';
-          e.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.1 });
+    // ─── POOL TYPE LOOKUP ─────────────────────────────────────────────
+    const poolTypes = { 'Foundry USA':'FPPS','AntPool':'PPS+','F2Pool':'PPS+','ViaBTC':'PPLNS','Binance Pool':'FPPS','Braiins Pool':'FPPS','Luxor':'FPPS','MARA Pool':'FPPS','SpiderPool':'PPS+','BTC.com':'PPS','SBICrypto':'PPS+','EMCDPool':'PPLNS' };
 
+    // ─── SCROLL ANIMATIONS ───────────────────────────────────────────
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+    }, { threshold: 0.1 });
     document.querySelectorAll('.stat-box, .feature-card').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(15px)';
-      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      el.style.opacity='0'; el.style.transform='translateY(15px)'; el.style.transition='opacity 0.5s ease, transform 0.5s ease';
       observer.observe(el);
     });
 
-    // ─── HELPERS ─────────────────────────────────────────────────────
-    const $ = id => document.getElementById(id);
-
-    function fmt(n, decimals = 0) {
-      return n.toLocaleString('en-US', { maximumFractionDigits: decimals });
-    }
-
-    function fmtUSD(n) {
-      if (n >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
-      if (n >= 1e9)  return '$' + (n / 1e9).toFixed(1) + 'B';
-      if (n >= 1e6)  return '$' + (n / 1e6).toFixed(1) + 'M';
-      return '$' + fmt(n);
-    }
-
-    function fmtHash(hps) {
-      // hps comes in as hashes/sec from mempool
-      const ehs = hps / 1e18;
-      return ehs.toFixed(1) + ' EH/s';
-    }
-
-    function setChange(el, pct) {
-      const pos = pct >= 0;
-      el.textContent = (pos ? '▲ +' : '▼ ') + pct.toFixed(2) + '%';
-      el.className = 'card-change' + (pos ? '' : ' negative');
-    }
-
-    function setTickerChange(el, pct) {
-      const pos = pct >= 0;
-      el.textContent = (pos ? '+' : '') + pct.toFixed(2) + '%';
-      el.className = pos ? 't-up' : 't-down';
-    }
-
-    function updateTime() {
-      const now = new Date();
-      $('nav-last-updated').textContent = 'UPDATED ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
-
-    // ─── POOL TYPE LOOKUP ─────────────────────────────────────────────
-    const poolTypes = {
-      'Foundry USA': 'FPPS', 'AntPool': 'PPS+', 'F2Pool': 'PPS+',
-      'ViaBTC': 'PPLNS', 'Binance Pool': 'FPPS', 'Braiins Pool': 'FPPS',
-      'Luxor': 'FPPS', 'MARA Pool': 'FPPS', 'SpiderPool': 'PPS+',
-      'BTC.com': 'PPS', 'SBICrypto': 'PPS+', 'EMCDPool': 'PPLNS'
-    };
-
-    // ─── COINGECKO — Price & Market Data ────────────────────────────
+    // ─── COINGECKO ───────────────────────────────────────────────────
     async function fetchCoinGecko() {
       try {
-        const res = await fetch(
-          'https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false'
-        );
+        const res = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false');
         const d = await res.json();
         const md = d.market_data;
-
-        const price     = md.current_price.usd;
-        const change24h = md.price_change_percentage_24h;
-        const high24h   = md.high_24h.usd;
-        const low24h    = md.low_24h.usd;
-        const vol24h    = md.total_volume.usd;
-        const mcap      = md.market_cap.usd;
-        const dom       = md.market_cap_percentage ? md.market_cap_percentage : null;
-        const ath       = md.ath.usd;
-        const athPct    = md.ath_change_percentage.usd;
-        const supply    = md.circulating_supply;
-        const sats      = Math.round(1e8 / price);
-
-        // Hero card
-        $('hero-price').textContent = '$' + fmt(price);
-        const changeEl = $('hero-change');
-        const priceDelta = price * (change24h / 100);
-        changeEl.textContent = (change24h >= 0 ? '▲ +' : '▼ ') + change24h.toFixed(2) + '% (' + (change24h >= 0 ? '+' : '') + '$' + fmt(Math.abs(priceDelta)) + ') today';
-        changeEl.className = 'card-change' + (change24h < 0 ? ' negative' : '');
-        $('hero-high').textContent = '$' + fmt(high24h);
-        $('hero-low').textContent  = '$' + fmt(low24h);
-        $('hero-vol').textContent  = fmtUSD(vol24h);
-
-        // Market stats
-        $('mkt-cap').textContent     = fmtUSD(mcap);
-        $('mkt-cap-sub').textContent = (change24h >= 0 ? '+' : '') + change24h.toFixed(2) + '% 24h';
-        $('mkt-vol').textContent     = fmtUSD(vol24h);
-        $('mkt-sats').textContent    = fmt(sats);
-        $('mkt-ath').textContent     = athPct.toFixed(1) + '%';
-        $('mkt-ath-sub').textContent = 'from $' + fmt(ath) + ' ATH';
-
-        // Ticker
-        const tickPrice = '$' + fmt(price);
-        const tickMcap  = fmtUSD(mcap);
-        ['tick-price','tick-price-2'].forEach(id => $(id).textContent = tickPrice);
-        ['tick-supply','tick-supply-2'].forEach(id => $(id).textContent = (supply / 1e6).toFixed(2) + 'M BTC');
-        ['tick-mcap','tick-mcap-2'].forEach(id => $(id).textContent = tickMcap);
-        ['tick-change-1','tick-change-3'].forEach(id => setTickerChange($(id), change24h));
-        ['tick-change-2','tick-change-4'].forEach(id => setTickerChange($(id), change24h));
-
-        // Dominance (if available from market_cap_percentage on global endpoint — use approximation)
-        $('hero-dom').textContent = '—'; // requires global endpoint, loaded separately
-
-        updateTime();
-      } catch(e) {
-        console.error('CoinGecko error:', e);
-      }
+        const price=md.current_price.usd, change24h=md.price_change_percentage_24h;
+        $('hero-price').textContent = '$'+fmt(price);
+        const delta = price*(change24h/100);
+        const ch=$('hero-change');
+        ch.textContent=(change24h>=0?'▲ +':'▼ ')+change24h.toFixed(2)+'% ('+(change24h>=0?'+':'')+' $'+fmt(Math.abs(delta))+') today';
+        ch.className='card-change'+(change24h<0?' negative':'');
+        $('hero-high').textContent='$'+fmt(md.high_24h.usd);
+        $('hero-low').textContent='$'+fmt(md.low_24h.usd);
+        $('hero-vol').textContent=fmtUSD(md.total_volume.usd);
+        $('mkt-cap').textContent=fmtUSD(md.market_cap.usd);
+        $('mkt-cap-sub').textContent=(change24h>=0?'+':'')+change24h.toFixed(2)+'% 24h';
+        $('mkt-vol').textContent=fmtUSD(md.total_volume.usd);
+        $('mkt-sats').textContent=fmt(Math.round(1e8/price));
+        $('mkt-ath').textContent=md.ath_change_percentage.usd.toFixed(1)+'%';
+        $('mkt-ath-sub').textContent='from $'+fmt(md.ath.usd)+' ATH';
+        updateTicker({ price, change24h, supply: (md.circulating_supply/1e6).toFixed(2)+'M BTC', mcap: fmtUSD(md.market_cap.usd) });
+        setBtcPrice(price);
+        updateNavTime();
+      } catch(e) { console.error('CoinGecko:', e); }
     }
 
-    // CoinGecko global endpoint for dominance
     async function fetchCoinGeckoGlobal() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/global');
         const d = await res.json();
         const dom = d.data.market_cap_percentage.btc;
-        $('hero-dom').textContent = dom.toFixed(1) + '%';
+        $('hero-dom').textContent = dom.toFixed(1)+'%';
       } catch(e) {}
     }
 
-    // ─── MEMPOOL.SPACE — On-Chain & Mining ──────────────────────────
     async function fetchMempool() {
       try {
-        // Fees
         const feesRes = await fetch('https://mempool.space/api/v1/fees/recommended');
         const fees = await feesRes.json();
-        const avgFee = fees.halfHourFee;
-        $('chain-fee').textContent = avgFee + ' s/vB';
-        ['tick-fees','tick-fees-2'].forEach(id => $(id).textContent = avgFee + ' sat/vB');
-
-        // Mempool stats
-        const mempoolRes = await fetch('https://mempool.space/api/mempool');
-        const mp = await mempoolRes.json();
-        const mbSize = (mp.vsize / 1e6).toFixed(1);
-        const txCount = fmt(mp.count);
-        $('chain-mempool').textContent     = mbSize + ' MB';
-        $('chain-mempool-sub').textContent = fmt(mp.count) + ' pending txs';
-        $('chain-txs').textContent         = txCount;
-        ['tick-mempool','tick-mempool-2'].forEach(id => $(id).textContent = mbSize + ' MB');
-
-      } catch(e) {
-        console.error('Mempool fees error:', e);
-      }
-
+        $('chain-fee').textContent=fees.halfHourFee+' s/vB';
+        updateTicker({ fees: fees.halfHourFee+' sat/vB' });
+        const mp = await (await fetch('https://mempool.space/api/mempool')).json();
+        const mbSize=(mp.vsize/1e6).toFixed(1);
+        $('chain-mempool').textContent=mbSize+' MB';
+        $('chain-mempool-sub').textContent=fmt(mp.count)+' pending txs';
+        $('chain-txs').textContent=fmt(mp.count);
+        updateTicker({ mempool: mbSize+' MB' });
+      } catch(e) {}
       try {
-        // Latest blocks
-        const blocksRes = await fetch('https://mempool.space/api/v1/blocks');
-        const blocks = await blocksRes.json();
-        const latest = blocks.slice(0, 5);
-
-        // Block height
-        const height = latest[0].height;
-        $('chain-height').textContent     = fmt(height);
-        $('chain-height-sub').textContent = 'last block ~' + Math.round((Date.now()/1000 - latest[0].timestamp) / 60) + ' min ago';
-
-        // Halving calc
-        const HALVING_INTERVAL = 210000;
-        const nextHalving = Math.ceil(height / HALVING_INTERVAL) * HALVING_INTERVAL;
-        const blocksLeft = nextHalving - height;
-        const daysLeft = Math.round(blocksLeft * 10 / 1440);
-        const halvingStr = '~' + fmt(daysLeft) + 'd';
-        $('mine-halving').textContent     = halvingStr;
-        $('mine-halving-sub').textContent = 'block ' + fmt(nextHalving);
-        ['tick-halving','tick-halving-2'].forEach(id => $(id).textContent = halvingStr);
-
-        // Terminal block display
-        const terminal = $('block-terminal');
-        let html = '<span class="t-comment">// latest blocks — live from mempool.space</span><br/>';
-        html += '<span class="t-cmd">$ bitdepth query block --latest 5</span><br/><br/>';
-        latest.forEach(b => {
-          const feeBTC = (b.extras?.totalFees / 1e8).toFixed(3) || '—';
-          const sizeMB = (b.size / 1e6).toFixed(2);
-          const pool   = b.extras?.pool?.name || 'Unknown';
-          html += `<span class="t-out">Block </span><span class="t-val">${fmt(b.height)}</span>`;
-          html += `<span class="t-out"> — ${fmt(b.tx_count)} txs — fees: ${feeBTC} BTC — size: ${sizeMB} MB — mined by: ${pool}</span><br/>`;
+        const blocks = await (await fetch('https://mempool.space/api/v1/blocks')).json();
+        const latest=blocks.slice(0,5);
+        const height=latest[0].height;
+        $('chain-height').textContent=fmt(height);
+        $('chain-height-sub').textContent='last block ~'+Math.round((Date.now()/1000-latest[0].timestamp)/60)+' min ago';
+        const nextHalving=Math.ceil(height/210000)*210000;
+        const daysLeft=Math.round((nextHalving-height)*10/1440);
+        const halvStr='~'+fmt(daysLeft)+'d';
+        $('mine-halving').textContent=halvStr;
+        $('mine-halving-sub').textContent='block '+fmt(nextHalving);
+        updateTicker({ halving: halvStr });
+        let html='<span class="t-comment">// latest blocks — live from mempool.space</span><br/>';
+        html+='<span class="t-cmd">$ bitdepth query block --latest 5</span><br/><br/>';
+        latest.forEach(b=>{
+          html+=`<span class="t-out">Block </span><span class="t-val">${fmt(b.height)}</span><span class="t-out"> — ${fmt(b.tx_count)} txs — fees: ${(b.extras?.totalFees/1e8).toFixed(3)||'—'} BTC — size: ${(b.size/1e6).toFixed(2)} MB — mined by: ${b.extras?.pool?.name||'Unknown'}</span><br/>`;
         });
-        html += '<br/><span class="t-cmd" id="blink-cursor" style="display:inline-block;width:0.6em;transition:opacity 0.1s">█</span>';
-        terminal.innerHTML = html;
-
-        // restart blink on new element — use opacity so layout doesn't shift
-        const cur = document.getElementById('blink-cursor');
-        if (cur) setInterval(() => {
-          cur.style.opacity = cur.style.opacity === '0' ? '1' : '0';
-        }, 600);
-
-      } catch(e) {
-        console.error('Mempool blocks error:', e);
-      }
-
+        html+='<br/><span class="t-cmd" id="blink-cursor" style="display:inline-block;width:0.6em">█</span>';
+        $('block-terminal').innerHTML=html;
+        const cur=document.getElementById('blink-cursor');
+        if(cur) setInterval(()=>{ cur.style.opacity=cur.style.opacity==='0'?'1':'0'; },600);
+      } catch(e) {}
       try {
-        // Hashrate & difficulty
-        const hashrateRes = await fetch('https://mempool.space/api/v1/mining/hashrate/3d');
-        const hr = await hashrateRes.json();
-        if (hr.currentHashrate) {
-          const ehs = (hr.currentHashrate / 1e18).toFixed(1);
-          $('mine-hashrate').textContent = ehs + ' EH/s';
-          ['tick-hashrate','tick-hashrate-2'].forEach(id => $(id).textContent = ehs + ' EH/s');
-        }
-        if (hr.currentDifficulty) {
-          const diff = hr.currentDifficulty;
-          const diffT = (diff / 1e12).toFixed(1) + 'T';
-          $('mine-difficulty').textContent = diffT;
-          ['tick-difficulty','tick-difficulty-2'].forEach(id => $(id).textContent = diffT);
-        }
-      } catch(e) {
-        console.error('Mempool hashrate error:', e);
-      }
-
+        const hr=await (await fetch('https://mempool.space/api/v1/mining/hashrate/3d')).json();
+        if(hr.currentHashrate){ const ehs=(hr.currentHashrate/1e18).toFixed(1)+' EH/s'; $('mine-hashrate').textContent=ehs; updateTicker({hashrate:ehs}); }
+        if(hr.currentDifficulty){ const dt=(hr.currentDifficulty/1e12).toFixed(1)+'T'; $('mine-difficulty').textContent=dt; updateTicker({difficulty:dt}); }
+      } catch(e) {}
       try {
-        // Mining pools
-        const poolsRes = await fetch('https://mempool.space/api/v1/mining/pools/24h');
-        const poolData = await poolsRes.json();
-        const tbody = $('pool-table-body');
-        const totalBlocks = poolData.pools.reduce((s, p) => s + p.blockCount, 0);
-
-        // Get total hashrate for estimation
-        const hashrateRes2 = await fetch('https://mempool.space/api/v1/mining/hashrate/3d');
-        const hr2 = await hashrateRes2.json();
-        const totalEH = hr2.currentHashrate ? hr2.currentHashrate / 1e18 : null;
-
-        let rows = '';
-        poolData.pools.slice(0, 8).forEach(pool => {
-          const share = ((pool.blockCount / totalBlocks) * 100).toFixed(1);
-          const estEH = totalEH ? ((pool.blockCount / totalBlocks) * totalEH).toFixed(1) + ' EH/s' : '—';
-          const type  = poolTypes[pool.name] || '—';
-          const tagClass = type !== '—' ? 'tag-orange' : 'tag-muted';
-          rows += `<tr>
-            <td>${pool.name}</td>
-            <td>${pool.blockCount}</td>
-            <td>${share}%</td>
-            <td>${estEH}</td>
-            <td><span class="tag ${tagClass}">${type}</span></td>
-          </tr>`;
+        const pools=await (await fetch('https://mempool.space/api/v1/mining/pools/24h')).json();
+        const hr2=await (await fetch('https://mempool.space/api/v1/mining/hashrate/3d')).json();
+        const totalBlocks=pools.pools.reduce((s,p)=>s+p.blockCount,0);
+        const totalEH=hr2.currentHashrate?hr2.currentHashrate/1e18:null;
+        let rows='';
+        pools.pools.slice(0,8).forEach(p=>{
+          const share=((p.blockCount/totalBlocks)*100).toFixed(1);
+          const estEH=totalEH?((p.blockCount/totalBlocks)*totalEH).toFixed(1)+' EH/s':'—';
+          const type=poolTypes[p.name]||'—';
+          rows+=`<tr><td>${p.name}</td><td>${p.blockCount}</td><td>${share}%</td><td>${estEH}</td><td><span class="tag ${type!=='—'?'tag-orange':'tag-muted'}">${type}</span></td></tr>`;
         });
-        tbody.innerHTML = rows || '<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
-
-        // Update diff sub
-        const diffAdj = await fetch('https://mempool.space/api/v1/difficulty-adjustment');
-        const da = await diffAdj.json();
-        if (da.remainingBlocks) {
-          $('mine-diff-sub').textContent = 'next adj in ~' + da.remainingBlocks + ' blocks';
-        }
-
-      } catch(e) {
-        console.error('Mempool pools error:', e);
-      }
+        $('pool-table-body').innerHTML=rows||'<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
+        const da=await (await fetch('https://mempool.space/api/v1/difficulty-adjustment')).json();
+        if(da.remainingBlocks) $('mine-diff-sub').textContent='next adj in ~'+da.remainingBlocks+' blocks';
+      } catch(e) {}
     }
 
-    // ─── SPARKLINE — CoinGecko 7d OHLC ──────────────────────────────
     async function fetchSparkline() {
       try {
-        const res = await fetch(
-          'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=7'
-        );
-        const ohlc = await res.json();
-        // Use close prices (index 4)
-        const prices = ohlc.map(d => d[4]);
-        const minP = Math.min(...prices);
-        const maxP = Math.max(...prices);
-        const W = 300, H = 60, PAD = 4;
-
-        const toX = (i) => (i / (prices.length - 1)) * W;
-        const toY = (p) => PAD + ((maxP - p) / (maxP - minP)) * (H - PAD * 2);
-
-        const pts = prices.map((p, i) => `${toX(i).toFixed(1)},${toY(p).toFixed(1)}`).join(' ');
-        const fillPts = pts + ` ${W},${H} 0,${H}`;
-
-        document.getElementById('spark-line').setAttribute('points', pts);
-        document.getElementById('spark-fill').setAttribute('points', fillPts);
-
-        const pctChange = ((prices[prices.length - 1] - prices[0]) / prices[0] * 100).toFixed(1);
-        const sign = pctChange >= 0 ? '+' : '';
-        const color = pctChange >= 0 ? 'var(--green)' : 'var(--red)';
-        document.getElementById('spark-label').innerHTML =
-          `7-day price chart &nbsp;<span style="color:${color}">${sign}${pctChange}%</span>`;
-      } catch(e) {
-        console.error('Sparkline error:', e);
-        document.getElementById('spark-label').textContent = '7-day chart unavailable';
-      }
+        const ohlc=await (await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=7')).json();
+        const prices=ohlc.map(d=>d[4]);
+        const minP=Math.min(...prices),maxP=Math.max(...prices),W=300,H=60,PAD=4;
+        const toX=i=>(i/(prices.length-1))*W;
+        const toY=p=>PAD+((maxP-p)/(maxP-minP))*(H-PAD*2);
+        const pts=prices.map((p,i)=>`${toX(i).toFixed(1)},${toY(p).toFixed(1)}`).join(' ');
+        document.getElementById('spark-line').setAttribute('points',pts);
+        document.getElementById('spark-fill').setAttribute('points',pts+` ${W},${H} 0,${H}`);
+        const pct=((prices[prices.length-1]-prices[0])/prices[0]*100).toFixed(1);
+        document.getElementById('spark-label').innerHTML=`7-day price chart &nbsp;<span style="color:${pct>=0?'var(--green)':'var(--red)'}">${pct>=0?'+':''}${pct}%</span>`;
+      } catch(e) { document.getElementById('spark-label').textContent='7-day chart unavailable'; }
     }
 
-    // ─── EXCHANGE TABLE — per-exchange public APIs ───────────────────
     async function fetchExchanges() {
-      const tbody = document.getElementById('exchange-table-body');
-      const results = [];
-
-      // Helper to build a row
-      function makeRow(name, price, change, vol, spread, ok) {
-        const changeColor = change >= 0 ? 'var(--green)' : 'var(--red)';
-        const changeStr = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
-        const volStr = vol ? fmtUSD(vol) : '—';
-        const spreadStr = spread ? '$' + spread.toFixed(2) : '—';
-        return `<tr>
-          <td>${name}</td>
-          <td>$${fmt(price)}</td>
-          <td style="color:${changeColor}">${changeStr}</td>
-          <td>${volStr}</td>
-          <td>${spreadStr}</td>
-          <td><span class="tag ${ok ? 'tag-green' : 'tag-muted'}">${ok ? 'Active' : 'Error'}</span></td>
-        </tr>`;
+      const tbody=$('exchange-table-body');
+      const results=[];
+      function makeRow(name,price,change,vol,spread,ok) {
+        const cc=change>=0?'var(--green)':'var(--red)';
+        return `<tr><td>${name}</td><td>$${fmt(price)}</td><td style="color:${cc}">${(change>=0?'+':'')+change.toFixed(2)}%</td><td>${vol?fmtUSD(vol):'—'}</td><td>${spread?'$'+spread.toFixed(2):'—'}</td><td><span class="tag ${ok?'tag-green':'tag-muted'}">${ok?'Active':'Error'}</span></td></tr>`;
       }
-
-      // Run all fetches in parallel, fail gracefully per exchange
-      const fetches = await Promise.allSettled([
-
-        // Coinbase — public product stats
-        fetch('https://api.exchange.coinbase.com/products/BTC-USD/stats')
-          .then(r => r.json())
-          .then(d => results.push({
-            name: 'Coinbase',
-            price: parseFloat(d.last),
-            change: ((parseFloat(d.last) - parseFloat(d.open)) / parseFloat(d.open)) * 100,
-            vol: parseFloat(d.volume) * parseFloat(d.last),
-            spread: null,
-            ok: true
-          })),
-
-        // Binance — 24hr ticker
-        fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
-          .then(r => r.json())
-          .then(d => results.push({
-            name: 'Binance',
-            price: parseFloat(d.lastPrice),
-            change: parseFloat(d.priceChangePercent),
-            vol: parseFloat(d.quoteVolume),
-            spread: parseFloat(d.askPrice) - parseFloat(d.bidPrice),
-            ok: true
-          })),
-
-        // Kraken — ticker
-        fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD')
-          .then(r => r.json())
-          .then(d => {
-            const t = d.result.XXBTZUSD;
-            const price = parseFloat(t.c[0]);
-            const open  = parseFloat(t.o);
-            results.push({
-              name: 'Kraken',
-              price,
-              change: ((price - open) / open) * 100,
-              vol: parseFloat(t.v[1]) * price,
-              spread: parseFloat(t.a[0]) - parseFloat(t.b[0]),
-              ok: true
-            });
-          }),
-
-        // Bitstamp — ticker
-        fetch('https://www.bitstamp.net/api/v2/ticker/btcusd/')
-          .then(r => r.json())
-          .then(d => {
-            const price = parseFloat(d.last);
-            const open  = parseFloat(d.open);
-            results.push({
-              name: 'Bitstamp',
-              price,
-              change: ((price - open) / open) * 100,
-              vol: parseFloat(d.volume) * price,
-              spread: parseFloat(d.ask) - parseFloat(d.bid),
-              ok: true
-            });
-          }),
-
-        // OKX — ticker
-        fetch('https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT')
-          .then(r => r.json())
-          .then(d => {
-            const t = d.data[0];
-            const price = parseFloat(t.last);
-            const open  = parseFloat(t.open24h);
-            results.push({
-              name: 'OKX',
-              price,
-              change: ((price - open) / open) * 100,
-              vol: parseFloat(t.volCcy24h) * price,
-              spread: parseFloat(t.askPx) - parseFloat(t.bidPx),
-              ok: true
-            });
-          })
+      await Promise.allSettled([
+        fetch('https://api.exchange.coinbase.com/products/BTC-USD/stats').then(r=>r.json()).then(d=>results.push({name:'Coinbase',price:parseFloat(d.last),change:((parseFloat(d.last)-parseFloat(d.open))/parseFloat(d.open))*100,vol:parseFloat(d.volume)*parseFloat(d.last),spread:null,ok:true})),
+        fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT').then(r=>r.json()).then(d=>results.push({name:'Binance',price:parseFloat(d.lastPrice),change:parseFloat(d.priceChangePercent),vol:parseFloat(d.quoteVolume),spread:parseFloat(d.askPrice)-parseFloat(d.bidPrice),ok:true})),
+        fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD').then(r=>r.json()).then(d=>{const t=d.result.XXBTZUSD;const p=parseFloat(t.c[0]);results.push({name:'Kraken',price:p,change:((p-parseFloat(t.o))/parseFloat(t.o))*100,vol:parseFloat(t.v[1])*p,spread:parseFloat(t.a[0])-parseFloat(t.b[0]),ok:true});}),
+        fetch('https://www.bitstamp.net/api/v2/ticker/btcusd/').then(r=>r.json()).then(d=>{const p=parseFloat(d.last);results.push({name:'Bitstamp',price:p,change:((p-parseFloat(d.open))/parseFloat(d.open))*100,vol:parseFloat(d.volume)*p,spread:parseFloat(d.ask)-parseFloat(d.bid),ok:true});}),
+        fetch('https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT').then(r=>r.json()).then(d=>{const t=d.data[0];const p=parseFloat(t.last);results.push({name:'OKX',price:p,change:((p-parseFloat(t.open24h))/parseFloat(t.open24h))*100,vol:parseFloat(t.volCcy24h)*p,spread:parseFloat(t.askPx)-parseFloat(t.bidPx),ok:true});})
       ]);
+      const order=['Binance','Coinbase','Kraken','OKX','Bitstamp'];
+      results.sort((a,b)=>order.indexOf(a.name)-order.indexOf(b.name));
+      tbody.innerHTML=results.length?results.map(r=>makeRow(r.name,r.price,r.change,r.vol,r.spread,r.ok)).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:1rem">Could not load exchange data</td></tr>';
+    }
 
-      // Sort by name order
-      const order = ['Binance','Coinbase','Kraken','OKX','Bitstamp'];
-      results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+    async function fetchLightning() {
+      try {
+        const d=await (await fetch('https://mempool.space/api/v1/lightning/statistics/latest')).json();
+        const capBTC=(d.latest.total_capacity/1e8).toFixed(0);
+        $('ln-capacity').textContent=fmt(parseInt(capBTC))+' BTC';
+        $('ln-nodes').textContent=d.latest.node_count.toLocaleString();
+        $('ln-channels').textContent=d.latest.channel_count.toLocaleString();
+        $('ln-avg-size').textContent=fmt(Math.round(d.latest.total_capacity/d.latest.channel_count))+' sats';
+        const priceEl=$('hero-price');
+        if(priceEl&&priceEl.textContent!=='—'){
+          const p=parseFloat(priceEl.textContent.replace(/[$,]/g,''));
+          $('ln-capacity-usd').textContent=fmtUSD(parseInt(capBTC)*p)+' USD';
+        }
+      } catch(e) {}
+      try {
+        const nodes=await (await fetch('https://mempool.space/api/v1/lightning/nodes/rankings/connectivity')).json();
+        let rows='';
+        nodes.slice(0,8).forEach(n=>{
+          rows+=`<tr><td style="font-family:var(--mono);max-width:200px;overflow:hidden;text-overflow:ellipsis">${n.alias||n.public_key.slice(0,16)+'...'}</td><td>${(n.capacity/1e8).toFixed(2)} BTC</td><td>${n.channels.toLocaleString()}</td><td>${fmt(Math.round(n.capacity/n.channels))} sats</td><td>${n.country?.en||'—'}</td></tr>`;
+        });
+        $('ln-nodes-table').innerHTML=rows||'<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
+      } catch(e) {}
+    }
 
-      if (results.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:1rem">Could not load exchange data</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = results.map(r =>
-        makeRow(r.name, r.price, r.change, r.vol, r.spread, r.ok)
-      ).join('');
+    async function fetchMacro() {
+      try {
+        const d=await (await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200&interval=daily')).json();
+        const prices=d.prices.map(p=>p[1]);
+        if(prices.length<200) return;
+        const ma200=prices.slice(-200).reduce((a,b)=>a+b,0)/200;
+        const cp=prices[prices.length-1];
+        const mayer=cp/ma200;
+        const pctAboveMA=((cp-ma200)/ma200*100).toFixed(1);
+        $('macro-price').textContent='$'+fmt(cp);
+        $('macro-ma200').textContent='$'+fmt(Math.round(ma200));
+        $('macro-mayer').textContent=mayer.toFixed(3);
+        let signal,signalColor,advice;
+        if(mayer<0.8){signal='DEEPLY UNDERVALUED';signalColor='#3b82f6';advice='Price is more than 20% below the 200-day MA. Historically a strong accumulation zone.';}
+        else if(mayer<1.0){signal='BELOW AVERAGE';signalColor='#00d68f';advice='Price is below the 200-day MA. Historically a favorable zone for long-term buyers.';}
+        else if(mayer<1.5){signal='FAIR VALUE';signalColor='#f7931a';advice='Price is near the 200-day MA. Neither cheap nor expensive by historical standards.';}
+        else if(mayer<2.4){signal='ELEVATED';signalColor='#ff8c00';advice='Price is significantly above the 200-day MA. Exercise caution — past cycles showed pullbacks from these levels.';}
+        else{signal='OVERHEATED';signalColor='#ff4d4d';advice='Mayer Multiple above 2.4 — historically a rare extreme. Previous cycle peaks occurred in this zone.';}
+        $('macro-mayer-sub').textContent=signal;
+        $('macro-mayer-sub').style.color=signalColor;
+        const pct2=Math.max(0,Math.min(1,(mayer-0.4)/(3.0-0.4)))*100;
+        $('mayer-indicator').style.left=pct2+'%';
+        $('mayer-signal-text').innerHTML=`<span style="color:${signalColor};font-weight:700">${signal}</span> &nbsp;—&nbsp; ${advice}`;
+        $('macro-terminal').innerHTML=`<span class="t-comment">// macro analysis — 200-day moving average</span><br/><span class="t-cmd">$ bitdepth macro --indicator mayer-multiple</span><br/><br/><span class="t-out">Current Price   </span><span class="t-val">$${fmt(cp)}</span><br/><span class="t-out">200-Day MA      </span><span class="t-val">$${fmt(Math.round(ma200))}</span><br/><span class="t-out">% vs MA         </span><span style="color:${pctAboveMA>=0?'var(--green)':'var(--red)'}">${pctAboveMA>=0?'+':''}${pctAboveMA}%</span><br/><span class="t-out">Mayer Multiple  </span><span class="t-val">${mayer.toFixed(4)}</span><br/><span class="t-out">Signal          </span><span style="color:${signalColor}">${signal}</span><br/><br/><span class="t-comment">// Values below 1.0 historically favor accumulation</span><br/><span class="t-cmd" id="mc" style="display:inline-block;width:0.6em">█</span>`;
+        const mc=document.getElementById('mc');
+        if(mc) setInterval(()=>{mc.style.opacity=mc.style.opacity==='0'?'1':'0';},600);
+      } catch(e) {}
     }
 
     // ─── BLOCK EXPLORER SEARCH ───────────────────────────────────────
-    document.getElementById('explorer-search').addEventListener('keydown', function(e) {
-      if (e.key !== 'Enter') return;
-      const q = this.value.trim();
-      if (!q) return;
-
+    $('explorer-search').addEventListener('keydown', function(e) {
+      if(e.key!=='Enter') return;
+      const q=this.value.trim(); if(!q) return;
       let url;
-      if (/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(q) || /^bc1[a-z0-9]{6,87}$/i.test(q)) {
-        // Bitcoin address (P2PKH, P2SH, or bech32)
-        url = `https://mempool.space/address/${q}`;
-      } else if (/^[a-fA-F0-9]{64}$/.test(q)) {
-        // Transaction ID or block hash
-        url = `https://mempool.space/tx/${q}`;
-      } else if (/^\d+$/.test(q)) {
-        // Block height
-        url = `https://mempool.space/block/${q}`;
-      } else {
-        // Fallback
-        url = `https://mempool.space/search?q=${encodeURIComponent(q)}`;
-      }
-
-      window.open(url, '_blank', 'noopener');
+      if(/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(q)||/^bc1[a-z0-9]{6,87}$/i.test(q)) url=`https://mempool.space/address/${q}`;
+      else if(/^[a-fA-F0-9]{64}$/.test(q)) url=`https://mempool.space/tx/${q}`;
+      else if(/^\d+$/.test(q)) url=`https://mempool.space/block/${q}`;
+      else url=`https://mempool.space/search?q=${encodeURIComponent(q)}`;
+      window.open(url,'_blank','noopener');
     });
-
-    // ─── LIGHTNING NETWORK ───────────────────────────────────────────
-    async function fetchLightning() {
-      try {
-        const res = await fetch('https://mempool.space/api/v1/lightning/statistics/latest');
-        const d = await res.json();
-
-        const capacityBTC = (d.latest.total_capacity / 1e8).toFixed(0);
-        const nodes       = d.latest.node_count.toLocaleString();
-        const channels    = d.latest.channel_count.toLocaleString();
-        const avgSats     = Math.round(d.latest.total_capacity / d.latest.channel_count);
-        const avgBTC      = (avgSats / 1e8).toFixed(4);
-
-        $('ln-capacity').textContent     = fmt(parseInt(capacityBTC)) + ' BTC';
-        $('ln-nodes').textContent        = nodes;
-        $('ln-channels').textContent     = channels;
-        $('ln-avg-size').textContent     = fmt(avgSats) + ' sats';
-
-        // Set USD value of capacity using cached price if available
-        const priceEl = $('hero-price');
-        if (priceEl && priceEl.textContent !== '—') {
-          const price = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
-          const capUSD = parseInt(capacityBTC) * price;
-          $('ln-capacity-usd').textContent = fmtUSD(capUSD) + ' USD';
-        } else {
-          $('ln-capacity-usd').textContent = avgBTC + ' avg channel';
-        }
-      } catch(e) {
-        console.error('Lightning stats error:', e);
-      }
-
-      try {
-        // Top nodes by capacity
-        const nodesRes = await fetch('https://mempool.space/api/v1/lightning/nodes/rankings/connectivity');
-        const nodes = await nodesRes.json();
-        const tbody = $('ln-nodes-table');
-
-        let rows = '';
-        nodes.slice(0, 8).forEach(node => {
-          const alias    = node.alias || node.public_key.slice(0, 16) + '...';
-          const capBTC   = (node.capacity / 1e8).toFixed(2);
-          const channels = node.channels.toLocaleString();
-          const avgCh    = fmt(Math.round(node.capacity / node.channels));
-          const country  = node.country?.en || '—';
-          rows += `<tr>
-            <td style="font-family:var(--mono);max-width:200px;overflow:hidden;text-overflow:ellipsis">${alias}</td>
-            <td>${capBTC} BTC</td>
-            <td>${channels}</td>
-            <td>${avgCh} sats</td>
-            <td>${country}</td>
-          </tr>`;
-        });
-        tbody.innerHTML = rows || '<tr><td colspan="5" style="color:var(--muted);text-align:center">No data</td></tr>';
-      } catch(e) {
-        console.error('Lightning nodes error:', e);
-      }
-    }
-
-    // ─── MACRO & CYCLES — Mayer Multiple via CoinGecko 200d MA ──────
-    async function fetchMacro() {
-      try {
-        // Get 200 days of daily prices
-        const res = await fetch(
-          'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200&interval=daily'
-        );
-        const d = await res.json();
-        const prices = d.prices.map(p => p[1]);
-
-        if (prices.length < 200) return;
-
-        const ma200       = prices.slice(-200).reduce((a, b) => a + b, 0) / 200;
-        const currentPrice = prices[prices.length - 1];
-        const mayer       = currentPrice / ma200;
-        const pctAboveMA  = ((currentPrice - ma200) / ma200 * 100).toFixed(1);
-
-        $('macro-price').textContent  = '$' + fmt(currentPrice);
-        $('macro-ma200').textContent  = '$' + fmt(Math.round(ma200));
-        $('macro-mayer').textContent  = mayer.toFixed(3);
-
-        // Mayer signal
-        let signal, signalColor, advice;
-        if (mayer < 0.8) {
-          signal = 'DEEPLY UNDERVALUED'; signalColor = '#3b82f6';
-          advice = 'Price is more than 20% below the 200-day MA. Historically a strong accumulation zone.';
-        } else if (mayer < 1.0) {
-          signal = 'BELOW AVERAGE'; signalColor = '#00d68f';
-          advice = 'Price is below the 200-day MA. Historically a favorable zone for long-term buyers.';
-        } else if (mayer < 1.5) {
-          signal = 'FAIR VALUE'; signalColor = '#f7931a';
-          advice = 'Price is near the 200-day MA. Neither cheap nor expensive by historical standards.';
-        } else if (mayer < 2.4) {
-          signal = 'ELEVATED'; signalColor = '#ff8c00';
-          advice = 'Price is significantly above the 200-day MA. Exercise caution — past cycles showed pullbacks from these levels.';
-        } else {
-          signal = 'OVERHEATED'; signalColor = '#ff4d4d';
-          advice = 'Mayer Multiple above 2.4 — historically a rare extreme. Previous cycle peaks occurred in this zone.';
-        }
-
-        $('macro-mayer-sub').textContent = signal;
-        $('macro-mayer-sub').style.color = signalColor;
-
-        // Move indicator on gradient bar (0 = 0.4 multiple, 1 = 3.0 multiple)
-        const minM = 0.4, maxM = 3.0;
-        const pct = Math.max(0, Math.min(1, (mayer - minM) / (maxM - minM))) * 100;
-        $('mayer-indicator').style.left = pct + '%';
-        $('mayer-signal-text').innerHTML =
-          `<span style="color:${signalColor};font-weight:700">${signal}</span> &nbsp;—&nbsp; ${advice}`;
-
-        // Terminal output
-        const sign = pctAboveMA >= 0 ? '+' : '';
-        $('macro-terminal').innerHTML = `
-          <span class="t-comment">// macro analysis — 200-day moving average</span><br/>
-          <span class="t-cmd">$ bitdepth macro --indicator mayer-multiple</span><br/><br/>
-          <span class="t-out">Current Price   </span><span class="t-val">$${fmt(currentPrice)}</span><br/>
-          <span class="t-out">200-Day MA      </span><span class="t-val">$${fmt(Math.round(ma200))}</span><br/>
-          <span class="t-out">% vs MA         </span><span style="color:${pctAboveMA >= 0 ? 'var(--green)' : 'var(--red)'}">${sign}${pctAboveMA}%</span><br/>
-          <span class="t-out">Mayer Multiple  </span><span class="t-val">${mayer.toFixed(4)}</span><br/>
-          <span class="t-out">Signal          </span><span style="color:${signalColor}">${signal}</span><br/><br/>
-          <span class="t-comment">// Mayer Multiple = Price / 200-Day MA</span><br/>
-          <span class="t-comment">// Values below 1.0 historically favor accumulation</span><br/>
-          <span class="t-comment">// Values above 2.4 historically coincide with cycle tops</span><br/><br/>
-          <span class="t-cmd" style="display:inline-block;width:0.6em" id="macro-cursor">█</span>
-        `;
-
-        const mc = document.getElementById('macro-cursor');
-        if (mc) setInterval(() => { mc.style.opacity = mc.style.opacity === '0' ? '1' : '0'; }, 600);
-
-      } catch(e) {
-        console.error('Macro error:', e);
-      }
-    }
-
-    // ─── TOOL: FEE ESTIMATOR ─────────────────────────────────────────
-    let feeData = { fastestFee: 0, halfHourFee: 0, hourFee: 0 };
-    let currentFeeTarget = 'next';
-    let btcPriceForTools = 0;
-
-    function updateFeeDisplay() {
-      const rate = currentFeeTarget === 'next' ? feeData.fastestFee
-                 : currentFeeTarget === '30min' ? feeData.halfHourFee
-                 : feeData.hourFee;
-
-      if (!rate) return;
-
-      $('fee-rate-val').textContent = rate;
-
-      // If all rates are same, mempool is very clear — note it
-      const allSame = feeData.fastestFee === feeData.hourFee;
-      const rateEl = $('fee-rate-val');
-      rateEl.style.color = rate <= 2 ? 'var(--green)' : rate <= 10 ? 'var(--orange)' : 'var(--red)';
-
-      // Typical tx sizes in vBytes
-      const simple = 141;   // P2PKH legacy
-      const segwit = 102;   // P2WPKH native segwit
-      const batch  = 350;   // multi-output batch
-
-      if (btcPriceForTools > 0) {
-        const toUSD = (vb) => {
-          const usd = (rate * vb / 1e8) * btcPriceForTools;
-          return usd < 0.01 ? '<$0.01' : '$' + usd.toFixed(2);
-        };
-        $('fee-cost-simple').textContent = toUSD(simple);
-        $('fee-cost-segwit').textContent = toUSD(segwit);
-        $('fee-cost-batch').textContent  = toUSD(batch);
-      }
-    }
-
-    document.querySelectorAll('.fee-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        currentFeeTarget = this.dataset.target;
-        updateFeeDisplay();
-      });
-    });
-
-    async function fetchFeeEstimator() {
-      try {
-        const [feesRes, mempoolRes] = await Promise.all([
-          fetch('https://mempool.space/api/v1/fees/recommended'),
-          fetch('https://mempool.space/api/mempool')
-        ]);
-        feeData = await feesRes.json();
-        const mempool = await mempoolRes.json();
-
-        // Show mempool congestion context
-        const vsize = mempool.vsize || 0;
-        const mb = (vsize / 1e6).toFixed(1);
-        let congestion, congColor;
-        if (vsize < 1e6)       { congestion = 'LOW — good time to send'; congColor = 'var(--green)'; }
-        else if (vsize < 5e6)  { congestion = 'MODERATE'; congColor = 'var(--orange)'; }
-        else if (vsize < 20e6) { congestion = 'BUSY'; congColor = '#ff8c00'; }
-        else                   { congestion = 'CONGESTED — fees elevated'; congColor = 'var(--red)'; }
-
-        $('fee-mempool-note').innerHTML =
-          `Mempool: <span style="color:${congColor}">${congestion}</span> (${mb} MB) &nbsp;·&nbsp; ` +
-          `Rates: <b>${feeData.fastestFee}</b> / <b>${feeData.halfHourFee}</b> / <b>${feeData.hourFee}</b> sat/vB`;
-
-        updateFeeDisplay();
-      } catch(e) { console.error('Fee estimator error:', e); }
-    }
-
-    // ─── TOOL: SATS CONVERTER ────────────────────────────────────────
-    let convPrice = 0;
-
-    function initConverter(price) {
-      convPrice = price;
-      $('conv-rate-btc').textContent = '$' + fmt(price);
-      $('conv-rate-sat').textContent = '$' + (price / 1e8).toFixed(8);
-      $('conv-rate-usd').textContent = fmt(Math.round(1e8 / price)) + ' sats';
-    }
-
-    $('conv-usd').addEventListener('input', function() {
-      if (!convPrice || !this.value) { $('conv-btc').value = ''; $('conv-sats').value = ''; return; }
-      const btc = parseFloat(this.value) / convPrice;
-      $('conv-btc').value  = btc.toFixed(8);
-      $('conv-sats').value = Math.round(btc * 1e8);
-    });
-    $('conv-btc').addEventListener('input', function() {
-      if (!convPrice || !this.value) { $('conv-usd').value = ''; $('conv-sats').value = ''; return; }
-      const btc = parseFloat(this.value);
-      $('conv-usd').value  = (btc * convPrice).toFixed(2);
-      $('conv-sats').value = Math.round(btc * 1e8);
-    });
-    $('conv-sats').addEventListener('input', function() {
-      if (!convPrice || !this.value) { $('conv-usd').value = ''; $('conv-btc').value = ''; return; }
-      const btc = parseInt(this.value) / 1e8;
-      $('conv-btc').value = btc.toFixed(8);
-      $('conv-usd').value = (btc * convPrice).toFixed(2);
-    });
-
-    // ─── TOOL: HALVING COUNTDOWN ─────────────────────────────────────
-    let halvingTarget = null;
-
-    function initHalvingClock(currentHeight) {
-      const HALVING_INTERVAL = 210000;
-      const nextHalving = Math.ceil(currentHeight / HALVING_INTERVAL) * HALVING_INTERVAL;
-      const blocksLeft  = nextHalving - currentHeight;
-      const msLeft      = blocksLeft * 10 * 60 * 1000; // 10 min per block
-      halvingTarget     = Date.now() + msLeft;
-
-      $('hc-current-block').textContent = fmt(currentHeight);
-      $('hc-target-block').textContent  = fmt(nextHalving);
-      $('hc-blocks-left').textContent   = fmt(blocksLeft);
-    }
-
-    function tickHalvingClock() {
-      if (!halvingTarget) return;
-      const ms   = Math.max(0, halvingTarget - Date.now());
-      const secs = Math.floor(ms / 1000);
-      const d    = Math.floor(secs / 86400);
-      const h    = Math.floor((secs % 86400) / 3600);
-      const m    = Math.floor((secs % 3600) / 60);
-      const s    = secs % 60;
-      $('hc-days').textContent  = String(d).padStart(3, '0');
-      $('hc-hours').textContent = String(h).padStart(2, '0');
-      $('hc-mins').textContent  = String(m).padStart(2, '0');
-      $('hc-secs').textContent  = String(s).padStart(2, '0');
-    }
-    setInterval(tickHalvingClock, 1000);
-
-    // ─── TOOL: IS BITCOIN CHEAP? ─────────────────────────────────────
-    function updateCheapSignal(mayer) {
-      const ring = $('signal-ring');
-      const num  = $('signal-mayer-num');
-      const verdict = $('signal-verdict');
-      const detail   = $('signal-detail');
-
-      num.textContent = mayer.toFixed(3);
-
-      let color, label, text;
-      if (mayer < 0.5) {
-        color = '#3b82f6'; label = 'EXTREMELY CHEAP';
-        text  = 'Rare territory. Price is less than half the 200-day MA. Historically one of the best accumulation windows in Bitcoin history.';
-      } else if (mayer < 1.0) {
-        color = '#00d68f'; label = 'YES — BUY ZONE';
-        text  = 'Price is below the 200-day moving average. Long-term holders have historically been rewarded buying here.';
-      } else if (mayer < 1.5) {
-        color = '#f7931a'; label = 'FAIR VALUE';
-        text  = 'Price is near the 200-day MA. Neither cheap nor expensive by historical standards. Accumulate or hold.';
-      } else if (mayer < 2.4) {
-        color = '#ff8c00'; label = 'GETTING PRICEY';
-        text  = 'Significantly above the 200-day MA. Not a screaming buy. Past cycles showed volatility and pullbacks from these levels.';
-      } else {
-        color = '#ff4d4d'; label = 'HISTORICALLY EXPENSIVE';
-        text  = 'Mayer Multiple above 2.4 — this zone has historically coincided with cycle peaks. Extreme caution warranted.';
-      }
-
-      ring.style.borderColor    = color;
-      ring.style.boxShadow      = `0 0 30px ${color}33`;
-      num.style.color           = color;
-      verdict.textContent       = label;
-      verdict.style.color       = color;
-      detail.textContent        = text;
-    }
-
-    // ─── BITCOIN OBITUARIES ──────────────────────────────────────────
-    const obituaries = [
-      { year: '2010', headline: '"Bitcoin is worthless"', source: 'Various forums', price: '$0.07' },
-      { year: '2011', headline: '"The Bitcoin Bubble"', source: 'Time Magazine', price: '$32' },
-      { year: '2012', headline: '"Bitcoin Is Dead"', source: 'Gizmodo', price: '$5' },
-      { year: '2013', headline: '"Bitcoin Will Never Be a Currency"', source: 'Wired', price: '$1,200' },
-      { year: '2014', headline: '"The Bitcoin Dream Is Dead"', source: 'Business Insider', price: '$300' },
-      { year: '2015', headline: '"Bitcoin Is Dead, Long Live the Blockchain"', source: 'Bloomberg', price: '$200' },
-      { year: '2017', headline: '"Bitcoin Is a Fraud" — Jamie Dimon', source: 'CNBC', price: '$4,200' },
-      { year: '2018', headline: '"Bitcoin Is a Pyramid Scheme"', source: 'NYT', price: '$6,500' },
-      { year: '2019', headline: '"The Bitcoin Bear Market Is Here To Stay"', source: 'Forbes', price: '$3,500' },
-      { year: '2020', headline: '"Bitcoin Will Never Recover From COVID"', source: 'MarketWatch', price: '$6,000' },
-      { year: '2022', headline: '"Bitcoin Is Worthless" — Warren Buffett', source: 'Fortune', price: '$29,000' },
-      { year: '2023', headline: '"Bitcoin Has No Future After FTX"', source: 'The Guardian', price: '$16,500' },
-    ];
-
-    const obitsGrid = $('obits-grid');
-    obitsGrid.innerHTML = obituaries.map((o, i) => `
-      <div class="obit-card${i >= 6 ? ' obit-hidden' : ''}">
-        <div class="obit-year">${o.year} — BTC: ${o.price}</div>
-        <div class="obit-headline">"${o.headline}"</div>
-        <div class="obit-source">${o.source}</div>
-      </div>
-    `).join('');
-
-    // Show more button (only relevant on mobile where grid is 1-col)
-    const showMoreBtn = document.createElement('button');
-    showMoreBtn.id = 'obits-show-more';
-    showMoreBtn.textContent = 'Show all 12 obituaries ↓';
-    showMoreBtn.style.cssText = 'display:none;width:100%;margin-top:1px;background:var(--bg2);border:1px solid var(--border);color:var(--orange);font-family:var(--mono);font-size:0.72rem;padding:0.85rem;cursor:pointer;letter-spacing:0.1em';
-    obitsGrid.after(showMoreBtn);
-
-    showMoreBtn.addEventListener('click', function() {
-      document.querySelectorAll('.obit-hidden').forEach(el => el.classList.remove('obit-hidden'));
-      this.style.display = 'none';
-    });
-
-    // ─── TOOL 5: SAT STACK CALCULATOR ───────────────────────────────
-    let dcaYears = 1;
-
-    document.querySelectorAll('[data-dca]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('[data-dca]').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        dcaYears = parseInt(this.dataset.dca);
-      });
-    });
-
-    $('dca-calc-btn').addEventListener('click', function() {
-      const monthly = parseFloat($('dca-amount').value) || 100;
-      const price   = parseFloat($('dca-price').value) || btcPriceForTools || 95000;
-      const months  = dcaYears * 12;
-      const totalUSD = monthly * months;
-      const totalBTC  = totalUSD / price;
-      const totalSats = Math.round(totalBTC * 1e8);
-      const currentVal = btcPriceForTools ? totalBTC * btcPriceForTools : totalBTC * price;
-      const perDay = Math.round((monthly / 30) / price * 1e8);
-
-      $('dca-total-invested').textContent = '$' + fmt(totalUSD);
-      $('dca-total-sats').textContent     = fmt(totalSats) + ' sats';
-      $('dca-total-btc').textContent      = totalBTC.toFixed(6) + ' BTC';
-      $('dca-current-val').textContent    = '$' + fmt(Math.round(currentVal));
-      $('dca-per-day').textContent        = fmt(perDay) + ' sats/day';
-      $('dca-result').style.display = 'block';
-    });
-
-    // Pre-fill DCA price field with live price once available
-    function prefillDCAPrice(price) {
-      const field = $('dca-price');
-      if (field && !field.value) field.placeholder = fmt(Math.round(price));
-    }
-
-    // ─── TOOL 6: ADDRESS BALANCE CHECKER ────────────────────────────
-    async function checkAddress() {
-      const addr = $('addr-input').value.trim();
-      const errEl = $('addr-error');
-      const resEl = $('addr-result');
-
-      errEl.style.display = 'none';
-      resEl.style.display = 'none';
-
-      if (!addr) { errEl.textContent = 'Please enter a Bitcoin address.'; errEl.style.display = 'block'; return; }
-
-      // Basic format check
-      const validAddr = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(addr) || /^bc1[a-z0-9]{6,87}$/i.test(addr);
-      if (!validAddr) { errEl.textContent = 'Invalid Bitcoin address format.'; errEl.style.display = 'block'; return; }
-
-      const btn = $('addr-check-btn');
-      btn.textContent = 'Checking...';
-      btn.disabled = true;
-
-      try {
-        const res  = await fetch(`https://mempool.space/api/address/${addr}`);
-        if (!res.ok) throw new Error('Address not found');
-        const d = await res.json();
-
-        const confirmed   = d.chain_stats.funded_txo_sum - d.chain_stats.spent_txo_sum;
-        const unconfirmed = d.mempool_stats.funded_txo_sum - d.mempool_stats.spent_txo_sum;
-        const received    = d.chain_stats.funded_txo_sum;
-        const txCount     = d.chain_stats.tx_count + d.mempool_stats.tx_count;
-
-        const satsToBTC = (s) => (s / 1e8).toFixed(8) + ' BTC';
-        const satsToK   = (s) => s >= 1e8 ? (s/1e8).toFixed(4) + ' BTC' : fmt(s) + ' sats';
-
-        $('addr-balance').textContent     = satsToK(confirmed);
-        $('addr-unconfirmed').textContent = unconfirmed !== 0 ? satsToK(unconfirmed) : '0';
-        $('addr-received').textContent    = satsToK(received);
-        $('addr-txcount').textContent     = fmt(txCount) + ' txs';
-
-        if (btcPriceForTools && confirmed > 0) {
-          const usd = ((confirmed / 1e8) * btcPriceForTools).toFixed(2);
-          $('addr-usd-val').textContent = `≈ $${fmt(parseFloat(usd))} USD at current price`;
-        } else {
-          $('addr-usd-val').textContent = '';
-        }
-
-        $('addr-mempool-link').href = `https://mempool.space/address/${addr}`;
-        resEl.style.display = 'block';
-      } catch(e) {
-        errEl.textContent = 'Could not fetch address data. Check the address and try again.';
-        errEl.style.display = 'block';
-      } finally {
-        btn.textContent = 'Check Address →';
-        btn.disabled = false;
-      }
-    }
-
-    $('addr-check-btn').addEventListener('click', checkAddress);
-    $('addr-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkAddress(); });
-
-    // ─── TOOL 7: BITCOIN VS INFLATION ───────────────────────────────
-    // Historical yearly average BTC prices (USD)
-    const btcHistoricalPrices = {
-      2015: 272,  2016: 568,  2017: 4000, 2018: 7600,
-      2019: 7200, 2020: 11000, 2021: 47000, 2022: 28000,
-      2023: 26000, 2024: 65000
-    };
-
-    // Cumulative USD inflation since each year (approximate CPI-based purchasing power loss)
-    const inflationLoss = {
-      2015: 0.272, 2016: 0.238, 2017: 0.207, 2018: 0.178,
-      2019: 0.155, 2020: 0.132, 2021: 0.093, 2022: 0.042,
-      2023: 0.016, 2024: 0.003
-    };
-
-    let infYear = 2020;
-
-    function calcInflation() {
-      const startPrice = btcHistoricalPrices[infYear];
-      const currentPrice = btcPriceForTools || 95000;
-      const loss = inflationLoss[infYear] || 0;
-
-      // $100 in USD — worth less due to inflation
-      const usdNow = (100 * (1 - loss)).toFixed(2);
-
-      // $100 in BTC — how many sats bought, what are they worth now
-      const satsBought = (100 / startPrice) * 1e8;
-      const btcVal = (satsBought / 1e8) * currentPrice;
-
-      $('inf-usd-val').textContent = '$' + usdNow;
-      $('inf-btc-val').textContent = '$' + fmt(Math.round(btcVal));
-      $('inf-usd-sub').textContent = `~${(loss * 100).toFixed(1)}% lost to inflation`;
-      $('inf-btc-sub').textContent = `at $${fmt(Math.round(currentPrice))} today`;
-
-      const multiplier = (btcVal / 100).toFixed(1);
-      const pct = ((btcVal - 100) / 100 * 100).toFixed(0);
-      const sign = btcVal > 100 ? '+' : '';
-
-      $('inf-summary').innerHTML = `$100 in Bitcoin in <b>${infYear}</b> is worth <span style="color:var(--green)">$${fmt(Math.round(btcVal))}</span> today — a <span style="color:var(--green)">${sign}${pct}%</span> return (${multiplier}×). The same $100 in dollars now has the purchasing power of <span style="color:var(--red)">$${usdNow}</span>.`;
-    }
-
-    document.querySelectorAll('[data-inf-year]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('[data-inf-year]').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        infYear = parseInt(this.dataset.infYear);
-        calcInflation();
-      });
-    });
-
-    // Run inflation calc once price is loaded
-    function initInflationTool(price) {
-      prefillDCAPrice(price);
-      calcInflation();
-    }
-    // Patch fetchCoinGecko to also update tools
-    const _origFetchCG = fetchCoinGecko;
-    fetchCoinGecko = async function() {
-      await _origFetchCG();
-      const priceEl = $('hero-price');
-      if (priceEl && priceEl.textContent !== '—') {
-        const p = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
-        if (p > 0) {
-          btcPriceForTools = p;
-          convPrice = p;
-          initConverter(p);
-          updateFeeDisplay();
-          initInflationTool(p);
-        }
-      }
-    };
-
-    // Patch fetchMempool to init halving clock and fee data
-    const _origFetchMP = fetchMempool;
-    fetchMempool = async function() {
-      await _origFetchMP();
-      const heightEl = $('chain-height');
-      if (heightEl && heightEl.textContent !== '—') {
-        const h = parseInt(heightEl.textContent.replace(/,/g, ''));
-        if (h > 0) initHalvingClock(h);
-      }
-      await fetchFeeEstimator();
-      // Feed mempool vsize into signal dashboard
-      try {
-        const r = await fetch('https://mempool.space/api/mempool');
-        const d = await r.json();
-        if (d.vsize) bsdSetMempool(d.vsize);
-        updateAlarmDisplay(feeData.fastestFee || 1);
-      } catch(e) {}
-    };
-
-    // Patch fetchMacro to update cheap signal + dashboard
-    const _origFetchMacro = fetchMacro;
-    fetchMacro = async function() {
-      await _origFetchMacro();
-      const mayerEl = $('macro-mayer');
-      if (mayerEl && mayerEl.textContent !== '—') {
-        const m = parseFloat(mayerEl.textContent);
-        if (m > 0) { updateCheapSignal(m); bsdSetMayer(m); }
-      }
-      // Hashrate from DOM
-      const hrEl = $('mining-hashrate');
-      if (hrEl && hrEl.textContent !== '—') {
-        const raw = hrEl.textContent; // e.g. "823 EH/s"
-        const ehr = parseFloat(raw);
-        if (ehr > 0) bsdSetHashrate(ehr);
-      }
-    };
-
-    // Patch fetchCoinGeckoGlobal to feed dominance
-    const _origFetchGlobal = fetchCoinGeckoGlobal;
-    fetchCoinGeckoGlobal = async function() {
-      await _origFetchGlobal();
-      // dominance is shown in a stat box
-      const domEl = document.querySelector('[id*="dominance"], [id*="dom"]');
-      if (domEl) {
-        const pct = parseFloat(domEl.textContent);
-        if (pct > 0) bsdSetDominance(pct);
-      }
-      // Also try fetching it directly
-      try {
-        const r = await fetch('https://api.coingecko.com/api/v3/global');
-        const d = await r.json();
-        const dom = d.data?.market_cap_percentage?.btc;
-        if (dom) bsdSetDominance(dom);
-      } catch(e) {}
-    };
-    // ─── TOOL 8: FEE ALARM ───────────────────────────────────────────
-    let alarmActive = false;
-    let alarmInterval = null;
-    let alarmTriggered = false;
-
-    // Audio context for alert sound
-    function playAlarmSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const times = [0, 0.25, 0.5];
-        times.forEach(t => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.frequency.setValueAtTime(880, ctx.currentTime + t);
-          osc.frequency.setValueAtTime(1100, ctx.currentTime + t + 0.1);
-          gain.gain.setValueAtTime(0.3, ctx.currentTime + t);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.2);
-          osc.start(ctx.currentTime + t);
-          osc.stop(ctx.currentTime + t + 0.2);
-        });
-      } catch(e) {}
-    }
-
-    async function checkAlarm() {
-      if (!alarmActive || alarmTriggered) return;
-      try {
-        const res = await fetch('https://mempool.space/api/v1/fees/recommended');
-        const d   = await res.json();
-        const current = d.fastestFee;
-        const target  = parseInt($('alarm-target').value) || 10;
-
-        $('alarm-current-fee').textContent = current + ' sat/vB';
-        $('alarm-current-fee').style.color = current <= target ? 'var(--green)' : 'var(--orange)';
-        $('alarm-status-text').textContent = `Watching · last checked ${new Date().toLocaleTimeString()} · current: ${current} sat/vB`;
-
-        if (current <= target) {
-          alarmTriggered = true;
-          alarmActive = false;
-          clearInterval(alarmInterval);
-          playAlarmSound();
-          $('alarm-status').style.display = 'none';
-          $('alarm-toggle-btn').style.display = 'none';
-          $('alarm-triggered').style.display = 'block';
-          $('alarm-triggered-detail').textContent =
-            `Fees dropped to ${current} sat/vB — below your target of ${target} sat/vB. Good time to send!`;
-        }
-      } catch(e) {}
-    }
-
-    function resetAlarm() {
-      alarmActive = false;
-      alarmTriggered = false;
-      clearInterval(alarmInterval);
-      $('alarm-triggered').style.display = 'none';
-      $('alarm-status').style.display = 'none';
-      $('alarm-toggle-btn').style.display = 'block';
-      $('alarm-toggle-btn').textContent = '🔔 Start Watching';
-      $('alarm-toggle-btn').style.background = 'var(--orange)';
-      $('alarm-toggle-btn').style.color = '#000';
-    }
-
-    $('alarm-toggle-btn').addEventListener('click', function() {
-      if (alarmActive) {
-        // Stop
-        alarmActive = false;
-        clearInterval(alarmInterval);
-        $('alarm-status').style.display = 'none';
-        this.textContent = '🔔 Start Watching';
-        this.style.background = 'var(--orange)';
-        this.style.color = '#000';
-      } else {
-        // Start
-        alarmTriggered = false;
-        alarmActive = true;
-        $('alarm-status').style.display = 'flex';
-        $('alarm-triggered').style.display = 'none';
-        this.textContent = '🔕 Stop Watching';
-        this.style.background = 'var(--bg2)';
-        this.style.color = 'var(--orange)';
-        checkAlarm(); // immediate first check
-        clearInterval(alarmInterval);
-        alarmInterval = setInterval(checkAlarm, 30_000);
-      }
-    });
-
-    // Keep alarm-current-fee updated passively from fee estimator data
-    function updateAlarmDisplay(fastestFee) {
-      if (!alarmActive && !alarmTriggered) {
-        $('alarm-current-fee').textContent = fastestFee + ' sat/vB';
-      }
-    }
-
-    // ─── TOOL 9: BITCOIN SIGNAL DASHBOARD ───────────────────────────
-    let bsdData = { mayer: null, mempoolVsize: null, hashrate: null, dominance: null };
-
-    function scoreColor(score) {
-      if (score >= 70) return '#00d68f';
-      if (score >= 50) return '#f7931a';
-      if (score >= 30) return '#ff8c00';
-      return '#ff4d4d';
-    }
-
-    function scoreMayer(m) {
-      if (!m) return null;
-      if (m < 0.5) return { score: 95, label: 'Extreme Low', detail: m.toFixed(2) + ' (historic buy zone)' };
-      if (m < 0.8) return { score: 80, label: 'Undervalued',  detail: m.toFixed(2) + ' (below 200d MA)' };
-      if (m < 1.2) return { score: 65, label: 'Fair Value',   detail: m.toFixed(2) + ' (near 200d MA)' };
-      if (m < 1.7) return { score: 45, label: 'Elevated',     detail: m.toFixed(2) + ' (above average)' };
-      if (m < 2.4) return { score: 25, label: 'High',         detail: m.toFixed(2) + ' (caution zone)' };
-      return               { score: 10, label: 'Overheated',  detail: m.toFixed(2) + ' (historical top range)' };
-    }
-
-    function scoreMempool(vsize) {
-      if (vsize === null) return null;
-      const mb = vsize / 1e6;
-      if (mb < 1)   return { score: 90, label: 'Clear',      detail: mb.toFixed(1) + ' MB (very low fees)' };
-      if (mb < 5)   return { score: 70, label: 'Moderate',   detail: mb.toFixed(1) + ' MB (normal)' };
-      if (mb < 20)  return { score: 50, label: 'Busy',       detail: mb.toFixed(1) + ' MB (fees rising)' };
-      if (mb < 100) return { score: 30, label: 'Congested',  detail: mb.toFixed(1) + ' MB (high fees)' };
-      return               { score: 10, label: 'Overwhelmed', detail: mb.toFixed(1) + ' MB (very high fees)' };
-    }
-
-    function scoreHashrate(ehr) {
-      // ehr = exahashes/sec — higher is better for network security
-      if (!ehr) return null;
-      if (ehr > 800)  return { score: 90, label: 'All-Time High', detail: Math.round(ehr) + ' EH/s (ATH territory)' };
-      if (ehr > 600)  return { score: 75, label: 'Very Strong',   detail: Math.round(ehr) + ' EH/s' };
-      if (ehr > 400)  return { score: 60, label: 'Strong',        detail: Math.round(ehr) + ' EH/s' };
-      if (ehr > 200)  return { score: 45, label: 'Moderate',      detail: Math.round(ehr) + ' EH/s' };
-      return                 { score: 25, label: 'Weak',          detail: Math.round(ehr) + ' EH/s' };
-    }
-
-    function scoreDominance(pct) {
-      if (!pct) return null;
-      if (pct > 60)  return { score: 85, label: 'Very High',  detail: pct.toFixed(1) + '% (Bitcoin leading)' };
-      if (pct > 55)  return { score: 70, label: 'High',       detail: pct.toFixed(1) + '% (strong cycle)' };
-      if (pct > 50)  return { score: 55, label: 'Moderate',   detail: pct.toFixed(1) + '% (altcoins competing)' };
-      if (pct > 45)  return { score: 35, label: 'Low',        detail: pct.toFixed(1) + '% (alt season risk)' };
-      return                { score: 20, label: 'Very Low',   detail: pct.toFixed(1) + '% (altcoin season)' };
-    }
-
-    function updateSignalDashboard() {
-      const results = [
-        { key: 'mayer',     fn: scoreMayer,      data: bsdData.mayer },
-        { key: 'mempool',   fn: scoreMempool,    data: bsdData.mempoolVsize },
-        { key: 'hashrate',  fn: scoreHashrate,   data: bsdData.hashrate },
-        { key: 'dominance', fn: scoreDominance,  data: bsdData.dominance },
-      ];
-
-      let totalScore = 0, count = 0;
-      results.forEach(({ key, fn, data }) => {
-        const r = fn(data);
-        if (!r) return;
-        count++;
-        totalScore += r.score;
-        const color = scoreColor(r.score);
-        $(`bsd-dot-${key}`).style.background    = color;
-        $(`bsd-val-${key}`).textContent         = r.detail;
-        $(`bsd-score-${key}`).textContent       = r.score;
-        $(`bsd-score-${key}`).style.color       = color;
-      });
-
-      if (!count) return;
-      const avg = Math.round(totalScore / count);
-
-      // Update arc
-      const arcEl = $('bsd-arc-fill');
-      const arcLen = 251; // half circumference of r=80 circle
-      const fill = (avg / 100) * arcLen;
-      const col  = scoreColor(avg);
-      arcEl.setAttribute('stroke-dasharray', `${fill} ${arcLen}`);
-      arcEl.setAttribute('stroke', col);
-
-      $('bsd-score').textContent     = avg;
-      $('bsd-score').style.color     = col;
-
-      let verdict, summary;
-      if (avg >= 75) {
-        verdict = 'ACCUMULATE';
-        summary = `Signal score ${avg}/100 — All indicators aligned bullishly. Mayer Multiple suggests undervaluation, mempool is clear, hashrate is securing the network, and Bitcoin dominance is strong. Historically favorable conditions for long-term buyers.`;
-      } else if (avg >= 55) {
-        verdict = 'NEUTRAL';
-        summary = `Signal score ${avg}/100 — Mixed signals. Some indicators are favorable but others suggest caution. Not a clear buy or sell signal — conditions are average relative to Bitcoin's history.`;
-      } else if (avg >= 35) {
-        verdict = 'CAUTION';
-        summary = `Signal score ${avg}/100 — Multiple indicators are elevated or unfavorable. Price may be stretched relative to fundamentals, or network conditions are stressed. Exercise caution with new positions.`;
-      } else {
-        verdict = 'HIGH RISK';
-        summary = `Signal score ${avg}/100 — Most indicators are in historically unfavorable territory. This has correlated with cycle tops or periods of significant drawdown. Not financial advice — do your own research.`;
-      }
-
-      $('bsd-score-label').textContent = verdict;
-      $('bsd-score-label').style.color = col;
-      $('bsd-summary').textContent     = summary;
-    }
-
-    // Feed data into dashboard from existing fetches
-    function bsdSetMayer(m)      { bsdData.mayer = m;      updateSignalDashboard(); }
-    function bsdSetMempool(v)    { bsdData.mempoolVsize = v; updateSignalDashboard(); }
-    function bsdSetHashrate(h)   { bsdData.hashrate = h;   updateSignalDashboard(); }
-    function bsdSetDominance(d)  { bsdData.dominance = d;  updateSignalDashboard(); }
 
     async function init() {
-      await Promise.allSettled([
-        fetchCoinGecko(),
-        fetchCoinGeckoGlobal(),
-        fetchMempool(),
-        fetchSparkline(),
-        fetchExchanges(),
-        fetchLightning(),
-        fetchMacro()
-      ]);
+      await Promise.allSettled([fetchCoinGecko(), fetchCoinGeckoGlobal(), fetchMempool(), fetchSparkline(), fetchExchanges(), fetchLightning(), fetchMacro()]);
     }
-
     init();
-
-    // ─── TOOL 10: BTC REGRET CALCULATOR ─────────────────────────────
-    $('regret-calc-btn').addEventListener('click', async function() {
-      const usd = parseFloat($('regret-usd').value);
-      const date = $('regret-date').value;
-
-      $('regret-result').style.display = 'none';
-      $('regret-error').style.display = 'none';
-
-      if (!usd || usd <= 0) {
-        $('regret-error').textContent = 'Please enter a valid USD amount.';
-        $('regret-error').style.display = 'block';
-        return;
-      }
-      if (!date) {
-        $('regret-error').textContent = 'Please select a date.';
-        $('regret-error').style.display = 'block';
-        return;
-      }
-
-      const chosen = new Date(date);
-      const earliest = new Date('2013-04-28');
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      if (chosen < earliest) {
-        $('regret-error').textContent = 'Date must be April 28, 2013 or later (earliest CoinGecko data).';
-        $('regret-error').style.display = 'block';
-        return;
-      }
-      if (chosen >= today) {
-        $('regret-error').textContent = 'Please pick a date in the past.';
-        $('regret-error').style.display = 'block';
-        return;
-      }
-
-      this.textContent = 'Fetching data...';
-      this.disabled = true;
-
-      try {
-        // Use market_chart/range to get price for the selected date
-        // We fetch a 2-day window around the date to ensure we get a data point
-        const ts = chosen.getTime();
-        const from = Math.floor((ts - 86400000) / 1000);
-        const to   = Math.floor((ts + 2 * 86400000) / 1000);
-
-        let priceThen = null;
-
-        // Try CoinGecko market_chart range first
-        try {
-          const histRes = await fetch(
-            `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
-          );
-          if (histRes.ok) {
-            const histData = await histRes.json();
-            const prices = histData?.prices;
-            if (prices && prices.length > 0) {
-              // Find the closest data point to the chosen date
-              let closest = prices[0];
-              for (const p of prices) {
-                if (Math.abs(p[0] - ts) < Math.abs(closest[0] - ts)) closest = p;
-              }
-              priceThen = closest[1];
-            }
-          }
-        } catch(e) {}
-
-        // Fallback: CoinGecko /history endpoint via corsproxy.io
-        if (!priceThen) {
-          const [y, m, d2] = date.split('-');
-          const ddmmyyyy = `${d2}-${m}-${y}`;
-          const proxyRes = await fetch(
-            `https://corsproxy.io/?url=${encodeURIComponent('https://api.coingecko.com/api/v3/coins/bitcoin/history?date=' + ddmmyyyy)}`
-          );
-          if (proxyRes.ok) {
-            const proxyData = await proxyRes.json();
-            priceThen = proxyData?.market_data?.current_price?.usd;
-          }
-        }
-
-        if (!priceThen) throw new Error('Could not fetch historical price. CoinGecko may be rate-limiting — try again in a moment.');
-
-        const nowPrice = btcPriceForTools || 0;
-        if (!nowPrice) throw new Error('Current BTC price not loaded yet. Reload the page and try again.');
-
-        const btcBought = usd / priceThen;
-        const valueNow = btcBought * nowPrice;
-        const gain = valueNow - usd;
-        const mult = valueNow / usd;
-
-        $('regret-price-then').textContent = '$' + priceThen.toLocaleString('en-US', {maximumFractionDigits:2});
-        $('regret-btc-then').textContent = btcBought.toFixed(8) + ' BTC';
-        $('regret-value-now').textContent = '$' + valueNow.toLocaleString('en-US', {maximumFractionDigits:2});
-
-        const isGain = gain >= 0;
-        $('regret-gain').textContent = (isGain ? '+' : '') + '$' + gain.toLocaleString('en-US', {maximumFractionDigits:2}) + ' (' + mult.toFixed(1) + 'x)';
-        $('regret-gain').style.color = isGain ? 'var(--green)' : 'var(--red)';
-        $('regret-value-now').style.color = isGain ? 'var(--green)' : 'var(--red)';
-
-        const purchaseDate = chosen.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
-        let summary;
-        if (mult >= 100) {
-          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. That stack would be worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} today — a ${mult.toFixed(0)}x return. 🚀`;
-        } else if (mult >= 2) {
-          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. Today that's worth $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} — a ${mult.toFixed(1)}x gain. Not bad.`;
-        } else if (mult >= 1) {
-          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. You'd be up $${gain.toLocaleString('en-US',{maximumFractionDigits:0})} today. Holding pays.`;
-        } else {
-          summary = `On ${purchaseDate}, $${usd.toLocaleString()} bought ${btcBought.toFixed(6)} BTC at $${priceThen.toLocaleString()}. At today's price that's $${valueNow.toLocaleString('en-US',{maximumFractionDigits:0})} — down ${((1-mult)*100).toFixed(1)}%. Time heals all wounds... usually.`;
-        }
-        $('regret-summary').textContent = summary;
-        $('regret-result').style.display = 'block';
-      } catch(e) {
-        $('regret-error').textContent = 'Error: ' + (e.message || 'Could not fetch data. Try again.');
-        $('regret-error').style.display = 'block';
-      } finally {
-        this.textContent = 'Calculate My Regret →';
-        this.disabled = false;
-      }
-    });
-
-    // Price every 60s, on-chain every 2 min, exchanges every 30s, sparkline/macro/lightning every 10 min
     setInterval(fetchCoinGecko, 60_000);
     setInterval(fetchCoinGeckoGlobal, 120_000);
     setInterval(fetchMempool, 120_000);

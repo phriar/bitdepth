@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sats Converter — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 05</div>
+      <div class="tool-page-title">🔄 Sats Converter</div>
+      <p class="tool-page-desc">Instantly convert between USD, BTC, and satoshis using the live Bitcoin price.</p>
+      <div class="tool-section">
+        <div class="tool-label">US Dollars (USD)</div>
+        <div class="conv-wrap"><span class="conv-prefix">$</span><input id="conv-usd" class="conv-input" type="number" placeholder="100" inputmode="decimal" /></div>
+      </div>
+      <div class="tool-section">
+        <div class="tool-label">Bitcoin (BTC)</div>
+        <div class="conv-wrap"><span class="conv-prefix">₿</span><input id="conv-btc" class="conv-input" type="number" placeholder="0.00000000" step="any" inputmode="decimal" /></div>
+      </div>
+      <div class="tool-section">
+        <div class="tool-label">Satoshis (sats)</div>
+        <div class="conv-wrap"><span class="conv-prefix" style="font-size:0.7rem">SAT</span><input id="conv-sats" class="conv-input" type="number" placeholder="10000000" style="padding-left:3.5rem" inputmode="numeric" /></div>
+      </div>
+      <div class="conv-rates" style="margin-top:0.5rem">
+        <div class="conv-rate-row"><span class="conv-rate-label">1 BTC =</span><span id="conv-rate-btc" class="conv-rate-val">loading...</span></div>
+        <div class="conv-rate-row"><span class="conv-rate-label">1 sat =</span><span id="conv-rate-sat" class="conv-rate-val">—</span></div>
+        <div class="conv-rate-row"><span class="conv-rate-label">$1 USD =</span><span id="conv-rate-usd" class="conv-rate-val">—</span></div>
+      </div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div><a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    let convPrice=0;
+    function initConverter(p){
+      convPrice=p;
+      $('conv-rate-btc').textContent='$'+fmt(p);
+      $('conv-rate-sat').textContent='$'+(p/1e8).toFixed(8);
+      $('conv-rate-usd').textContent=fmt(Math.round(1e8/p))+' sats';
+    }
+    $('conv-usd').addEventListener('input',function(){
+      if(!convPrice||!this.value){$('conv-btc').value='';$('conv-sats').value='';return;}
+      const btc=parseFloat(this.value)/convPrice;
+      $('conv-btc').value=btc.toFixed(8);$('conv-sats').value=Math.round(btc*1e8);
+    });
+    $('conv-btc').addEventListener('input',function(){
+      if(!convPrice||!this.value){$('conv-usd').value='';$('conv-sats').value='';return;}
+      const btc=parseFloat(this.value);
+      $('conv-usd').value=(btc*convPrice).toFixed(2);$('conv-sats').value=Math.round(btc*1e8);
+    });
+    $('conv-sats').addEventListener('input',function(){
+      if(!convPrice||!this.value){$('conv-usd').value='';$('conv-btc').value='';return;}
+      const btc=parseInt(this.value)/1e8;
+      $('conv-btc').value=btc.toFixed(8);$('conv-usd').value=(btc*convPrice).toFixed(2);
+    });
+    async function init(){const p=await fetchBtcPriceMini();if(p>0)initConverter(p);updateNavTime();}
+    init();
+    setInterval(async()=>{const p=await fetchBtcPriceMini();if(p>0)initConverter(p);},60000);
+  </script>
+</body>
+</html>

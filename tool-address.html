@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Address Checker — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav>
+    <a class="logo" href="index.html">Bit<span>Depth</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li>
+      <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
+    </ul>
+    <div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div>
+  </nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 02</div>
+      <div class="tool-page-title">🔍 Address Checker</div>
+      <p class="tool-page-desc">Check any Bitcoin address balance, transaction count, and received total. Powered by Mempool.space.</p>
+      <div class="tool-section">
+        <div class="tool-label">Bitcoin Address</div>
+        <textarea id="addr-input" class="addr-input" placeholder="Paste any Bitcoin address (P2PKH, P2SH, bech32...)" rows="2" style="resize:none;margin-top:0.4rem"></textarea>
+      </div>
+      <button id="addr-check-btn" class="tool-action-btn">Check Address →</button>
+      <div id="addr-result" style="display:none;margin-top:1rem">
+        <div class="addr-result-grid">
+          <div class="addr-stat"><div class="addr-stat-label">Balance</div><div id="addr-balance" class="addr-stat-val" style="color:var(--green)">—</div></div>
+          <div class="addr-stat"><div class="addr-stat-label">Unconfirmed</div><div id="addr-unconfirmed" class="addr-stat-val">—</div></div>
+          <div class="addr-stat"><div class="addr-stat-label">Total Received</div><div id="addr-received" class="addr-stat-val">—</div></div>
+          <div class="addr-stat"><div class="addr-stat-label">Transactions</div><div id="addr-txcount" class="addr-stat-val">—</div></div>
+        </div>
+        <div id="addr-usd-val" class="tool-note" style="margin-top:0.75rem;text-align:center"></div>
+        <a id="addr-mempool-link" href="#" target="_blank" rel="noopener"
+           style="display:block;margin-top:0.75rem;text-align:center;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em;text-decoration:none">
+          VIEW ON MEMPOOL.SPACE →
+        </a>
+      </div>
+      <div id="addr-error" class="tool-note" style="display:none;color:var(--red)"></div>
+      <div class="tool-note" style="margin-top:1rem">Only queries public blockchain data. No private keys ever needed. Powered by mempool.space API.</div>
+    </div>
+  </div>
+  <footer>
+    <div><strong style="color:var(--text)">BitDepth</strong></div>
+    <div><a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div>
+  </footer>
+  <script src="shared.js"></script>
+  <script>
+    let livePrice = 0;
+    async function init() { livePrice = await fetchBtcPriceMini(); updateNavTime(); }
+
+    async function checkAddress() {
+      const addr = $('addr-input').value.trim();
+      const btn = $('addr-check-btn');
+      const resEl = $('addr-result');
+      const errEl = $('addr-error');
+      resEl.style.display = 'none'; errEl.style.display = 'none';
+      if (!addr) { errEl.textContent = 'Please enter a Bitcoin address.'; errEl.style.display = 'block'; return; }
+      btn.textContent = 'Checking...'; btn.disabled = true;
+      try {
+        const res = await fetch(`https://mempool.space/api/address/${addr}`);
+        if (!res.ok) throw new Error('Address not found');
+        const d = await res.json();
+        const confirmed = d.chain_stats.funded_txo_sum - d.chain_stats.spent_txo_sum;
+        const unconfirmed = d.mempool_stats.funded_txo_sum - d.mempool_stats.spent_txo_sum;
+        const received = d.chain_stats.funded_txo_sum;
+        const txCount = d.chain_stats.tx_count + d.mempool_stats.tx_count;
+        const satsToK = s => s >= 1e8 ? (s/1e8).toFixed(4)+' BTC' : fmt(s)+' sats';
+        $('addr-balance').textContent = satsToK(confirmed);
+        $('addr-unconfirmed').textContent = unconfirmed !== 0 ? satsToK(unconfirmed) : '0';
+        $('addr-received').textContent = satsToK(received);
+        $('addr-txcount').textContent = fmt(txCount)+' txs';
+        if (livePrice && confirmed > 0) {
+          $('addr-usd-val').textContent = '≈ $'+fmt(Math.round((confirmed/1e8)*livePrice))+' USD at current price';
+        }
+        $('addr-mempool-link').href = `https://mempool.space/address/${addr}`;
+        resEl.style.display = 'block';
+      } catch(e) {
+        errEl.textContent = 'Could not fetch address data. Check the address and try again.';
+        errEl.style.display = 'block';
+      } finally { btn.textContent = 'Check Address →'; btn.disabled = false; }
+    }
+
+    $('addr-check-btn').addEventListener('click', checkAddress);
+    $('addr-input').addEventListener('keydown', e => { if(e.key==='Enter') checkAddress(); });
+    init();
+  </script>
+</body>
+</html>

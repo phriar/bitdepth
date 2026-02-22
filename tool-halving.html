@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halving Countdown — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 06</div>
+      <div class="tool-page-title">📉 Halving Countdown</div>
+      <p class="tool-page-desc">Bitcoin's next supply shock, live to the second. Every 210,000 blocks the block reward halves — programmatic scarcity in action.</p>
+      <div class="tool-label" style="margin-bottom:0.5rem">Time until next halving (estimated)</div>
+      <div class="clock-grid">
+        <div class="clock-unit"><div id="hc-days" class="clock-val">—</div><div class="clock-label">DAYS</div></div>
+        <div class="clock-unit"><div id="hc-hours" class="clock-val">—</div><div class="clock-label">HOURS</div></div>
+        <div class="clock-unit"><div id="hc-mins" class="clock-val">—</div><div class="clock-label">MINS</div></div>
+        <div class="clock-unit"><div id="hc-secs" class="clock-val">—</div><div class="clock-label">SECS</div></div>
+      </div>
+      <div class="halving-stats">
+        <div class="halving-stat"><div class="halving-stat-label">Current Block</div><div id="hc-current-block" class="halving-stat-val">loading...</div></div>
+        <div class="halving-stat"><div class="halving-stat-label">Halving Block</div><div id="hc-target-block" class="halving-stat-val">—</div></div>
+        <div class="halving-stat"><div class="halving-stat-label">Blocks Remaining</div><div id="hc-blocks-left" class="halving-stat-val">—</div></div>
+        <div class="halving-stat"><div class="halving-stat-label">Current Reward</div><div class="halving-stat-val">3.125 BTC</div></div>
+      </div>
+      <div class="tool-note">Estimated based on 10-minute average block time. Actual timing varies. After the halving, reward drops to 1.5625 BTC per block.</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div><a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    let halvingTarget=null;
+    function initClock(h){
+      const INTERVAL=210000;
+      const next=Math.ceil(h/INTERVAL)*INTERVAL;
+      halvingTarget=Date.now()+(next-h)*10*60*1000;
+      $('hc-current-block').textContent=fmt(h);
+      $('hc-target-block').textContent=fmt(next);
+      $('hc-blocks-left').textContent=fmt(next-h);
+    }
+    function tick(){
+      if(!halvingTarget)return;
+      const ms=Math.max(0,halvingTarget-Date.now());
+      const secs=Math.floor(ms/1000);
+      const d=Math.floor(secs/86400),h=Math.floor((secs%86400)/3600),m=Math.floor((secs%3600)/60),s=secs%60;
+      $('hc-days').textContent=String(d).padStart(3,'0');
+      $('hc-hours').textContent=String(h).padStart(2,'0');
+      $('hc-mins').textContent=String(m).padStart(2,'0');
+      $('hc-secs').textContent=String(s).padStart(2,'0');
+    }
+    setInterval(tick,1000);
+    async function init(){
+      try{
+        const blocks=await (await fetch('https://mempool.space/api/v1/blocks')).json();
+        initClock(blocks[0].height);
+        updateNavTime();
+      }catch(e){$('hc-current-block').textContent='Could not load block data';}
+    }
+    init();
+  </script>
+</body>
+</html>

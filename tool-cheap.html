@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Is Bitcoin Cheap? — BitDepth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav><a class="logo" href="index.html">Bit<span>Depth</span></a><ul class="nav-links"><li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li><li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li></ul><div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div></nav>
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 07</div>
+      <div class="tool-page-title">🎯 Is Bitcoin Cheap?</div>
+      <p class="tool-page-desc">One signal. No noise. Based on the Mayer Multiple — the ratio of Bitcoin's current price to its 200-day moving average.</p>
+      <div class="signal-body">
+        <div class="signal-ring" id="signal-ring">
+          <div class="signal-ring-label">MAYER MULTIPLE</div>
+          <div id="signal-mayer-num" class="signal-ring-num">—</div>
+          <div class="signal-ring-sub">loading...</div>
+        </div>
+        <div id="signal-verdict" class="signal-verdict" style="color:var(--muted)">Calculating...</div>
+        <div id="signal-detail" class="signal-detail">Fetching 200-day moving average from CoinGecko...</div>
+        <div class="signal-legend">
+          <div class="signal-legend-item" style="background:rgba(59,130,246,0.15);color:#3b82f6">&lt;0.5<br/>Extreme<br/>Low</div>
+          <div class="signal-legend-item" style="background:rgba(0,214,143,0.15);color:#00d68f">0.5–1.0<br/>Buy<br/>Zone</div>
+          <div class="signal-legend-item" style="background:rgba(247,147,26,0.15);color:#f7931a">1.0–1.5<br/>Fair<br/>Value</div>
+          <div class="signal-legend-item" style="background:rgba(255,140,0,0.15);color:#ff8c00">1.5–2.4<br/>Getting<br/>Pricey</div>
+          <div class="signal-legend-item" style="background:rgba(255,77,77,0.15);color:#ff4d4d">&gt;2.4<br/>Historically<br/>Expensive</div>
+        </div>
+      </div>
+      <div class="tool-note" style="margin-top:1.5rem;text-align:center">Mayer Multiple = Current Price ÷ 200-Day MA. Not financial advice.</div>
+    </div>
+  </div>
+  <footer><div><strong style="color:var(--text)">BitDepth</strong></div><div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div></footer>
+  <script src="shared.js"></script>
+  <script>
+    async function init(){
+      try{
+        const d=await (await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200&interval=daily')).json();
+        const prices=d.prices.map(p=>p[1]);
+        if(prices.length<200)throw new Error('Not enough data');
+        const ma200=prices.slice(-200).reduce((a,b)=>a+b,0)/200;
+        const cp=prices[prices.length-1];
+        const mayer=cp/ma200;
+        $('signal-mayer-num').textContent=mayer.toFixed(3);
+        let color,label,text;
+        if(mayer<0.5){color='#3b82f6';label='EXTREMELY CHEAP';text='Rare territory. Price is less than half the 200-day MA. Historically one of the best accumulation windows in Bitcoin history.';}
+        else if(mayer<1.0){color='#00d68f';label='YES — BUY ZONE';text='Price is below the 200-day moving average. Long-term holders have historically been rewarded buying here.';}
+        else if(mayer<1.5){color='#f7931a';label='FAIR VALUE';text='Price is near the 200-day MA. Neither cheap nor expensive by historical standards. Accumulate or hold.';}
+        else if(mayer<2.4){color='#ff8c00';label='GETTING PRICEY';text='Significantly above the 200-day MA. Not a screaming buy. Past cycles showed volatility and pullbacks from these levels.';}
+        else{color='#ff4d4d';label='HISTORICALLY EXPENSIVE';text='Mayer Multiple above 2.4 — this zone has historically coincided with cycle peaks. Extreme caution warranted.';}
+        const ring=$('signal-ring');
+        ring.style.borderColor=color;ring.style.boxShadow='0 0 30px '+color+'33';
+        $('signal-mayer-num').style.color=color;
+        $('signal-verdict').textContent=label;$('signal-verdict').style.color=color;
+        $('signal-detail').textContent=text;
+        updateNavTime();
+      }catch(e){$('signal-verdict').textContent='Could not load data';$('signal-detail').textContent='Try refreshing the page.';}
+    }
+    init();
+  </script>
+</body>
+</html>

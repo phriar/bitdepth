@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sat Stack Calculator — BitDepth</title>
+  <meta name="description" content="How many sats would you have stacked with regular DCA? Model your Bitcoin dollar-cost averaging strategy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+</head>
+<body>
+  <nav>
+    <a class="logo" href="index.html">Bit<span>Depth</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li>
+      <li><a href="index.html#markets">Markets</a></li>
+      <li><a href="index.html#macro">Macro</a></li>
+      <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
+    </ul>
+    <div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div>
+  </nav>
+
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 01</div>
+      <div class="tool-page-title">📈 Sat Stack Calculator</div>
+      <p class="tool-page-desc">How many sats would you have stacked with regular DCA? Enter your monthly buy amount and see how your stack grows over time.</p>
+
+      <div class="tool-section">
+        <div class="tool-label">Monthly investment (USD)</div>
+        <div class="conv-wrap"><span class="conv-prefix">$</span>
+          <input id="dca-amount" class="conv-input" type="number" placeholder="100" min="1" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="tool-section">
+        <div class="tool-label">Duration</div>
+        <div class="fee-btn-grid">
+          <button class="fee-btn active" data-dca="1">1 Year</button>
+          <button class="fee-btn" data-dca="2">2 Years</button>
+          <button class="fee-btn" data-dca="4">4 Years</button>
+        </div>
+      </div>
+      <div class="tool-section">
+        <div class="tool-label">Assumed avg BTC price</div>
+        <div class="conv-wrap"><span class="conv-prefix">$</span>
+          <input id="dca-price" class="conv-input" type="number" placeholder="95000" min="1" inputmode="decimal" />
+        </div>
+        <div class="tool-note" style="margin-top:0.4rem">Uses today's live price by default. Adjust to model different scenarios.</div>
+      </div>
+      <button id="dca-calc-btn" class="tool-action-btn">Calculate Stack →</button>
+      <div class="dca-result" id="dca-result" style="display:none;margin-top:1rem">
+        <div class="dca-result-row"><span class="dca-result-label">Total invested</span><span id="dca-total-invested" class="dca-result-val">—</span></div>
+        <div class="dca-result-row"><span class="dca-result-label">Sats accumulated</span><span id="dca-total-sats" class="dca-result-val" style="color:var(--orange)">—</span></div>
+        <div class="dca-result-row"><span class="dca-result-label">BTC accumulated</span><span id="dca-total-btc" class="dca-result-val" style="color:var(--green)">—</span></div>
+        <div class="dca-result-row"><span class="dca-result-label">Current value</span><span id="dca-current-val" class="dca-result-val">—</span></div>
+        <div class="dca-result-row"><span class="dca-result-label">Sats per $1/day</span><span id="dca-per-day" class="dca-result-val" style="color:var(--muted)">—</span></div>
+      </div>
+      <div class="tool-note" style="margin-top:1rem">Assumes a flat average price. Actual DCA results vary with price fluctuations. Not financial advice.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div><strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Bitcoin Tools</div>
+    <div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    let dcaYears = 1;
+    let livePrice = 0;
+
+    document.querySelectorAll('[data-dca]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-dca]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        dcaYears = parseInt(this.dataset.dca);
+      });
+    });
+
+    async function init() {
+      livePrice = await fetchBtcPriceMini();
+      if (livePrice > 0) {
+        $('dca-price').placeholder = Math.round(livePrice).toLocaleString();
+        updateNavTime();
+      }
+    }
+
+    $('dca-calc-btn').addEventListener('click', function() {
+      const monthly = parseFloat($('dca-amount').value) || 100;
+      const price = parseFloat($('dca-price').value) || livePrice || 95000;
+      const months = dcaYears * 12;
+      const totalInvested = monthly * months;
+      const totalBTC = totalInvested / price;
+      const totalSats = Math.round(totalBTC * 1e8);
+      const currentVal = totalBTC * (livePrice || price);
+      const satsPerDay = Math.round((monthly / 30) / price * 1e8);
+
+      $('dca-total-invested').textContent = '$' + fmt(totalInvested);
+      $('dca-total-sats').textContent = totalSats.toLocaleString() + ' sats';
+      $('dca-total-btc').textContent = totalBTC.toFixed(8) + ' BTC';
+      $('dca-current-val').textContent = '$' + fmt(Math.round(currentVal));
+      $('dca-per-day').textContent = satsPerDay.toLocaleString() + ' sats/day';
+      $('dca-result').style.display = 'block';
+    });
+
+    init();
+  </script>
+</body>
+</html>
