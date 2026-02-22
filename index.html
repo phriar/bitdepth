@@ -706,12 +706,12 @@
   <nav>
     <div class="logo">Bit<span>Depth</span></div>
     <ul class="nav-links">
+      <li><a href="#tools" style="color:var(--orange)">⚙ Tools</a></li>
       <li><a href="#markets">Markets</a></li>
       <li><a href="#onchain">On-Chain</a></li>
       <li><a href="#mining">Mining</a></li>
       <li><a href="#lightning">Lightning</a></li>
       <li><a href="#macro">Macro</a></li>
-      <li><a href="#tools" style="color:var(--orange)">⚙ Tools</a></li>
       <li><a href="#bitcoin-101">Learn</a></li>
       <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
     </ul>
@@ -791,376 +791,6 @@
       </svg>
       <div id="spark-label" style="font-size:0.6rem;color:var(--muted);text-align:right;margin-top:0.25rem">7-day price chart — loading...</div>
     </div>
-  </div>
-
-  <!-- MARKETS SECTION -->
-  <div id="markets">
-    <section>
-      <div class="section-header">
-        <div class="section-title">Market Overview</div>
-        <div class="section-tag">// real-time</div>
-      </div>
-
-      <div class="stats-grid fade-in">
-        <div class="stat-box">
-          <div class="stat-box-label">Market Cap</div>
-          <div class="stat-box-val" id="mkt-cap">—</div>
-          <div class="stat-box-sub" id="mkt-cap-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">24h Volume</div>
-          <div class="stat-box-val" id="mkt-vol">—</div>
-          <div class="stat-box-sub">across all exchanges</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Sats per Dollar</div>
-          <div class="stat-box-val" id="mkt-sats">—</div>
-          <div class="stat-box-sub">sats per $1 USD</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">ATH Distance</div>
-          <div class="stat-box-val" id="mkt-ath">—</div>
-          <div class="stat-box-sub" id="mkt-ath-sub">from ATH</div>
-        </div>
-      </div>
-
-      <div class="search-wrap">
-        <span class="search-icon">⌕</span>
-        <input class="search-input" id="explorer-search" type="text" placeholder="Search address, transaction ID, or block height..." />
-      </div>
-
-      <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Exchange</th>
-            <th>BTC/USD</th>
-            <th>24h Change</th>
-            <th>Volume</th>
-            <th>Spread</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="exchange-table-body">
-          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- ON-CHAIN SECTION -->
-  <div id="onchain">
-    <section>
-      <div class="section-header">
-        <div class="section-title">On-Chain Metrics</div>
-        <div class="section-tag">// blockchain data</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Block Height</div>
-          <div class="stat-box-val" id="chain-height">—</div>
-          <div class="stat-box-sub" id="chain-height-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Mempool Size</div>
-          <div class="stat-box-val" id="chain-mempool">—</div>
-          <div class="stat-box-sub" id="chain-mempool-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Avg Fee</div>
-          <div class="stat-box-val" id="chain-fee">—</div>
-          <div class="stat-box-sub">sat per vbyte</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Unconfirmed Txs</div>
-          <div class="stat-box-val" id="chain-txs">—</div>
-          <div class="stat-box-sub">in mempool</div>
-        </div>
-      </div>
-
-      <div class="terminal" id="block-terminal">
-        <span class="t-comment">// latest blocks — loading...</span>
-      </div>
-    </section>
-  </div>
-
-  <!-- MINING SECTION -->
-  <div id="mining">
-    <section>
-      <div class="section-header">
-        <div class="section-title">Mining Intelligence</div>
-        <div class="section-tag">// network security</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Hash Rate</div>
-          <div class="stat-box-val" id="mine-hashrate">—</div>
-          <div class="stat-box-sub">7-day average</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Difficulty</div>
-          <div class="stat-box-val" id="mine-difficulty">—</div>
-          <div class="stat-box-sub" id="mine-diff-sub">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Block Reward</div>
-          <div class="stat-box-val">3.125</div>
-          <div class="stat-box-sub">BTC per block</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Next Halving</div>
-          <div class="stat-box-val" id="mine-halving">—</div>
-          <div class="stat-box-sub" id="mine-halving-sub">loading...</div>
-        </div>
-      </div>
-
-      <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Mining Pool</th>
-            <th>Blocks (24h)</th>
-            <th>Hash Share</th>
-            <th>Estimated Hashrate</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody id="pool-table-body">
-          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- FEATURES NAV CARDS -->
-  <div id="learn">
-    <section>
-      <div class="section-header">
-        <div class="section-title">What BitDepth Covers</div>
-        <div class="section-tag">// everything</div>
-      </div>
-      <div class="feature-grid">
-        <a href="#markets" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">📡</div>
-          <div class="feature-title">Price & Markets</div>
-          <div class="feature-desc">Live BTC price across major exchanges, 24h change, volume, market cap, and sats per dollar.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
-        </a>
-        <a href="#onchain" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">🔗</div>
-          <div class="feature-title">On-Chain Analytics</div>
-          <div class="feature-desc">Block explorer, mempool size, fee rates, unconfirmed transactions, and latest block data.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
-        </a>
-        <a href="#mining" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">⛏️</div>
-          <div class="feature-title">Mining & Network</div>
-          <div class="feature-desc">Hash rate, difficulty, pool distribution, block reward, and next halving countdown.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
-        </a>
-        <a href="#lightning" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-title">Lightning Network</div>
-          <div class="feature-desc">Live channel capacity, node count, total channels, and top nodes by connectivity.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
-        </a>
-        <a href="#macro" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">📊</div>
-          <div class="feature-title">Macro & Cycles</div>
-          <div class="feature-desc">Mayer Multiple, 200-day moving average, price vs MA ratio, and cycle signal interpretation.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
-        </a>
-        <a href="#bitcoin-101" class="feature-card" style="text-decoration:none;cursor:pointer">
-          <div class="feature-icon">📖</div>
-          <div class="feature-title">Learn Bitcoin</div>
-          <div class="feature-desc">Explainers on the UTXO model, halving mechanics, SegWit, Taproot, Lightning, and more.</div>
-          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">READ GUIDES →</div>
-        </a>
-      </div>
-    </section>
-  </div>
-
-  <!-- X / TWITTER FOLLOW CARD -->
-  <div style="max-width:1200px;margin:0 auto;padding:0 2rem 3rem">
-    <div style="background:var(--bg2);border:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
-      <div style="display:flex;align-items:center;gap:1.5rem">
-        <div style="width:52px;height:52px;background:#000;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">𝕏</div>
-        <div>
-          <div style="font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-0.01em">@btc_journey</div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">Bitcoin analysis, on-chain data, and market intelligence</div>
-        </div>
-      </div>
-      <a href="https://x.com/btc_journey" target="_blank" rel="noopener"
-         style="background:var(--orange);color:#000;padding:0.7rem 1.75rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background 0.2s"
-         onmouseover="this.style.background='#ffad3b'" onmouseout="this.style.background='var(--orange)'">
-        Follow on 𝕏
-      </a>
-    </div>
-  </div>
-  <div id="lightning">
-    <section>
-      <div class="section-header">
-        <div class="section-title">Lightning Network</div>
-        <div class="section-tag">// layer 2 payments</div>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-box-label">Total Capacity</div>
-          <div class="stat-box-val" id="ln-capacity">—</div>
-          <div class="stat-box-sub" id="ln-capacity-usd">loading...</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Active Nodes</div>
-          <div class="stat-box-val" id="ln-nodes">—</div>
-          <div class="stat-box-sub">with active channels</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Total Channels</div>
-          <div class="stat-box-val" id="ln-channels">—</div>
-          <div class="stat-box-sub">active payment channels</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Avg Channel Size</div>
-          <div class="stat-box-val" id="ln-avg-size">—</div>
-          <div class="stat-box-sub">per channel</div>
-        </div>
-      </div>
-
-      <div class="data-table-wrap">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Node Alias</th>
-            <th>Capacity</th>
-            <th>Channels</th>
-            <th>Avg Channel</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody id="ln-nodes-table">
-          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- MACRO & CYCLES SECTION -->
-  <div id="macro">
-    <section>
-      <div class="section-header">
-        <div class="section-title">Macro & Cycles</div>
-        <div class="section-tag">// market intelligence</div>
-      </div>
-      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
-        <div class="stat-box">
-          <div class="stat-box-label">Current Price</div>
-          <div class="stat-box-val" id="macro-price">—</div>
-          <div class="stat-box-sub">BTC/USD</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">200-Day MA</div>
-          <div class="stat-box-val" id="macro-ma200">—</div>
-          <div class="stat-box-sub">200-day moving average</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Mayer Multiple</div>
-          <div class="stat-box-val" id="macro-mayer">—</div>
-          <div class="stat-box-sub" id="macro-mayer-sub">price ÷ 200-day MA</div>
-        </div>
-      </div>
-
-      <!-- Mayer Multiple signal bar -->
-      <div style="background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem">
-        <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Mayer Multiple Signal</div>
-        <div style="position:relative;height:8px;background:linear-gradient(to right,#3b82f6,#00d68f,#f7931a,#ff4d4d);border-radius:0">
-          <div id="mayer-indicator" style="position:absolute;top:-4px;width:3px;height:16px;background:#fff;transition:left 0.8s ease;left:50%"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.6rem;color:var(--muted)">
-          <span>Undervalued &lt;0.8</span>
-          <span>Fair Value ~1.0</span>
-          <span>Overheated &gt;2.4</span>
-        </div>
-        <div id="mayer-signal-text" style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">Loading signal...</div>
-      </div>
-
-      <!-- 200 MA context -->
-      <div class="terminal" id="macro-terminal">
-        <span class="t-comment">// macro analysis — loading...</span>
-      </div>
-    </section>
-  </div>
-
-  <!-- LEARN / BITCOIN 101 SECTION -->
-  <div id="bitcoin-101">
-    <section>
-      <div class="section-header">
-        <div class="section-title">Learn Bitcoin</div>
-        <div class="section-tag">// fundamentals</div>
-      </div>
-      <div class="feature-grid">
-
-        <div class="feature-card">
-          <div class="feature-icon">₿</div>
-          <div class="feature-title">What is Bitcoin?</div>
-          <div class="feature-desc">Bitcoin is a decentralized digital currency with no central bank or single administrator. Transactions are verified by a peer-to-peer network and recorded on a public ledger called the blockchain. Created by the pseudonymous Satoshi Nakamoto in 2009, it was the first cryptocurrency.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <div class="feature-title">The UTXO Model</div>
-          <div class="feature-desc">Bitcoin doesn't use account balances. Instead it uses Unspent Transaction Outputs (UTXOs) — chunks of bitcoin tied to addresses. When you spend bitcoin, you consume UTXOs and create new ones as change. Your "balance" is just the sum of all UTXOs you control.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⛏️</div>
-          <div class="feature-title">Proof of Work</div>
-          <div class="feature-desc">Miners compete to solve a cryptographic puzzle by hashing block data with a random nonce. The first to find a valid hash wins the block reward. This process secures the network — rewriting history would require more computing power than all honest miners combined.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📉</div>
-          <div class="feature-title">The Halving</div>
-          <div class="feature-desc">Every 210,000 blocks (~4 years), the block reward paid to miners is cut in half. Bitcoin launched with a 50 BTC reward. It's now 3.125 BTC after four halvings. This programmatic supply reduction continues until ~2140, when all 21 million BTC will have been issued.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📦</div>
-          <div class="feature-title">SegWit & Taproot</div>
-          <div class="feature-desc">SegWit (2017) separated signature data from transaction data, fixing transaction malleability and increasing block capacity. Taproot (2021) added Schnorr signatures enabling more efficient multisig, better privacy, and smarter scripting — Bitcoin's biggest upgrade in years.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-title">Lightning Network</div>
-          <div class="feature-desc">A Layer 2 payment protocol built on top of Bitcoin. Two parties open a payment channel by locking funds on-chain, then transact instantly and cheaply off-chain. Only the final balance is settled on the blockchain. Enables microtransactions and instant global payments.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🔑</div>
-          <div class="feature-title">Keys & Wallets</div>
-          <div class="feature-desc">A Bitcoin wallet stores private keys, not coins. Your private key proves ownership and signs transactions. The public key (and derived address) is what others send to. "Not your keys, not your coins" — if an exchange holds your keys, they control your bitcoin.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <div class="feature-title">Nodes & Consensus</div>
-          <div class="feature-desc">Full nodes download and verify every block and transaction, enforcing Bitcoin's rules independently. No authority controls the rules — consensus emerges from thousands of nodes worldwide agreeing. Running a node is the most sovereign way to use Bitcoin.</div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <div class="feature-title">Reading the Mempool</div>
-          <div class="feature-desc">The mempool is a waiting room for unconfirmed transactions. Miners prioritize higher fee-rate transactions. When the mempool is congested, fees rise. When it clears, 1 sat/vB can get you confirmed. Watching mempool size helps you time transactions and save on fees.</div>
-        </div>
-
-      </div>
-    </section>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
@@ -1337,6 +967,386 @@
     </section>
   </div>
 
+
+
+  <!-- SECTION NAV -->
+  <!-- FEATURES NAV CARDS -->
+  <div id="overview">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Explore BitDepth</div>
+        <div class="section-tag">// jump to any section</div>
+      </div>
+      <div class="feature-grid">
+        <a href="#tools" class="feature-card" style="text-decoration:none;cursor:pointer;border-color:var(--orange)">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-title" style="color:var(--orange)">BitDepth Tools</div>
+          <div class="feature-desc">Fee estimator, sats converter, halving countdown, and our "Is Bitcoin Cheap?" signal. Built different.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">USE TOOLS →</div>
+        </a>
+        <a href="#markets" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">📡</div>
+          <div class="feature-title">Price & Markets</div>
+          <div class="feature-desc">Live BTC price across major exchanges, 24h change, volume, market cap, and sats per dollar.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#onchain" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">🔗</div>
+          <div class="feature-title">On-Chain Analytics</div>
+          <div class="feature-desc">Block explorer, mempool size, fee rates, unconfirmed transactions, and latest block data.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#mining" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">⛏️</div>
+          <div class="feature-title">Mining & Network</div>
+          <div class="feature-desc">Hash rate, difficulty, pool distribution, block reward, and next halving countdown.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#lightning" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Lightning Network</div>
+          <div class="feature-desc">Live channel capacity, node count, total channels, and top nodes by connectivity.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#macro" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Macro & Cycles</div>
+          <div class="feature-desc">Mayer Multiple, 200-day moving average, price vs MA ratio, and cycle signal interpretation.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">VIEW DATA →</div>
+        </a>
+        <a href="#bitcoin-101" class="feature-card" style="text-decoration:none;cursor:pointer">
+          <div class="feature-icon">📖</div>
+          <div class="feature-title">Learn Bitcoin</div>
+          <div class="feature-desc">Explainers on the UTXO model, halving mechanics, SegWit, Taproot, Lightning, and more.</div>
+          <div style="margin-top:1rem;font-size:0.65rem;color:var(--orange);letter-spacing:0.1em">READ GUIDES →</div>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- MARKETS SECTION -->
+  <div id="markets">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Market Overview</div>
+        <div class="section-tag">// real-time</div>
+      </div>
+
+      <div class="stats-grid fade-in">
+        <div class="stat-box">
+          <div class="stat-box-label">Market Cap</div>
+          <div class="stat-box-val" id="mkt-cap">—</div>
+          <div class="stat-box-sub" id="mkt-cap-sub">loading...</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">24h Volume</div>
+          <div class="stat-box-val" id="mkt-vol">—</div>
+          <div class="stat-box-sub">across all exchanges</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Sats per Dollar</div>
+          <div class="stat-box-val" id="mkt-sats">—</div>
+          <div class="stat-box-sub">sats per $1 USD</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">ATH Distance</div>
+          <div class="stat-box-val" id="mkt-ath">—</div>
+          <div class="stat-box-sub" id="mkt-ath-sub">from ATH</div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" id="explorer-search" type="text" placeholder="Search address, transaction ID, or block height..." />
+      </div>
+
+      <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Exchange</th>
+            <th>BTC/USD</th>
+            <th>24h Change</th>
+            <th>Volume</th>
+            <th>Spread</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="exchange-table-body">
+          <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:2rem">Loading exchange data...</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ON-CHAIN SECTION -->
+  <div id="onchain">
+    <section>
+      <div class="section-header">
+        <div class="section-title">On-Chain Metrics</div>
+        <div class="section-tag">// blockchain data</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Block Height</div>
+          <div class="stat-box-val" id="chain-height">—</div>
+          <div class="stat-box-sub" id="chain-height-sub">loading...</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Mempool Size</div>
+          <div class="stat-box-val" id="chain-mempool">—</div>
+          <div class="stat-box-sub" id="chain-mempool-sub">loading...</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Avg Fee</div>
+          <div class="stat-box-val" id="chain-fee">—</div>
+          <div class="stat-box-sub">sat per vbyte</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Unconfirmed Txs</div>
+          <div class="stat-box-val" id="chain-txs">—</div>
+          <div class="stat-box-sub">in mempool</div>
+        </div>
+      </div>
+
+      <div class="terminal" id="block-terminal">
+        <span class="t-comment">// latest blocks — loading...</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- MINING SECTION -->
+  <div id="mining">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Mining Intelligence</div>
+        <div class="section-tag">// network security</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Hash Rate</div>
+          <div class="stat-box-val" id="mine-hashrate">—</div>
+          <div class="stat-box-sub">7-day average</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Difficulty</div>
+          <div class="stat-box-val" id="mine-difficulty">—</div>
+          <div class="stat-box-sub" id="mine-diff-sub">loading...</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Block Reward</div>
+          <div class="stat-box-val">3.125</div>
+          <div class="stat-box-sub">BTC per block</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Next Halving</div>
+          <div class="stat-box-val" id="mine-halving">—</div>
+          <div class="stat-box-sub" id="mine-halving-sub">loading...</div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mining Pool</th>
+            <th>Blocks (24h)</th>
+            <th>Hash Share</th>
+            <th>Estimated Hashrate</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody id="pool-table-body">
+          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading pool data...</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+  </div>
+
+  <div id="lightning">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Lightning Network</div>
+        <div class="section-tag">// layer 2 payments</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Total Capacity</div>
+          <div class="stat-box-val" id="ln-capacity">—</div>
+          <div class="stat-box-sub" id="ln-capacity-usd">loading...</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Active Nodes</div>
+          <div class="stat-box-val" id="ln-nodes">—</div>
+          <div class="stat-box-sub">with active channels</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Total Channels</div>
+          <div class="stat-box-val" id="ln-channels">—</div>
+          <div class="stat-box-sub">active payment channels</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Avg Channel Size</div>
+          <div class="stat-box-val" id="ln-avg-size">—</div>
+          <div class="stat-box-sub">per channel</div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Node Alias</th>
+            <th>Capacity</th>
+            <th>Channels</th>
+            <th>Avg Channel</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="ln-nodes-table">
+          <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem">Loading node data...</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- MACRO & CYCLES SECTION -->
+  <div id="macro">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Macro & Cycles</div>
+        <div class="section-tag">// market intelligence</div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr)">
+        <div class="stat-box">
+          <div class="stat-box-label">Current Price</div>
+          <div class="stat-box-val" id="macro-price">—</div>
+          <div class="stat-box-sub">BTC/USD</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">200-Day MA</div>
+          <div class="stat-box-val" id="macro-ma200">—</div>
+          <div class="stat-box-sub">200-day moving average</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Mayer Multiple</div>
+          <div class="stat-box-val" id="macro-mayer">—</div>
+          <div class="stat-box-sub" id="macro-mayer-sub">price ÷ 200-day MA</div>
+        </div>
+      </div>
+
+      <!-- Mayer Multiple signal bar -->
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem">
+        <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Mayer Multiple Signal</div>
+        <div style="position:relative;height:8px;background:linear-gradient(to right,#3b82f6,#00d68f,#f7931a,#ff4d4d);border-radius:0">
+          <div id="mayer-indicator" style="position:absolute;top:-4px;width:3px;height:16px;background:#fff;transition:left 0.8s ease;left:50%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.6rem;color:var(--muted)">
+          <span>Undervalued &lt;0.8</span>
+          <span>Fair Value ~1.0</span>
+          <span>Overheated &gt;2.4</span>
+        </div>
+        <div id="mayer-signal-text" style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">Loading signal...</div>
+      </div>
+
+      <!-- 200 MA context -->
+      <div class="terminal" id="macro-terminal">
+        <span class="t-comment">// macro analysis — loading...</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- LEARN / BITCOIN 101 SECTION -->
+  <div id="bitcoin-101">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Learn Bitcoin</div>
+        <div class="section-tag">// fundamentals</div>
+      </div>
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">₿</div>
+          <div class="feature-title">What is Bitcoin?</div>
+          <div class="feature-desc">Bitcoin is a decentralized digital currency with no central bank or single administrator. Transactions are verified by a peer-to-peer network and recorded on a public ledger called the blockchain. Created by the pseudonymous Satoshi Nakamoto in 2009, it was the first cryptocurrency.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">The UTXO Model</div>
+          <div class="feature-desc">Bitcoin doesn't use account balances. Instead it uses Unspent Transaction Outputs (UTXOs) — chunks of bitcoin tied to addresses. When you spend bitcoin, you consume UTXOs and create new ones as change. Your "balance" is just the sum of all UTXOs you control.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⛏️</div>
+          <div class="feature-title">Proof of Work</div>
+          <div class="feature-desc">Miners compete to solve a cryptographic puzzle by hashing block data with a random nonce. The first to find a valid hash wins the block reward. This process secures the network — rewriting history would require more computing power than all honest miners combined.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📉</div>
+          <div class="feature-title">The Halving</div>
+          <div class="feature-desc">Every 210,000 blocks (~4 years), the block reward paid to miners is cut in half. Bitcoin launched with a 50 BTC reward. It's now 3.125 BTC after four halvings. This programmatic supply reduction continues until ~2140, when all 21 million BTC will have been issued.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <div class="feature-title">SegWit & Taproot</div>
+          <div class="feature-desc">SegWit (2017) separated signature data from transaction data, fixing transaction malleability and increasing block capacity. Taproot (2021) added Schnorr signatures enabling more efficient multisig, better privacy, and smarter scripting — Bitcoin's biggest upgrade in years.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Lightning Network</div>
+          <div class="feature-desc">A Layer 2 payment protocol built on top of Bitcoin. Two parties open a payment channel by locking funds on-chain, then transact instantly and cheaply off-chain. Only the final balance is settled on the blockchain. Enables microtransactions and instant global payments.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <div class="feature-title">Keys & Wallets</div>
+          <div class="feature-desc">A Bitcoin wallet stores private keys, not coins. Your private key proves ownership and signs transactions. The public key (and derived address) is what others send to. "Not your keys, not your coins" — if an exchange holds your keys, they control your bitcoin.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <div class="feature-title">Nodes & Consensus</div>
+          <div class="feature-desc">Full nodes download and verify every block and transaction, enforcing Bitcoin's rules independently. No authority controls the rules — consensus emerges from thousands of nodes worldwide agreeing. Running a node is the most sovereign way to use Bitcoin.</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Reading the Mempool</div>
+          <div class="feature-desc">The mempool is a waiting room for unconfirmed transactions. Miners prioritize higher fee-rate transactions. When the mempool is congested, fees rise. When it clears, 1 sat/vB can get you confirmed. Watching mempool size helps you time transactions and save on fees.</div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+
+  <!-- X / TWITTER FOLLOW CARD -->
+  <div style="max-width:1200px;margin:0 auto;padding:0 2rem 3rem">
+    <div style="background:var(--bg2);border:1px solid var(--border);padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div style="display:flex;align-items:center;gap:1.5rem">
+        <div style="width:52px;height:52px;background:#000;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">𝕏</div>
+        <div>
+          <div style="font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-0.01em">@btc_journey</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem">Bitcoin analysis, on-chain data, and market intelligence</div>
+        </div>
+      </div>
+      <a href="https://x.com/btc_journey" target="_blank" rel="noopener"
+         style="background:var(--orange);color:#000;padding:0.7rem 1.75rem;font-family:var(--mono);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background 0.2s"
+         onmouseover="this.style.background='#ffad3b'" onmouseout="this.style.background='var(--orange)'">
+        Follow on 𝕏
+      </a>
+    </div>
+  </div>
   <!-- FOOTER -->
   <footer>
     <div>
