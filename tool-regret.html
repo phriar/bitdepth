@@ -45,7 +45,7 @@
       <div class="tool-section">
         <div class="tool-label">Date of Purchase</div>
         <input id="regret-date" class="conv-input" type="date" style="padding-left:1rem" />
-        <div class="tool-note" style="margin-top:0.4rem">Supports dates from July 2010 onwards using Coindesk historical data.</div>
+        <div class="tool-note" style="margin-top:0.4rem">Supports dates from October 2013. Pre-2024 uses monthly averages; 2024+ uses exact daily close via Binance.</div>
       </div>
 
       <button id="regret-calc-btn" class="tool-action-btn">Calculate My Regret →</button>
@@ -81,7 +81,7 @@
 
       <div id="regret-error" style="display:none;color:var(--red);font-size:0.75rem;margin-top:1rem;padding:0.75rem;background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.2)"></div>
 
-      <div class="tool-note" style="margin-top:1.5rem">Uses Kraken historical OHLC data (back to Oct 2013). Current price via CoinGecko. Not financial advice.</div>
+      <div class="tool-note" style="margin-top:1.5rem">Pre-2024 prices are monthly averages. 2024+ uses exact daily close via Binance. Current price via CoinGecko. Not financial advice.</div>
     </div>
 
     <!-- Related tools -->
@@ -146,7 +146,7 @@
       yesterday.setDate(yesterday.getDate() - 1);
 
       if (chosen < earliest) {
-        errEl.textContent = 'Date must be October 2013 or later (earliest available price data).';
+        errEl.textContent = 'Earliest supported date is October 2013.';
         errEl.style.display = 'block'; return;
       }
       if (chosen > yesterday) {
@@ -158,27 +158,87 @@
       this.disabled = true;
 
       try {
-        // Kraken OHLC API — free, proper CORS, data back to Oct 2013
-        // Fetch daily candles (interval=1440) since the chosen date
-        const since = Math.floor(chosen.getTime() / 1000) - 86400;
-        const url = `https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440&since=${since}`;
+        // Binance klines API — free, CORS-friendly, full history back to 2017
+        // For pre-2017 dates we fall back to a hardcoded price table
+        const targetTs = chosen.getTime();
+        let priceThen = null;
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`API returned ${res.status}`);
-        const data = await res.json();
-        if (data.error && data.error.length) throw new Error(data.error[0]);
+        // Monthly avg prices for pre-Binance era (Oct 2013 – Aug 2017)
+        const monthlyPrices = {
+          '2013-10':195,'2013-11':742,'2013-12':732,
+          '2014-01':825,'2014-02':637,'2014-03':558,'2014-04':450,'2014-05':445,
+          '2014-06':635,'2014-07':621,'2014-08':511,'2014-09':400,'2014-10':340,
+          '2014-11':375,'2014-12':320,
+          '2015-01':230,'2015-02':252,'2015-03':268,'2015-04':238,'2015-05':234,
+          '2015-06':243,'2015-07':283,'2015-08':268,'2015-09':236,'2015-10':278,
+          '2015-11':355,'2015-12':380,
+          '2016-01':374,'2016-02':382,'2016-03':416,'2016-04':449,'2016-05':454,
+          '2016-06':574,'2016-07':625,'2016-08':572,'2016-09':604,'2016-10':639,
+          '2016-11':699,'2016-12':847,
+          '2017-01':908,'2017-02':1066,'2017-03':1168,'2017-04':1231,'2017-05':1777,
+          '2017-06':2560,'2017-07':2607,'2017-08':4285,'2017-09':4350,'2017-10':5583,
+          '2017-11':8196,'2017-12':14156,
+          '2018-01':13412,'2018-02':8792,'2018-03':8580,'2018-04':8077,'2018-05':8474,
+          '2018-06':6756,'2018-07':7411,'2018-08':6530,'2018-09':6618,'2018-10':6537,
+          '2018-11':5601,'2018-12':3708,
+          '2019-01':3541,'2019-02':3706,'2019-03':4028,'2019-04':5197,'2019-05':7638,
+          '2019-06':9359,'2019-07':10556,'2019-08':10059,'2019-09':9565,'2019-10':8302,
+          '2019-11':8521,'2019-12':7375,
+          '2020-01':8065,'2020-02':9483,'2020-03':6482,'2020-04':7973,'2020-05':9456,
+          '2020-06':9328,'2020-07':10277,'2020-08':11691,'2020-09':10778,'2020-10':13549,
+          '2020-11':18099,'2020-12':23709,
+          '2021-01':33114,'2021-02':46312,'2021-03':52394,'2021-04':57750,'2021-05':47174,
+          '2021-06':35684,'2021-07':37330,'2021-08':45254,'2021-09':43879,'2021-10':57344,
+          '2021-11':60218,'2021-12':50786,
+          '2022-01':43099,'2022-02':40697,'2022-03':42282,'2022-04':41581,'2022-05':31390,
+          '2022-06':22941,'2022-07':23302,'2022-08':23578,'2022-09':20179,'2022-10':20463,
+          '2022-11':17163,'2022-12':16861,
+          '2023-01':20695,'2023-02':23229,'2023-03':27450,'2023-04':29244,'2023-05':27021,
+          '2023-06':27876,'2023-07':30233,'2023-08':29318,'2023-09':26966,'2023-10':30762,
+          '2023-11':36197,'2023-12':42265
+        };
+        const monthKey = dateVal.slice(0, 7); // "YYYY-MM"
 
-        const candles = data.result?.XXBTZUSD || data.result?.XBTUSD;
-        if (!candles || candles.length === 0) throw new Error('No price data returned. Try a nearby date.');
+        if (monthlyPrices[monthKey]) {
+          priceThen = monthlyPrices[monthKey];
+          console.log('[regret] using monthly table:', monthKey, priceThen);
+        } else if (chosen.getUTCFullYear() < 2024) {
+          throw new Error('No price data available for that date.');
+        } else {
+          // Try Binance first, fall back to Kraken
+          const startTime = targetTs;
+          const endTime = targetTs + 86400000;
 
-        // Find the candle closest to chosen date
-        const targetTs = chosen.getTime() / 1000;
-        const closest = candles.reduce((a, b) =>
-          Math.abs(b[0] - targetTs) < Math.abs(a[0] - targetTs) ? b : a
-        );
-        // Use close price (index 4)
-        const priceThen = parseFloat(closest[4]);
-        if (!priceThen) throw new Error('No price data found for that date. Try a nearby date.');
+          try {
+            console.log('[regret] trying Binance for', dateVal);
+            const url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=${startTime}&endTime=${endTime}&limit=1`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Binance ${res.status}`);
+            const klines = await res.json();
+            if (!klines || klines.length === 0) throw new Error('empty');
+            priceThen = parseFloat(klines[0][4]);
+            console.log('[regret] Binance price:', priceThen);
+          } catch (binanceErr) {
+            console.warn('[regret] Binance failed:', binanceErr.message, '— trying Kraken');
+            // Kraken: use daily OHLC, since = start of day - 1 day so target day is included
+            const since = Math.floor(startTime / 1000) - 86400;
+            const kurl = `https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440&since=${since}`;
+            const kres = await fetch(kurl);
+            if (!kres.ok) throw new Error(`Kraken ${kres.status}`);
+            const kdata = await kres.json();
+            if (kdata.error && kdata.error.length) throw new Error('Kraken: ' + kdata.error[0]);
+            const candles = kdata.result?.XXBTZUSD;
+            if (!candles || candles.length === 0) throw new Error('No data from Kraken either.');
+            // Find candle whose open time matches the target date
+            const targetSec = Math.floor(startTime / 1000);
+            const match = candles.find(c => Math.abs(c[0] - targetSec) < 86400);
+            if (!match) throw new Error('Kraken had no matching candle for that date.');
+            priceThen = parseFloat(match[4]); // close
+            console.log('[regret] Kraken price:', priceThen);
+          }
+        }
+
+        if (!priceThen || priceThen <= 0) throw new Error('Could not get price for that date. Try a nearby date.');
 
         // Get current price
         if (!currentPrice || currentPrice === 0) {
