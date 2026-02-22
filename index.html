@@ -1157,143 +1157,9 @@
 
       <div class="tools-grid" id="tools-grid">
 
-        <!-- ── TOOL 1: Fee Estimator ── -->
-        <div class="tool-card" id="tool-fee">
-          <div class="tool-badge">TOOL 01</div>
-          <div class="tool-title">⛽ Fee Estimator</div>
-          <div class="tool-desc">How long will your transaction take? Pick your urgency and get the exact fee rate to use right now.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">Target confirmation time</div>
-              <div class="fee-btn-grid">
-                <button class="fee-btn active" data-target="next">Next Block<br/><span class="fee-btn-sub">~10 min</span></button>
-                <button class="fee-btn" data-target="30min">3 Blocks<br/><span class="fee-btn-sub">~30 min</span></button>
-                <button class="fee-btn" data-target="hour">6 Blocks<br/><span class="fee-btn-sub">~1 hour</span></button>
-              </div>
-            </div>
-            <div class="fee-rate-box">
-              <div class="fee-rate-label">Recommended Fee Rate</div>
-              <div class="fee-rate-row">
-                <span id="fee-rate-val" class="fee-rate-num">—</span>
-                <span class="fee-rate-unit">sat/vByte</span>
-              </div>
-            </div>
-            <div class="fee-cost-grid">
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">SIMPLE TX</div>
-                <div id="fee-cost-simple" class="fee-cost-val">—</div>
-              </div>
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">SEGWIT TX</div>
-                <div id="fee-cost-segwit" class="fee-cost-val">—</div>
-              </div>
-              <div class="fee-cost-box">
-                <div class="fee-cost-label">BATCH TX</div>
-                <div id="fee-cost-batch" class="fee-cost-val">—</div>
-              </div>
-            </div>
-            <div class="tool-note" id="fee-mempool-note">Fetching mempool data...</div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 2: Sats Converter ── -->
-        <div class="tool-card" id="tool-sats">
-          <div class="tool-badge">TOOL 02</div>
-          <div class="tool-title">🔄 Sats Converter</div>
-          <div class="tool-desc">Instantly convert between USD, BTC, and satoshis. Type in any field to update the others.</div>
-          <div class="tool-body">
-            <div class="tool-section">
-              <div class="tool-label">US Dollars (USD)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">$</span>
-                <input id="conv-usd" class="conv-input" type="number" placeholder="0.00" step="any" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Bitcoin (BTC)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix" style="color:var(--orange)">₿</span>
-                <input id="conv-btc" class="conv-input" type="number" placeholder="0.00000000" step="any" inputmode="decimal" />
-              </div>
-            </div>
-            <div class="tool-section">
-              <div class="tool-label">Satoshis (sats)</div>
-              <div class="conv-wrap">
-                <span class="conv-prefix">⚡</span>
-                <input id="conv-sats" class="conv-input" type="number" placeholder="0" step="1" inputmode="numeric" />
-              </div>
-            </div>
-            <div class="conv-rates">
-              <div class="conv-rate-row"><span class="conv-rate-label">1 BTC =</span><span id="conv-rate-btc" class="conv-rate-val">—</span></div>
-              <div class="conv-rate-row"><span class="conv-rate-label">1 sat =</span><span id="conv-rate-sat" class="conv-rate-val">—</span></div>
-              <div class="conv-rate-row"><span class="conv-rate-label">$1 USD =</span><span id="conv-rate-usd" class="conv-rate-val">—</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 3: Halving Countdown ── -->
-        <div class="tool-card" id="tool-halving">
-          <div class="tool-badge">TOOL 03</div>
-          <div class="tool-title">📉 Halving Countdown</div>
-          <div class="tool-desc">Bitcoin's next supply shock, live to the second. Each halving cuts the block reward in half — permanently.</div>
-          <div class="tool-body">
-            <div class="clock-grid">
-              <div class="clock-unit"><div class="clock-val" id="hc-days">—</div><div class="clock-label">DAYS</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-hours">—</div><div class="clock-label">HRS</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-mins">—</div><div class="clock-label">MIN</div></div>
-              <div class="clock-unit"><div class="clock-val" id="hc-secs">—</div><div class="clock-label">SEC</div></div>
-            </div>
-            <div class="halving-stats">
-              <div class="halving-stat">
-                <div class="halving-stat-label">CURRENT HEIGHT</div>
-                <div id="hc-current-block" class="halving-stat-val">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">HALVING BLOCK</div>
-                <div id="hc-target-block" class="halving-stat-val" style="color:var(--orange)">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">BLOCKS LEFT</div>
-                <div id="hc-blocks-left" class="halving-stat-val">—</div>
-              </div>
-              <div class="halving-stat">
-                <div class="halving-stat-label">NEXT REWARD</div>
-                <div class="halving-stat-val" style="color:var(--green)">1.5625 BTC</div>
-              </div>
-            </div>
-            <div class="tool-note" style="border-top:1px solid var(--border);padding-top:0.75rem">
-              Past halvings: <span style="color:var(--text)">Nov 2012</span> → <span style="color:var(--text)">Jul 2016</span> → <span style="color:var(--text)">May 2020</span> → <span style="color:var(--text)">Apr 2024</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── TOOL 4: Is Bitcoin Cheap? ── -->
-        <div class="tool-card" id="tool-signal">
-          <div class="tool-badge">TOOL 04</div>
-          <div class="tool-title">🎯 Is Bitcoin Cheap?</div>
-          <div class="tool-desc">One signal. No noise. Based on the Mayer Multiple — price divided by 200-day moving average.</div>
-          <div class="tool-body signal-body">
-            <div class="signal-ring" id="signal-ring">
-              <div class="signal-ring-label">MAYER MULTIPLE</div>
-              <div id="signal-mayer-num" class="signal-ring-num">—</div>
-              <div class="signal-ring-sub">vs 200d MA</div>
-            </div>
-            <div id="signal-verdict" class="signal-verdict">Loading...</div>
-            <div id="signal-detail" class="signal-detail">Fetching data...</div>
-            <div class="signal-legend">
-              <div class="signal-legend-item" style="background:#1a2a4a;color:#3b82f6">EXTREME LOW<br/>&lt;0.5</div>
-              <div class="signal-legend-item" style="background:#0a2a1a;color:#00d68f">BUY ZONE<br/>0.5–1.0</div>
-              <div class="signal-legend-item" style="background:#2a2010;color:#f7931a">FAIR VALUE<br/>1.0–1.5</div>
-              <div class="signal-legend-item" style="background:#2a1a00;color:#ff8c00">ELEVATED<br/>1.5–2.4</div>
-              <div class="signal-legend-item" style="background:#2a0a0a;color:#ff4d4d">TOP ZONE<br/>&gt;2.4</div>
-            </div>
-            <div class="tool-note">Not financial advice. Historical signal only.</div>
-          </div>
-        </div>
-
         <!-- ── TOOL 5: Sat Stack Calculator ── -->
         <div class="tool-card" id="tool-satstack">
-          <div class="tool-badge">TOOL 05</div>
+          <div class="tool-badge">TOOL 01</div>
           <div class="tool-title">📈 Sat Stack Calculator</div>
           <div class="tool-desc">How many sats would you have stacked with regular DCA? Enter your monthly buy and see how your stack grows.</div>
           <div class="tool-body">
@@ -1348,7 +1214,7 @@
 
         <!-- ── TOOL 6: Address Balance Checker ── -->
         <div class="tool-card" id="tool-address">
-          <div class="tool-badge">TOOL 06</div>
+          <div class="tool-badge">TOOL 02</div>
           <div class="tool-title">🔍 Address Checker</div>
           <div class="tool-desc">Paste any Bitcoin address to see its balance, transaction count, and total received. No login. No tracking.</div>
           <div class="tool-body">
@@ -1388,7 +1254,7 @@
 
         <!-- ── TOOL 7: Bitcoin vs Inflation ── -->
         <div class="tool-card" id="tool-inflation">
-          <div class="tool-badge">TOOL 07</div>
+          <div class="tool-badge">TOOL 03</div>
           <div class="tool-title">💸 Bitcoin vs Inflation</div>
           <div class="tool-desc">What would $100 be worth today if you'd bought Bitcoin instead of holding dollars? Pick a year and find out.</div>
           <div class="tool-body">
@@ -1422,6 +1288,140 @@
             <div class="tool-note">BTC prices are historical yearly averages. Inflation uses US CPI data. Not financial advice.</div>
           </div>
         </div>
+        <!-- ── TOOL 1: Fee Estimator ── -->
+        <div class="tool-card" id="tool-fee">
+          <div class="tool-badge">TOOL 04</div>
+          <div class="tool-title">⛽ Fee Estimator</div>
+          <div class="tool-desc">How long will your transaction take? Pick your urgency and get the exact fee rate to use right now.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">Target confirmation time</div>
+              <div class="fee-btn-grid">
+                <button class="fee-btn active" data-target="next">Next Block<br/><span class="fee-btn-sub">~10 min</span></button>
+                <button class="fee-btn" data-target="30min">3 Blocks<br/><span class="fee-btn-sub">~30 min</span></button>
+                <button class="fee-btn" data-target="hour">6 Blocks<br/><span class="fee-btn-sub">~1 hour</span></button>
+              </div>
+            </div>
+            <div class="fee-rate-box">
+              <div class="fee-rate-label">Recommended Fee Rate</div>
+              <div class="fee-rate-row">
+                <span id="fee-rate-val" class="fee-rate-num">—</span>
+                <span class="fee-rate-unit">sat/vByte</span>
+              </div>
+            </div>
+            <div class="fee-cost-grid">
+              <div class="fee-cost-box">
+                <div class="fee-cost-label">SIMPLE TX</div>
+                <div id="fee-cost-simple" class="fee-cost-val">—</div>
+              </div>
+              <div class="fee-cost-box">
+                <div class="fee-cost-label">SEGWIT TX</div>
+                <div id="fee-cost-segwit" class="fee-cost-val">—</div>
+              </div>
+              <div class="fee-cost-box">
+                <div class="fee-cost-label">BATCH TX</div>
+                <div id="fee-cost-batch" class="fee-cost-val">—</div>
+              </div>
+            </div>
+            <div class="tool-note" id="fee-mempool-note">Fetching mempool data...</div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 2: Sats Converter ── -->
+        <div class="tool-card" id="tool-sats">
+          <div class="tool-badge">TOOL 05</div>
+          <div class="tool-title">🔄 Sats Converter</div>
+          <div class="tool-desc">Instantly convert between USD, BTC, and satoshis. Type in any field to update the others.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">US Dollars (USD)</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix">$</span>
+                <input id="conv-usd" class="conv-input" type="number" placeholder="0.00" step="any" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="tool-section">
+              <div class="tool-label">Bitcoin (BTC)</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix" style="color:var(--orange)">₿</span>
+                <input id="conv-btc" class="conv-input" type="number" placeholder="0.00000000" step="any" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="tool-section">
+              <div class="tool-label">Satoshis (sats)</div>
+              <div class="conv-wrap">
+                <span class="conv-prefix">⚡</span>
+                <input id="conv-sats" class="conv-input" type="number" placeholder="0" step="1" inputmode="numeric" />
+              </div>
+            </div>
+            <div class="conv-rates">
+              <div class="conv-rate-row"><span class="conv-rate-label">1 BTC =</span><span id="conv-rate-btc" class="conv-rate-val">—</span></div>
+              <div class="conv-rate-row"><span class="conv-rate-label">1 sat =</span><span id="conv-rate-sat" class="conv-rate-val">—</span></div>
+              <div class="conv-rate-row"><span class="conv-rate-label">$1 USD =</span><span id="conv-rate-usd" class="conv-rate-val">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 3: Halving Countdown ── -->
+        <div class="tool-card" id="tool-halving">
+          <div class="tool-badge">TOOL 06</div>
+          <div class="tool-title">📉 Halving Countdown</div>
+          <div class="tool-desc">Bitcoin's next supply shock, live to the second. Each halving cuts the block reward in half — permanently.</div>
+          <div class="tool-body">
+            <div class="clock-grid">
+              <div class="clock-unit"><div class="clock-val" id="hc-days">—</div><div class="clock-label">DAYS</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-hours">—</div><div class="clock-label">HRS</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-mins">—</div><div class="clock-label">MIN</div></div>
+              <div class="clock-unit"><div class="clock-val" id="hc-secs">—</div><div class="clock-label">SEC</div></div>
+            </div>
+            <div class="halving-stats">
+              <div class="halving-stat">
+                <div class="halving-stat-label">CURRENT HEIGHT</div>
+                <div id="hc-current-block" class="halving-stat-val">—</div>
+              </div>
+              <div class="halving-stat">
+                <div class="halving-stat-label">HALVING BLOCK</div>
+                <div id="hc-target-block" class="halving-stat-val" style="color:var(--orange)">—</div>
+              </div>
+              <div class="halving-stat">
+                <div class="halving-stat-label">BLOCKS LEFT</div>
+                <div id="hc-blocks-left" class="halving-stat-val">—</div>
+              </div>
+              <div class="halving-stat">
+                <div class="halving-stat-label">NEXT REWARD</div>
+                <div class="halving-stat-val" style="color:var(--green)">1.5625 BTC</div>
+              </div>
+            </div>
+            <div class="tool-note" style="border-top:1px solid var(--border);padding-top:0.75rem">
+              Past halvings: <span style="color:var(--text)">Nov 2012</span> → <span style="color:var(--text)">Jul 2016</span> → <span style="color:var(--text)">May 2020</span> → <span style="color:var(--text)">Apr 2024</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 4: Is Bitcoin Cheap? ── -->
+        <div class="tool-card" id="tool-signal">
+          <div class="tool-badge">TOOL 07</div>
+          <div class="tool-title">🎯 Is Bitcoin Cheap?</div>
+          <div class="tool-desc">One signal. No noise. Based on the Mayer Multiple — price divided by 200-day moving average.</div>
+          <div class="tool-body signal-body">
+            <div class="signal-ring" id="signal-ring">
+              <div class="signal-ring-label">MAYER MULTIPLE</div>
+              <div id="signal-mayer-num" class="signal-ring-num">—</div>
+              <div class="signal-ring-sub">vs 200d MA</div>
+            </div>
+            <div id="signal-verdict" class="signal-verdict">Loading...</div>
+            <div id="signal-detail" class="signal-detail">Fetching data...</div>
+            <div class="signal-legend">
+              <div class="signal-legend-item" style="background:#1a2a4a;color:#3b82f6">EXTREME LOW<br/>&lt;0.5</div>
+              <div class="signal-legend-item" style="background:#0a2a1a;color:#00d68f">BUY ZONE<br/>0.5–1.0</div>
+              <div class="signal-legend-item" style="background:#2a2010;color:#f7931a">FAIR VALUE<br/>1.0–1.5</div>
+              <div class="signal-legend-item" style="background:#2a1a00;color:#ff8c00">ELEVATED<br/>1.5–2.4</div>
+              <div class="signal-legend-item" style="background:#2a0a0a;color:#ff4d4d">TOP ZONE<br/>&gt;2.4</div>
+            </div>
+            <div class="tool-note">Not financial advice. Historical signal only.</div>
+          </div>
+        </div>
+
 
       </div><!-- /tools-grid -->
 
