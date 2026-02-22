@@ -705,7 +705,153 @@
       #obits-show-more { display: block !important; }
     }
 
-    /* ─── NEW TOOL STYLES ─── */
+    /* ─── FEE ALARM ─── */
+    .alarm-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.4rem;
+    }
+    .alarm-unit {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .alarm-current-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      font-size: 0.72rem;
+      margin-top: 0.5rem;
+    }
+    .alarm-current-val {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--orange);
+    }
+    .alarm-status {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      margin-top: 0.75rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .alarm-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .alarm-triggered {
+      background: rgba(247,147,26,0.08);
+      border: 2px solid var(--orange);
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 0.75rem;
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px rgba(247,147,26,0.2); }
+      to   { box-shadow: 0 0 25px rgba(247,147,26,0.5); }
+    }
+    .alarm-triggered-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .alarm-triggered-title {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--orange);
+      letter-spacing: 0.05em;
+    }
+    .alarm-triggered-detail { font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
+
+    /* ─── SIGNAL DASHBOARD ─── */
+    .bsd-score-wrap {
+      position: relative;
+      width: 200px;
+      margin: 0 auto 1.25rem;
+    }
+    .bsd-arc-svg { width: 100%; display: block; }
+    .bsd-score-inner {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      padding-bottom: 0.5rem;
+    }
+    .bsd-score-num {
+      font-family: var(--display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1;
+      transition: color 0.8s;
+    }
+    .bsd-score-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      transition: color 0.8s;
+    }
+    .bsd-indicators {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .bsd-ind {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+    .bsd-ind-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+    .bsd-ind-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--muted);
+      transition: background 0.5s;
+    }
+    .bsd-ind-name { font-size: 0.72rem; color: var(--text); }
+    .bsd-ind-val  { font-size: 0.62rem; color: var(--muted); margin-top: 0.1rem; }
+    .bsd-ind-score {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .bsd-summary {
+      font-size: 0.75rem;
+      color: var(--text);
+      line-height: 1.7;
+      padding: 0.75rem 1rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
     .tool-action-btn {
       width: 100%;
       background: var(--orange);
@@ -1431,6 +1577,111 @@
           </div>
         </div>
 
+
+        <!-- ── TOOL 8: Fee Alarm ── -->
+        <div class="tool-card" id="tool-fee-alarm">
+          <div class="tool-badge">TOOL 08</div>
+          <div class="tool-title">🔔 Fee Alarm</div>
+          <div class="tool-desc">Set a target fee rate. This page will alert you the moment mempool fees drop below it — so you never overpay again.</div>
+          <div class="tool-body">
+            <div class="tool-section">
+              <div class="tool-label">Alert me when fees drop below</div>
+              <div class="alarm-input-row">
+                <input id="alarm-target" class="conv-input" type="number" value="10" min="1" max="500" inputmode="numeric" style="flex:1" />
+                <span class="alarm-unit">sat/vB</span>
+              </div>
+            </div>
+
+            <div class="alarm-current-row">
+              <span class="tool-label">Current fastest fee:</span>
+              <span id="alarm-current-fee" class="alarm-current-val">— sat/vB</span>
+            </div>
+
+            <button id="alarm-toggle-btn" class="tool-action-btn">🔔 Start Watching</button>
+
+            <div id="alarm-status" class="alarm-status" style="display:none">
+              <div class="alarm-status-dot" id="alarm-dot"></div>
+              <span id="alarm-status-text">Watching...</span>
+            </div>
+
+            <div id="alarm-triggered" class="alarm-triggered" style="display:none">
+              <div class="alarm-triggered-icon">🔔</div>
+              <div class="alarm-triggered-title">FEES ARE LOW!</div>
+              <div id="alarm-triggered-detail" class="alarm-triggered-detail"></div>
+              <button class="tool-action-btn" onclick="resetAlarm()" style="margin-top:0.75rem;background:var(--bg2);color:var(--orange);border:1px solid var(--orange)">Reset Alarm</button>
+            </div>
+
+            <div class="tool-note" style="margin-top:0.75rem">Keep this tab open. Checks every 30 seconds. Sound plays when target is reached.</div>
+          </div>
+        </div>
+
+        <!-- ── TOOL 9: Bitcoin Signal Dashboard ── -->
+        <div class="tool-card" id="tool-signal-dash">
+          <div class="tool-badge">TOOL 09</div>
+          <div class="tool-title">📡 Bitcoin Signal</div>
+          <div class="tool-desc">Four on-chain indicators combined into one score. Green means accumulate. Red means caution. Updated live.</div>
+          <div class="tool-body">
+
+            <!-- Big score display -->
+            <div class="bsd-score-wrap">
+              <svg class="bsd-arc-svg" viewBox="0 0 200 110">
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+                <path id="bsd-arc-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f7931a" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 251"/>
+              </svg>
+              <div class="bsd-score-inner">
+                <div class="bsd-score-num" id="bsd-score">—</div>
+                <div class="bsd-score-label" id="bsd-score-label">Loading</div>
+              </div>
+            </div>
+
+            <!-- Four indicator rows -->
+            <div class="bsd-indicators">
+              <div class="bsd-ind">
+                <div class="bsd-ind-left">
+                  <div class="bsd-ind-dot" id="bsd-dot-mayer"></div>
+                  <div>
+                    <div class="bsd-ind-name">Mayer Multiple</div>
+                    <div class="bsd-ind-val" id="bsd-val-mayer">—</div>
+                  </div>
+                </div>
+                <div class="bsd-ind-score" id="bsd-score-mayer">—</div>
+              </div>
+              <div class="bsd-ind">
+                <div class="bsd-ind-left">
+                  <div class="bsd-ind-dot" id="bsd-dot-mempool"></div>
+                  <div>
+                    <div class="bsd-ind-name">Mempool Health</div>
+                    <div class="bsd-ind-val" id="bsd-val-mempool">—</div>
+                  </div>
+                </div>
+                <div class="bsd-ind-score" id="bsd-score-mempool">—</div>
+              </div>
+              <div class="bsd-ind">
+                <div class="bsd-ind-left">
+                  <div class="bsd-ind-dot" id="bsd-dot-hashrate"></div>
+                  <div>
+                    <div class="bsd-ind-name">Hashrate Trend</div>
+                    <div class="bsd-ind-val" id="bsd-val-hashrate">—</div>
+                  </div>
+                </div>
+                <div class="bsd-ind-score" id="bsd-score-hashrate">—</div>
+              </div>
+              <div class="bsd-ind" style="border:none">
+                <div class="bsd-ind-left">
+                  <div class="bsd-ind-dot" id="bsd-dot-dominance"></div>
+                  <div>
+                    <div class="bsd-ind-name">BTC Dominance</div>
+                    <div class="bsd-ind-val" id="bsd-val-dominance">—</div>
+                  </div>
+                </div>
+                <div class="bsd-ind-score" id="bsd-score-dominance">—</div>
+              </div>
+            </div>
+
+            <div id="bsd-summary" class="bsd-summary">Calculating signal...</div>
+            <div class="tool-note">Score 0–100. Each indicator scored independently and averaged. Not financial advice.</div>
+          </div>
+        </div>
 
       </div><!-- /tools-grid -->
 
@@ -2713,25 +2964,261 @@
     const _origFetchMP = fetchMempool;
     fetchMempool = async function() {
       await _origFetchMP();
-      // Block height — grab from already-set DOM
       const heightEl = $('chain-height');
       if (heightEl && heightEl.textContent !== '—') {
         const h = parseInt(heightEl.textContent.replace(/,/g, ''));
         if (h > 0) initHalvingClock(h);
       }
       await fetchFeeEstimator();
+      // Feed mempool vsize into signal dashboard
+      try {
+        const r = await fetch('https://mempool.space/api/mempool');
+        const d = await r.json();
+        if (d.vsize) bsdSetMempool(d.vsize);
+        updateAlarmDisplay(feeData.fastestFee || 1);
+      } catch(e) {}
     };
 
-    // Patch fetchMacro to update cheap signal
+    // Patch fetchMacro to update cheap signal + dashboard
     const _origFetchMacro = fetchMacro;
     fetchMacro = async function() {
       await _origFetchMacro();
       const mayerEl = $('macro-mayer');
       if (mayerEl && mayerEl.textContent !== '—') {
         const m = parseFloat(mayerEl.textContent);
-        if (m > 0) updateCheapSignal(m);
+        if (m > 0) { updateCheapSignal(m); bsdSetMayer(m); }
+      }
+      // Hashrate from DOM
+      const hrEl = $('mining-hashrate');
+      if (hrEl && hrEl.textContent !== '—') {
+        const raw = hrEl.textContent; // e.g. "823 EH/s"
+        const ehr = parseFloat(raw);
+        if (ehr > 0) bsdSetHashrate(ehr);
       }
     };
+
+    // Patch fetchCoinGeckoGlobal to feed dominance
+    const _origFetchGlobal = fetchCoinGeckoGlobal;
+    fetchCoinGeckoGlobal = async function() {
+      await _origFetchGlobal();
+      // dominance is shown in a stat box
+      const domEl = document.querySelector('[id*="dominance"], [id*="dom"]');
+      if (domEl) {
+        const pct = parseFloat(domEl.textContent);
+        if (pct > 0) bsdSetDominance(pct);
+      }
+      // Also try fetching it directly
+      try {
+        const r = await fetch('https://api.coingecko.com/api/v3/global');
+        const d = await r.json();
+        const dom = d.data?.market_cap_percentage?.btc;
+        if (dom) bsdSetDominance(dom);
+      } catch(e) {}
+    };
+    // ─── TOOL 8: FEE ALARM ───────────────────────────────────────────
+    let alarmActive = false;
+    let alarmInterval = null;
+    let alarmTriggered = false;
+
+    // Audio context for alert sound
+    function playAlarmSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const times = [0, 0.25, 0.5];
+        times.forEach(t => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.setValueAtTime(880, ctx.currentTime + t);
+          osc.frequency.setValueAtTime(1100, ctx.currentTime + t + 0.1);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime + t);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.2);
+          osc.start(ctx.currentTime + t);
+          osc.stop(ctx.currentTime + t + 0.2);
+        });
+      } catch(e) {}
+    }
+
+    async function checkAlarm() {
+      if (!alarmActive || alarmTriggered) return;
+      try {
+        const res = await fetch('https://mempool.space/api/v1/fees/recommended');
+        const d   = await res.json();
+        const current = d.fastestFee;
+        const target  = parseInt($('alarm-target').value) || 10;
+
+        $('alarm-current-fee').textContent = current + ' sat/vB';
+        $('alarm-current-fee').style.color = current <= target ? 'var(--green)' : 'var(--orange)';
+        $('alarm-status-text').textContent = `Watching · last checked ${new Date().toLocaleTimeString()} · current: ${current} sat/vB`;
+
+        if (current <= target) {
+          alarmTriggered = true;
+          alarmActive = false;
+          clearInterval(alarmInterval);
+          playAlarmSound();
+          $('alarm-status').style.display = 'none';
+          $('alarm-toggle-btn').style.display = 'none';
+          $('alarm-triggered').style.display = 'block';
+          $('alarm-triggered-detail').textContent =
+            `Fees dropped to ${current} sat/vB — below your target of ${target} sat/vB. Good time to send!`;
+        }
+      } catch(e) {}
+    }
+
+    function resetAlarm() {
+      alarmActive = false;
+      alarmTriggered = false;
+      clearInterval(alarmInterval);
+      $('alarm-triggered').style.display = 'none';
+      $('alarm-status').style.display = 'none';
+      $('alarm-toggle-btn').style.display = 'block';
+      $('alarm-toggle-btn').textContent = '🔔 Start Watching';
+      $('alarm-toggle-btn').style.background = 'var(--orange)';
+      $('alarm-toggle-btn').style.color = '#000';
+    }
+
+    $('alarm-toggle-btn').addEventListener('click', function() {
+      if (alarmActive) {
+        // Stop
+        alarmActive = false;
+        clearInterval(alarmInterval);
+        $('alarm-status').style.display = 'none';
+        this.textContent = '🔔 Start Watching';
+        this.style.background = 'var(--orange)';
+        this.style.color = '#000';
+      } else {
+        // Start
+        alarmTriggered = false;
+        alarmActive = true;
+        $('alarm-status').style.display = 'flex';
+        $('alarm-triggered').style.display = 'none';
+        this.textContent = '🔕 Stop Watching';
+        this.style.background = 'var(--bg2)';
+        this.style.color = 'var(--orange)';
+        checkAlarm(); // immediate first check
+        clearInterval(alarmInterval);
+        alarmInterval = setInterval(checkAlarm, 30_000);
+      }
+    });
+
+    // Keep alarm-current-fee updated passively from fee estimator data
+    function updateAlarmDisplay(fastestFee) {
+      if (!alarmActive && !alarmTriggered) {
+        $('alarm-current-fee').textContent = fastestFee + ' sat/vB';
+      }
+    }
+
+    // ─── TOOL 9: BITCOIN SIGNAL DASHBOARD ───────────────────────────
+    let bsdData = { mayer: null, mempoolVsize: null, hashrate: null, dominance: null };
+
+    function scoreColor(score) {
+      if (score >= 70) return '#00d68f';
+      if (score >= 50) return '#f7931a';
+      if (score >= 30) return '#ff8c00';
+      return '#ff4d4d';
+    }
+
+    function scoreMayer(m) {
+      if (!m) return null;
+      if (m < 0.5) return { score: 95, label: 'Extreme Low', detail: m.toFixed(2) + ' (historic buy zone)' };
+      if (m < 0.8) return { score: 80, label: 'Undervalued',  detail: m.toFixed(2) + ' (below 200d MA)' };
+      if (m < 1.2) return { score: 65, label: 'Fair Value',   detail: m.toFixed(2) + ' (near 200d MA)' };
+      if (m < 1.7) return { score: 45, label: 'Elevated',     detail: m.toFixed(2) + ' (above average)' };
+      if (m < 2.4) return { score: 25, label: 'High',         detail: m.toFixed(2) + ' (caution zone)' };
+      return               { score: 10, label: 'Overheated',  detail: m.toFixed(2) + ' (historical top range)' };
+    }
+
+    function scoreMempool(vsize) {
+      if (vsize === null) return null;
+      const mb = vsize / 1e6;
+      if (mb < 1)   return { score: 90, label: 'Clear',      detail: mb.toFixed(1) + ' MB (very low fees)' };
+      if (mb < 5)   return { score: 70, label: 'Moderate',   detail: mb.toFixed(1) + ' MB (normal)' };
+      if (mb < 20)  return { score: 50, label: 'Busy',       detail: mb.toFixed(1) + ' MB (fees rising)' };
+      if (mb < 100) return { score: 30, label: 'Congested',  detail: mb.toFixed(1) + ' MB (high fees)' };
+      return               { score: 10, label: 'Overwhelmed', detail: mb.toFixed(1) + ' MB (very high fees)' };
+    }
+
+    function scoreHashrate(ehr) {
+      // ehr = exahashes/sec — higher is better for network security
+      if (!ehr) return null;
+      if (ehr > 800)  return { score: 90, label: 'All-Time High', detail: Math.round(ehr) + ' EH/s (ATH territory)' };
+      if (ehr > 600)  return { score: 75, label: 'Very Strong',   detail: Math.round(ehr) + ' EH/s' };
+      if (ehr > 400)  return { score: 60, label: 'Strong',        detail: Math.round(ehr) + ' EH/s' };
+      if (ehr > 200)  return { score: 45, label: 'Moderate',      detail: Math.round(ehr) + ' EH/s' };
+      return                 { score: 25, label: 'Weak',          detail: Math.round(ehr) + ' EH/s' };
+    }
+
+    function scoreDominance(pct) {
+      if (!pct) return null;
+      if (pct > 60)  return { score: 85, label: 'Very High',  detail: pct.toFixed(1) + '% (Bitcoin leading)' };
+      if (pct > 55)  return { score: 70, label: 'High',       detail: pct.toFixed(1) + '% (strong cycle)' };
+      if (pct > 50)  return { score: 55, label: 'Moderate',   detail: pct.toFixed(1) + '% (altcoins competing)' };
+      if (pct > 45)  return { score: 35, label: 'Low',        detail: pct.toFixed(1) + '% (alt season risk)' };
+      return                { score: 20, label: 'Very Low',   detail: pct.toFixed(1) + '% (altcoin season)' };
+    }
+
+    function updateSignalDashboard() {
+      const results = [
+        { key: 'mayer',     fn: scoreMayer,      data: bsdData.mayer },
+        { key: 'mempool',   fn: scoreMempool,    data: bsdData.mempoolVsize },
+        { key: 'hashrate',  fn: scoreHashrate,   data: bsdData.hashrate },
+        { key: 'dominance', fn: scoreDominance,  data: bsdData.dominance },
+      ];
+
+      let totalScore = 0, count = 0;
+      results.forEach(({ key, fn, data }) => {
+        const r = fn(data);
+        if (!r) return;
+        count++;
+        totalScore += r.score;
+        const color = scoreColor(r.score);
+        $(`bsd-dot-${key}`).style.background    = color;
+        $(`bsd-val-${key}`).textContent         = r.detail;
+        $(`bsd-score-${key}`).textContent       = r.score;
+        $(`bsd-score-${key}`).style.color       = color;
+      });
+
+      if (!count) return;
+      const avg = Math.round(totalScore / count);
+
+      // Update arc
+      const arcEl = $('bsd-arc-fill');
+      const arcLen = 251; // half circumference of r=80 circle
+      const fill = (avg / 100) * arcLen;
+      const col  = scoreColor(avg);
+      arcEl.setAttribute('stroke-dasharray', `${fill} ${arcLen}`);
+      arcEl.setAttribute('stroke', col);
+
+      $('bsd-score').textContent     = avg;
+      $('bsd-score').style.color     = col;
+
+      let verdict, summary;
+      if (avg >= 75) {
+        verdict = 'ACCUMULATE';
+        summary = `Signal score ${avg}/100 — All indicators aligned bullishly. Mayer Multiple suggests undervaluation, mempool is clear, hashrate is securing the network, and Bitcoin dominance is strong. Historically favorable conditions for long-term buyers.`;
+      } else if (avg >= 55) {
+        verdict = 'NEUTRAL';
+        summary = `Signal score ${avg}/100 — Mixed signals. Some indicators are favorable but others suggest caution. Not a clear buy or sell signal — conditions are average relative to Bitcoin's history.`;
+      } else if (avg >= 35) {
+        verdict = 'CAUTION';
+        summary = `Signal score ${avg}/100 — Multiple indicators are elevated or unfavorable. Price may be stretched relative to fundamentals, or network conditions are stressed. Exercise caution with new positions.`;
+      } else {
+        verdict = 'HIGH RISK';
+        summary = `Signal score ${avg}/100 — Most indicators are in historically unfavorable territory. This has correlated with cycle tops or periods of significant drawdown. Not financial advice — do your own research.`;
+      }
+
+      $('bsd-score-label').textContent = verdict;
+      $('bsd-score-label').style.color = col;
+      $('bsd-summary').textContent     = summary;
+    }
+
+    // Feed data into dashboard from existing fetches
+    function bsdSetMayer(m)      { bsdData.mayer = m;      updateSignalDashboard(); }
+    function bsdSetMempool(v)    { bsdData.mempoolVsize = v; updateSignalDashboard(); }
+    function bsdSetHashrate(h)   { bsdData.hashrate = h;   updateSignalDashboard(); }
+    function bsdSetDominance(d)  { bsdData.dominance = d;  updateSignalDashboard(); }
+
     async function init() {
       await Promise.allSettled([
         fetchCoinGecko(),
