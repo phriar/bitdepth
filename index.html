@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BitDepth — Deep Bitcoin Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #181818;
+      --border: #222222;
+      --orange: #f7931a;
+      --orange-dim: #c97515;
+      --orange-glow: rgba(247,147,26,0.15);
+      --text: #e8e8e8;
+      --muted: #666666;
+      --green: #00d68f;
+      --red: #ff4d4d;
+      --mono: 'Space Mono', monospace;
+      --display: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .logo span { color: var(--orange); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--orange); }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--orange);
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: #ffad3b; transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* ─── PRICE CARD (hero right) ─── */
+    .hero-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      animation: fadeUp 0.8s ease both 0.2s;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--orange);
+    }
+
+    .card-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .card-price {
+      font-family: var(--display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .card-change {
+      font-size: 0.8rem;
+      color: var(--green);
+      margin-bottom: 2rem;
+    }
+    .card-change.negative { color: var(--red); }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .mini-stat { }
+    .mini-stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+    .mini-stat-val {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    /* fake sparkline */
+    .sparkline {
+      width: 100%;
+      height: 60px;
+      margin-top: 1rem;
+    }
+
+    /* ─── TICKER BAR ─── */
+    .ticker-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      overflow: hidden;
+      padding: 0.6rem 0;
+    }
+    .ticker {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 25s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .ticker-item .t-label { color: var(--muted); }
+    .ticker-item .t-val { color: var(--text); }
+    .ticker-item .t-up { color: var(--green); }
+    .ticker-item .t-down { color: var(--red); }
+
+    /* ─── SECTIONS ─── */
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .section-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+
+    /* ─── FEATURE GRID ─── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .feature-card {
+      background: var(--bg);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+    .feature-card:hover { background: var(--bg3); }
+
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .feature-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .feature-desc {
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ─── DATA TABLE ─── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .data-table tr:hover td { background: var(--bg2); }
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .tag-orange { border-color: var(--orange); color: var(--orange); }
+    .tag-green { border-color: var(--green); color: var(--green); }
+    .tag-muted { border-color: var(--border); color: var(--muted); }
+
+    /* ─── SEARCH ─── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 1rem 1rem 1rem 3rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--orange); }
+    .search-input::placeholder { color: var(--muted); }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* ─── STATS GRID ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .stat-box {
+      background: var(--bg);
+      padding: 1.5rem;
+    }
+    .stat-box-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .stat-box-val {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .stat-box-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ─── TERMINAL BLOCK ─── */
+    .terminal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      line-height: 1.9;
+      position: relative;
+    }
+    .terminal::before {
+      content: '● ● ●';
+      display: block;
+      color: var(--muted);
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .t-cmd { color: var(--orange); }
+    .t-out { color: var(--muted); }
+    .t-val { color: var(--green); }
+    .t-comment { color: #444; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: var(--muted);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--orange); text-decoration: none; }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-in {
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 2.5rem; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Bit<span>Depth</span></div>
+    <ul class="nav-links">
+      <li><a href="#markets">Markets</a></li>
+      <li><a href="#onchain">On-Chain</a></li>
+      <li><a href="#mining">Mining</a></li>
+      <li><a href="#learn">Learn</a></li>
+    </ul>
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      LIVE DATA
+    </div>
+  </nav>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <!-- Duplicated for seamless loop -->
+      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val">$67,240</span><span class="t-up">+2.4%</span></span>
+      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val">623 EH/s</span><span class="t-up">+1.1%</span></span>
+      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val">88.1T</span><span class="t-up">+3.2%</span></span>
+      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val">142 MB</span><span class="t-down">-8%</span></span>
+      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val">~1,204 days</span></span>
+      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val">19.72M BTC</span></span>
+      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val">$1.33T</span><span class="t-up">+2.1%</span></span>
+      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val">12 sat/vB</span><span class="t-down">-18%</span></span>
+      <!-- Duplicate -->
+      <span class="ticker-item"><span class="t-label">BTC/USD</span><span class="t-val">$67,240</span><span class="t-up">+2.4%</span></span>
+      <span class="ticker-item"><span class="t-label">HASH RATE</span><span class="t-val">623 EH/s</span><span class="t-up">+1.1%</span></span>
+      <span class="ticker-item"><span class="t-label">DIFFICULTY</span><span class="t-val">88.1T</span><span class="t-up">+3.2%</span></span>
+      <span class="ticker-item"><span class="t-label">MEMPOOL</span><span class="t-val">142 MB</span><span class="t-down">-8%</span></span>
+      <span class="ticker-item"><span class="t-label">NEXT HALVING</span><span class="t-val">~1,204 days</span></span>
+      <span class="ticker-item"><span class="t-label">CIRCULATING</span><span class="t-val">19.72M BTC</span></span>
+      <span class="ticker-item"><span class="t-label">MARKET CAP</span><span class="t-val">$1.33T</span><span class="t-up">+2.1%</span></span>
+      <span class="ticker-item"><span class="t-label">FEES (AVG)</span><span class="t-val">12 sat/vB</span><span class="t-down">-18%</span></span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="fade-in">
+      <div class="hero-label">// Bitcoin Intelligence Platform</div>
+      <h1>Go<br/>deeper<br/><em>than the chart.</em></h1>
+      <p class="hero-desc">BitDepth aggregates on-chain data, market structure, mining metrics, and network fundamentals into one terminal-grade research environment. Built for people who want to actually understand Bitcoin.</p>
+      <div class="cta-row">
+        <a href="#markets" class="btn-primary">Explore Data</a>
+        <a href="#learn" class="btn-ghost">Learn Bitcoin</a>
+      </div>
+    </div>
+    <div class="hero-card fade-in delay-2">
+      <div class="card-label">BTC / USD — Live</div>
+      <div class="card-price">$67,240</div>
+      <div class="card-change">▲ +2.4% &nbsp;(+$1,572) today</div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-label">24h High</div>
+          <div class="mini-stat-val">$68,100</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">24h Low</div>
+          <div class="mini-stat-val">$65,430</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Volume</div>
+          <div class="mini-stat-val">$42.1B</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Dominance</div>
+          <div class="mini-stat-val">54.2%</div>
+        </div>
+      </div>
+      <!-- Fake SVG Sparkline -->
+      <svg class="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f7931a" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#f7931a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <polyline
+          points="0,50 20,45 40,48 60,30 80,35 100,20 120,25 140,18 160,22 180,15 200,20 220,10 240,14 260,8 280,12 300,5"
+          fill="none" stroke="#f7931a" stroke-width="1.5"/>
+        <polygon
+          points="0,50 20,45 40,48 60,30 80,35 100,20 120,25 140,18 160,22 180,15 200,20 220,10 240,14 260,8 280,12 300,5 300,60 0,60"
+          fill="url(#sparkGrad)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- MARKETS SECTION -->
+  <div id="markets">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Market Overview</div>
+        <div class="section-tag">// real-time</div>
+      </div>
+
+      <div class="stats-grid fade-in">
+        <div class="stat-box">
+          <div class="stat-box-label">Market Cap</div>
+          <div class="stat-box-val">$1.33T</div>
+          <div class="stat-box-sub">+2.1% 24h</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">24h Volume</div>
+          <div class="stat-box-val">$42.1B</div>
+          <div class="stat-box-sub">across all exchanges</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Sats per Dollar</div>
+          <div class="stat-box-val">1,488</div>
+          <div class="stat-box-sub">sats per $1 USD</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">ATH Distance</div>
+          <div class="stat-box-val">−3.4%</div>
+          <div class="stat-box-sub">from $69,044 ATH</div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" type="text" placeholder="Search addresses, transactions, blocks..." />
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Exchange</th>
+            <th>BTC/USD</th>
+            <th>24h Change</th>
+            <th>Volume</th>
+            <th>Spread</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Coinbase</td>
+            <td>$67,244</td>
+            <td style="color:var(--green)">+2.41%</td>
+            <td>$8.2B</td>
+            <td>$0.12</td>
+            <td><span class="tag tag-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>Binance</td>
+            <td>$67,231</td>
+            <td style="color:var(--green)">+2.38%</td>
+            <td>$18.7B</td>
+            <td>$0.08</td>
+            <td><span class="tag tag-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>Kraken</td>
+            <td>$67,250</td>
+            <td style="color:var(--green)">+2.43%</td>
+            <td>$3.1B</td>
+            <td>$0.15</td>
+            <td><span class="tag tag-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>Bitstamp</td>
+            <td>$67,218</td>
+            <td style="color:var(--green)">+2.36%</td>
+            <td>$1.4B</td>
+            <td>$0.22</td>
+            <td><span class="tag tag-green">Active</span></td>
+          </tr>
+          <tr>
+            <td>OKX</td>
+            <td>$67,255</td>
+            <td style="color:var(--green)">+2.44%</td>
+            <td>$6.8B</td>
+            <td>$0.10</td>
+            <td><span class="tag tag-green">Active</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ON-CHAIN SECTION -->
+  <div id="onchain">
+    <section>
+      <div class="section-header">
+        <div class="section-title">On-Chain Metrics</div>
+        <div class="section-tag">// blockchain data</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Block Height</div>
+          <div class="stat-box-val">838,402</div>
+          <div class="stat-box-sub">~9 min since last</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Mempool Size</div>
+          <div class="stat-box-val">142 MB</div>
+          <div class="stat-box-sub">~4,100 pending txs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Avg Fee</div>
+          <div class="stat-box-val">12 s/vB</div>
+          <div class="stat-box-sub">sat per vbyte</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Active Addresses</div>
+          <div class="stat-box-val">924K</div>
+          <div class="stat-box-sub">past 24 hours</div>
+        </div>
+      </div>
+
+      <div class="terminal">
+        <span class="t-comment">// latest blocks</span><br/>
+        <span class="t-cmd">$ bitdepth query block --latest 5</span><br/><br/>
+        <span class="t-out">Block </span><span class="t-val">838,402</span><span class="t-out"> — 3,214 txs — fees: 0.382 BTC — size: 1.72 MB — mined by: AntPool</span><br/>
+        <span class="t-out">Block </span><span class="t-val">838,401</span><span class="t-out"> — 2,988 txs — fees: 0.341 BTC — size: 1.68 MB — mined by: Foundry USA</span><br/>
+        <span class="t-out">Block </span><span class="t-val">838,400</span><span class="t-out"> — 3,102 txs — fees: 0.357 BTC — size: 1.71 MB — mined by: F2Pool</span><br/>
+        <span class="t-out">Block </span><span class="t-val">838,399</span><span class="t-out"> — 2,741 txs — fees: 0.312 BTC — size: 1.59 MB — mined by: ViaBTC</span><br/>
+        <span class="t-out">Block </span><span class="t-val">838,398</span><span class="t-out"> — 3,450 txs — fees: 0.401 BTC — size: 1.82 MB — mined by: Binance Pool</span><br/><br/>
+        <span class="t-cmd">█</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- MINING SECTION -->
+  <div id="mining">
+    <section>
+      <div class="section-header">
+        <div class="section-title">Mining Intelligence</div>
+        <div class="section-tag">// network security</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-label">Hash Rate</div>
+          <div class="stat-box-val">623 EH/s</div>
+          <div class="stat-box-sub">7-day average</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Difficulty</div>
+          <div class="stat-box-val">88.1T</div>
+          <div class="stat-box-sub">next adj in 4 days</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Block Reward</div>
+          <div class="stat-box-val">3.125</div>
+          <div class="stat-box-sub">BTC per block</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Next Halving</div>
+          <div class="stat-box-val">~1,204d</div>
+          <div class="stat-box-sub">block 1,050,000</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Mining Pool</th>
+            <th>Blocks (24h)</th>
+            <th>Hash Share</th>
+            <th>Estimated Hashrate</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Foundry USA</td>
+            <td>38</td>
+            <td>27.1%</td>
+            <td>168.9 EH/s</td>
+            <td><span class="tag tag-orange">FPPS</span></td>
+          </tr>
+          <tr>
+            <td>AntPool</td>
+            <td>29</td>
+            <td>20.7%</td>
+            <td>129.0 EH/s</td>
+            <td><span class="tag tag-orange">PPS+</span></td>
+          </tr>
+          <tr>
+            <td>F2Pool</td>
+            <td>21</td>
+            <td>15.0%</td>
+            <td>93.5 EH/s</td>
+            <td><span class="tag tag-orange">PPS+</span></td>
+          </tr>
+          <tr>
+            <td>ViaBTC</td>
+            <td>14</td>
+            <td>10.0%</td>
+            <td>62.3 EH/s</td>
+            <td><span class="tag tag-muted">PPLNS</span></td>
+          </tr>
+          <tr>
+            <td>Binance Pool</td>
+            <td>11</td>
+            <td>7.9%</td>
+            <td>48.9 EH/s</td>
+            <td><span class="tag tag-muted">FPPS</span></td>
+          </tr>
+          <tr>
+            <td>Unknown</td>
+            <td>27</td>
+            <td>19.3%</td>
+            <td>120.2 EH/s</td>
+            <td><span class="tag tag-muted">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- FEATURES / LEARN -->
+  <div id="learn">
+    <section>
+      <div class="section-header">
+        <div class="section-title">What BitDepth Covers</div>
+        <div class="section-tag">// everything</div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📡</div>
+          <div class="feature-title">Price & Markets</div>
+          <div class="feature-desc">Real-time BTC price across 30+ exchanges, order book depth, derivatives, futures curves, and funding rates.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <div class="feature-title">On-Chain Analytics</div>
+          <div class="feature-desc">Block explorer, mempool visualizer, UTXO age bands, exchange flows, whale tracking, and HODL waves.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⛏️</div>
+          <div class="feature-title">Mining & Network</div>
+          <div class="feature-desc">Hash rate, difficulty adjustments, pool distribution, miner revenue, and energy consumption estimates.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Lightning Network</div>
+          <div class="feature-desc">Channel capacity, node counts, routing fees, growth trends, and top nodes by connectivity.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Macro & Cycles</div>
+          <div class="feature-desc">Stock-to-flow model, Mayer Multiple, MVRV Z-Score, realized cap, and historical cycle comparisons.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <div class="feature-title">Learn Bitcoin</div>
+          <div class="feature-desc">Deep-dive guides on consensus, UTXO model, SegWit, Taproot, halving mechanics, and more.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Deep Bitcoin Intelligence
+    </div>
+    <div>
+      Data is for informational purposes only. Not financial advice. &nbsp;|&nbsp; <a href="#">GitHub</a> &nbsp;|&nbsp; <a href="#">API</a>
+    </div>
+  </footer>
+
+  <script>
+    // Animate stats on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.stat-box, .feature-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(15px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+
+    // Animate price counter
+    function animateCounter(el, target, prefix = '', suffix = '') {
+      const start = target * 0.97;
+      const duration = 1200;
+      const startTime = performance.now();
+      function update(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        const val = start + (target - start) * t;
+        el.textContent = prefix + val.toLocaleString('en-US', { maximumFractionDigits: 0 }) + suffix;
+        if (t < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Blink cursor in terminal
+    const cursor = document.querySelector('.t-cmd:last-child');
+    if (cursor) {
+      setInterval(() => {
+        cursor.textContent = cursor.textContent === '█' ? '' : '█';
+      }, 600);
+    }
+  </script>
+</body>
+</html>
