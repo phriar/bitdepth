@@ -93,46 +93,107 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ─── NAV LAST UPDATED ─────────────────────────────────────────────
+function updateNavTime() {
+  const el = $('nav-last-updated');
+  if (el) el.textContent = 'UPDATED ' + new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+// ─── HIGHLIGHT ACTIVE NAV LINK ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    const href = a.getAttribute('href')?.split('/').pop();
+    if (href === path) a.classList.add('active');
+  });
+});
+
 // ─── HAMBURGER NAV ────────────────────────────────────────────────
 (function () {
-  var LINKS = [
+  var TOOLS = [
+    { href: 'tool-etf.html',       label: '🏦 ETF → 1 BTC' },
+    { href: 'tool-satstack.html',  label: '📈 Sat Stack' },
+    { href: 'tool-address.html',   label: '🔍 Address Checker' },
+    { href: 'tool-fee.html',       label: '⛽ Fee Estimator' },
+    { href: 'tool-alarm.html',     label: '🔔 Fee Alarm' },
+    { href: 'tool-converter.html', label: '🔄 Sats Converter' },
+    { href: 'tool-halving.html',   label: '📉 Halving' },
+    { href: 'tool-cheap.html',     label: '🎯 Is BTC Cheap?' },
+    { href: 'tool-signal.html',    label: '📡 BTC Signal' },
+    { href: 'tool-regret.html',    label: '😢 Regret Calc' },
+  ];
+
+  var NAV = [
     { href: 'index.html',           label: '⌂ Home' },
-    { href: 'index.html#tools',     label: '⚙ All Tools' },
-    { href: 'tool-etf.html',        label: '🏦 ETF → 1 BTC' },
-    { href: 'tool-satstack.html',   label: '📈 Sat Stack' },
-    { href: 'tool-address.html',    label: '🔍 Address Checker' },
-    { href: 'tool-fee.html',        label: '⛽ Fee Estimator' },
-    { href: 'tool-alarm.html',      label: '🔔 Fee Alarm' },
-    { href: 'tool-converter.html',  label: '🔄 Sats Converter' },
-    { href: 'tool-halving.html',    label: '📉 Halving' },
-    { href: 'tool-cheap.html',      label: '🎯 Is BTC Cheap?' },
-    { href: 'tool-signal.html',     label: '📡 BTC Signal' },
-    { href: 'tool-regret.html',     label: '😢 Regret Calc' },
+    { label: '⚙ Tools', tools: true },
+    { href: 'index.html#markets',   label: '📊 Markets' },
+    { href: 'index.html#onchain',   label: '⛓ On-Chain' },
+    { href: 'index.html#mining',    label: '⛏ Mining' },
+    { href: 'index.html#lightning', label: '⚡ Lightning' },
+    { href: 'index.html#macro',     label: '🌐 Macro' },
     { href: 'btc-search.html',      label: '🔒 Stealth View' },
-    { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey' },
+    { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey', external: true },
   ];
 
   function build() {
     var nav = document.querySelector('nav');
     if (!nav) return;
 
+    // Overlay
     var overlay = document.createElement('div');
     overlay.className = 'nav-overlay';
     document.body.appendChild(overlay);
 
+    // Drawer
     var drawer = document.createElement('div');
     drawer.className = 'nav-drawer';
     var cur = window.location.pathname.split('/').pop() || 'index.html';
-    LINKS.forEach(function (item) {
-      var a = document.createElement('a');
-      a.href = item.href;
-      a.textContent = item.label;
-      if (item.href.split('/').pop().split('#')[0] === cur) a.classList.add('active');
-      if (item.href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
-      drawer.appendChild(a);
+    var toolsOpen = TOOLS.some(function(t) { return t.href.split('/').pop() === cur; });
+
+    NAV.forEach(function (item) {
+      if (item.tools) {
+        // Tools accordion header
+        var header = document.createElement('button');
+        header.className = 'nav-drawer-group' + (toolsOpen ? ' open' : '');
+        header.innerHTML = '<span>' + item.label + '</span><span class="nav-drawer-arrow">' + (toolsOpen ? '▲' : '▼') + '</span>';
+
+        // Tools submenu
+        var sub = document.createElement('div');
+        sub.className = 'nav-drawer-sub' + (toolsOpen ? ' open' : '');
+        TOOLS.forEach(function (tool) {
+          var a = document.createElement('a');
+          a.href = tool.href;
+          a.textContent = tool.label;
+          a.className = 'nav-drawer-sub-link';
+          if (tool.href.split('/').pop() === cur) a.classList.add('active');
+          a.addEventListener('click', closeMenu);
+          sub.appendChild(a);
+        });
+
+        header.addEventListener('click', function () {
+          var isOpen = sub.classList.contains('open');
+          sub.classList.toggle('open', !isOpen);
+          header.classList.toggle('open', !isOpen);
+          header.querySelector('.nav-drawer-arrow').textContent = isOpen ? '▼' : '▲';
+        });
+
+        drawer.appendChild(header);
+        drawer.appendChild(sub);
+      } else {
+        var a = document.createElement('a');
+        a.href = item.href;
+        a.textContent = item.label;
+        a.className = 'nav-drawer-link';
+        if (item.href.split('/').pop().split('#')[0] === cur) a.classList.add('active');
+        if (item.external) { a.target = '_blank'; a.rel = 'noopener'; }
+        a.addEventListener('click', closeMenu);
+        drawer.appendChild(a);
+      }
     });
+
     document.body.appendChild(drawer);
 
+    // Burger button
     var burger = document.createElement('button');
     burger.className = 'nav-burger';
     burger.setAttribute('aria-label', 'Menu');
@@ -157,17 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
       burger.classList.contains('open') ? closeMenu() : openMenu();
     });
     overlay.addEventListener('click', closeMenu);
-    drawer.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', closeMenu);
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeMenu();
-    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', build);
-  } else {
-    build();
-  }
+  } else { build(); }
 }());
