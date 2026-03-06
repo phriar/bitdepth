@@ -628,6 +628,7 @@ footer a { color: var(--orange); text-decoration: none; }
   .clock-val { font-size: 1.1rem; }
 }
 
+
 /* ─── HAMBURGER MENU ─── */
 .nav-burger {
   display: none;
@@ -637,64 +638,75 @@ footer a { color: var(--orange); text-decoration: none; }
   width: 36px;
   height: 36px;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   flex-shrink: 0;
   background: none;
-  border: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  z-index: 101;
 }
 .nav-burger span {
   display: block;
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.2s ease, width 0.2s ease;
-  width: 22px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  width: 100%;
 }
 .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-burger.open span:nth-child(2) { opacity: 0; width: 0; }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
 .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 .nav-drawer {
   position: fixed;
   top: 0; right: 0; bottom: 0;
-  width: 260px;
-  background: var(--bg2);
+  width: 75vw;
+  max-width: 280px;
+  background: #111;
   border-left: 1px solid var(--border);
-  z-index: 999;
-  padding: 5rem 2rem 2rem;
+  z-index: 1001;
+  padding: 4.5rem 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  transform: translateX(100%);
+  overflow-y: auto;
+  transform: translateX(110%);
   transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
-  pointer-events: none;
+  visibility: hidden;
 }
-.nav-drawer.open { transform: translateX(0); pointer-events: all; }
+.nav-drawer.open {
+  transform: translateX(0);
+  visibility: visible;
+}
 .nav-drawer a {
   display: block;
   color: var(--muted);
   text-decoration: none;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 1rem 0;
+  padding: 0.85rem 0;
   border-bottom: 1px solid var(--border);
-  transition: color 0.2s;
+  transition: color 0.15s;
+  font-family: var(--mono);
 }
 .nav-drawer a:hover, .nav-drawer a.active { color: var(--orange); }
 .nav-drawer a:last-child { border-bottom: none; }
+
 .nav-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 998;
-  backdrop-filter: blur(2px);
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
-.nav-overlay.open { opacity: 1; pointer-events: all; }
+.nav-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
 
 @media (max-width: 600px) {
   .nav-burger { display: flex; }
+  .nav-status { display: none; }
 }
