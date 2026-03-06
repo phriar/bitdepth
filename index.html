@@ -177,6 +177,25 @@
     .feature-title { font-family: var(--display); font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
     .feature-desc { font-size: 0.75rem; line-height: 1.7; color: var(--muted); }
 
+    /* NEW tool badge */
+    .tmi-new-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      background: var(--orange);
+      color: #000;
+      padding: 0.1rem 0.35rem;
+      vertical-align: middle;
+      margin-left: 0.4rem;
+      font-weight: 700;
+    }
+    .tool-menu-item--new {
+      background: rgba(247,147,26,0.04);
+      border-left: 2px solid var(--orange);
+    }
+    .tool-menu-item--new:hover { background: rgba(247,147,26,0.1); }
+
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 1.5rem 2.5rem; }
       .tools-menu { grid-template-columns: 1fr 1fr; }
@@ -345,6 +364,12 @@
           <div class="tmi-icon">😢</div>
           <div class="tmi-name">Regret Calculator</div>
           <div class="tmi-desc">What would your spend be worth in Bitcoin today?</div>
+        </a>
+        <a class="tool-menu-item tool-menu-item--new" href="tool-etf.html">
+          <div class="tmi-num">Tool 11 <span class="tmi-new-badge">NEW</span></div>
+          <div class="tmi-icon">🏦</div>
+          <div class="tmi-name">ETF → 1 BTC</div>
+          <div class="tmi-desc">How many ETF shares make a full Bitcoin? Track IBIT, FBTC, ARKB & more.</div>
         </a>
       </div>
     </section>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ETF → 1 Bitcoin Calculator — BitDepth</title>
+  <meta name="description" content="How many Bitcoin ETF shares do you need to own a full Bitcoin? Enter your IBIT, FBTC, ARKB and other ETF holdings and track your progress to 1 BTC." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* ── ETF grid ── */
+    .etf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .etf-cell {
+      background: var(--bg);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.15s;
+    }
+    .etf-cell:hover { background: var(--bg3); }
+    .etf-cell-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .etf-ticker {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .etf-issuer {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .etf-ratio {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+    .etf-ratio span { color: var(--orange); }
+    .etf-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .etf-shares-input {
+      flex: 1;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+      -moz-appearance: textfield;
+      width: 100%;
+    }
+    .etf-shares-input::-webkit-outer-spin-button,
+    .etf-shares-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .etf-shares-input:focus { border-color: var(--orange); }
+    .etf-shares-label {
+      font-size: 0.6rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+    }
+    .etf-result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.25rem;
+    }
+    .etf-btc-val {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--orange);
+    }
+    .etf-usd-val {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    /* ── Progress block ── */
+    .progress-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .progress-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--orange);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.6rem;
+    }
+    .progress-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .progress-pct {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 2rem;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      transition: color 0.4s;
+    }
+    .progress-pct.complete { color: var(--green); }
+    .progress-bar-track {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      height: 6px;
+      margin-bottom: 1.25rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--orange);
+      transition: width 0.5s ease;
+      max-width: 100%;
+    }
+    .progress-bar-fill.complete { background: var(--green); }
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .pstat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-bottom: 0.25rem;
+    }
+    .pstat-val {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .pstat-val.orange { color: var(--orange); }
+    .pstat-val.green { color: var(--green); }
+
+    /* ── Complete banner ── */
+    .complete-banner {
+      display: none;
+      border: 1px solid var(--green);
+      background: rgba(0,214,143,0.07);
+      padding: 1rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--green);
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .complete-banner.show { display: block; }
+
+    /* ── Needed table ── */
+    .needed-block {
+      display: none;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--orange);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .needed-block.show { display: block; }
+    .needed-title {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-family: var(--mono);
+      margin-bottom: 0.75rem;
+    }
+    .needed-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .needed-table td {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .needed-table tr:last-child td { border-bottom: none; }
+    .needed-table td:first-child { color: var(--muted); width: 80px; }
+    .needed-table td:last-child { color: var(--muted); text-align: right; }
+
+    /* ── Reset btn ── */
+    .reset-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .reset-btn:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    /* ── Price bar ── */
+    .etf-price-bar {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--orange);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .pb-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .pb-label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
+    .pb-val { font-family: var(--mono); font-size: 0.95rem; color: var(--text); font-weight: 700; }
+    .pb-val.orange { color: var(--orange); }
+
+    @media (max-width: 900px) {
+      .etf-grid { grid-template-columns: repeat(2, 1fr); }
+      .progress-stats { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .etf-grid { grid-template-columns: 1fr; }
+      .progress-stats { grid-template-columns: 1fr; }
+      .etf-price-bar { gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="logo" href="index.html">Bit<span>Depth</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#tools" style="color:var(--orange)">⚙ Tools</a></li>
+      <li><a href="https://x.com/btc_journey" target="_blank" rel="noopener" style="color:var(--orange)">𝕏 @btc_journey</a></li>
+    </ul>
+    <div class="nav-status"><div class="status-dot"></div><span id="nav-last-updated">LIVE DATA</span></div>
+  </nav>
+
+  <div class="tool-page-wrap">
+    <a class="tool-page-back" href="index.html#tools">← Back to all tools</a>
+    <div class="tool-page-card">
+      <div class="tool-badge">TOOL 11 — NEW</div>
+      <div class="tool-page-title">🏦 ETF → 1 Bitcoin</div>
+      <p class="tool-page-desc">Enter your share counts across all spot Bitcoin ETFs and watch your progress toward owning one full Bitcoin. BTC-per-share ratios update live with the price.</p>
+
+      <!-- Live price bar -->
+      <div class="etf-price-bar">
+        <div class="pb-item">
+          <span class="pb-label">BTC Price</span>
+          <span class="pb-val orange" id="etf-btc-price">Loading...</span>
+        </div>
+        <div class="pb-item">
+          <span class="pb-label">Last Updated</span>
+          <span class="pb-val" id="etf-updated" style="font-size:0.75rem;color:var(--muted)">—</span>
+        </div>
+        <div class="pb-item" style="margin-left:auto">
+          <span class="pb-label">Total BTC Held</span>
+          <span class="pb-val orange" id="etf-total-btc-bar">0.00000000 BTC</span>
+        </div>
+      </div>
+
+      <!-- ETF input grid -->
+      <div class="etf-grid" id="etfGrid"></div>
+
+      <!-- Complete banner -->
+      <div class="complete-banner" id="completeBanner">
+        ✓ YOU HOLD 1 FULL BITCOIN ACROSS YOUR ETF POSITIONS
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">Progress to 1 BTC</span>
+          <span class="progress-pct" id="progressPct">0.00%</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-stats">
+          <div>
+            <div class="pstat-label">BTC Held</div>
+            <div class="pstat-val orange" id="statBtc">0.00000000</div>
+          </div>
+          <div>
+            <div class="pstat-label">USD Value</div>
+            <div class="pstat-val" id="statUsd">$0</div>
+          </div>
+          <div>
+            <div class="pstat-label">Still Needed</div>
+            <div class="pstat-val" id="statRemaining">1.00000000 BTC</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What's needed -->
+      <div class="needed-block" id="neededBlock">
+        <div class="needed-title">Shares needed to reach 1 BTC (each ETF independently)</div>
+        <table class="needed-table" id="neededTable"></table>
+      </div>
+
+      <button class="reset-btn" onclick="resetAll()">Reset All Holdings</button>
+
+      <div class="tool-note" style="margin-top:1.5rem">
+        BTC-per-share ratios are each ETF's approximate NAV ratio and erode slowly over time due to management fees. Ratios reflect current approximations and may vary slightly from official filings. Not financial advice.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div><strong style="color:var(--text)">BitDepth</strong> &nbsp;—&nbsp; Bitcoin Tools</div>
+    <div>Not financial advice. &nbsp;|&nbsp; <a href="https://x.com/btc_journey" target="_blank" rel="noopener">𝕏 @btc_journey</a></div>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script>
+    const ETFS = [
+      { ticker:'IBIT',  name:'iShares Bitcoin Trust',          issuer:'BlackRock',    btcPerShare:0.00009887 },
+      { ticker:'FBTC',  name:'Fidelity Wise Origin BTC Fund',  issuer:'Fidelity',     btcPerShare:0.00009695 },
+      { ticker:'BITB',  name:'Bitwise Bitcoin ETF',            issuer:'Bitwise',      btcPerShare:0.00099120 },
+      { ticker:'ARKB',  name:'ARK 21Shares Bitcoin ETF',       issuer:'ARK/21Shares', btcPerShare:0.00096714 },
+      { ticker:'BTCO',  name:'Invesco Galaxy Bitcoin ETF',     issuer:'Invesco',      btcPerShare:0.00099547 },
+      { ticker:'HODL',  name:'VanEck Bitcoin Trust',           issuer:'VanEck',       btcPerShare:0.00095614 },
+      { ticker:'BRRR',  name:'Valkyrie Bitcoin Fund',          issuer:'CoinShares',   btcPerShare:0.00094800 },
+      { ticker:'EZBC',  name:'Franklin Bitcoin ETF',           issuer:'Franklin',     btcPerShare:0.00099700 },
+      { ticker:'BTCW',  name:'WisdomTree Bitcoin Fund',        issuer:'WisdomTree',   btcPerShare:0.00095200 },
+    ];
+
+    let btcPrice = 0;
+    const shares = {};
+
+    function buildGrid() {
+      const grid = $('etfGrid');
+      ETFS.forEach(etf => {
+        shares[etf.ticker] = 0;
+        const cell = document.createElement('div');
+        cell.className = 'etf-cell';
+        cell.innerHTML = `
+          <div class="etf-cell-top">
+            <span class="etf-ticker">${etf.ticker}</span>
+            <span class="etf-issuer">${etf.issuer}</span>
+          </div>
+          <div class="etf-ratio">≈ <span>${etf.btcPerShare.toFixed(8)}</span> BTC/share</div>
+          <div class="etf-input-row">
+            <input type="number" class="etf-shares-input" id="inp-${etf.ticker}"
+              min="0" step="1" placeholder="0 shares"
+              oninput="onInput('${etf.ticker}', this.value)">
+          </div>
+          <div class="etf-result-row">
+            <span class="etf-btc-val" id="btcval-${etf.ticker}">0.00000000 BTC</span>
+            <span class="etf-usd-val" id="usdval-${etf.ticker}">$0</span>
+          </div>
+        `;
+        grid.appendChild(cell);
+      });
+    }
+
+    function onInput(ticker, val) {
+      shares[ticker] = Math.max(0, parseFloat(val) || 0);
+      refreshCard(ticker);
+      refreshSummary();
+    }
+
+    function refreshCard(ticker) {
+      const etf = ETFS.find(e => e.ticker === ticker);
+      const n = shares[ticker];
+      const btc = n * etf.btcPerShare;
+      const usd = btc * btcPrice;
+      const bv = $('btcval-' + ticker);
+      const uv = $('usdval-' + ticker);
+      if (bv) bv.textContent = btc.toFixed(8) + ' BTC';
+      if (uv) uv.textContent = btcPrice > 0
+        ? '$' + usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : '—';
+    }
+
+    function refreshSummary() {
+      const totalBtc = ETFS.reduce((s, e) => s + shares[e.ticker] * e.btcPerShare, 0);
+      const pct = Math.min(100, totalBtc * 100);
+      const remaining = Math.max(0, 1 - totalBtc);
+      const usd = totalBtc * btcPrice;
+
+      $('statBtc').textContent = totalBtc.toFixed(8);
+      $('statUsd').textContent = btcPrice > 0
+        ? '$' + usd.toLocaleString('en-US', { maximumFractionDigits: 0 })
+        : '—';
+      $('statRemaining').textContent = remaining.toFixed(8) + ' BTC';
+      $('etf-total-btc-bar').textContent = totalBtc.toFixed(8) + ' BTC';
+
+      const pctEl = $('progressPct');
+      const fillEl = $('progressFill');
+      pctEl.textContent = pct.toFixed(2) + '%';
+      fillEl.style.width = pct + '%';
+      const complete = totalBtc >= 1;
+      pctEl.className = 'progress-pct' + (complete ? ' complete' : '');
+      fillEl.className = 'progress-bar-fill' + (complete ? ' complete' : '');
+      $('completeBanner').className = 'complete-banner' + (complete ? ' show' : '');
+
+      // Needed table — only if some holdings entered but not complete
+      const nb = $('neededBlock');
+      const nt = $('neededTable');
+      if (totalBtc > 0.000001 && remaining > 0.000001) {
+        nb.className = 'needed-block show';
+        nt.innerHTML = ETFS.map(etf => {
+          const need = Math.ceil(remaining / etf.btcPerShare);
+          const cost = need * etf.btcPerShare * btcPrice;
+          return `<tr>
+            <td>${etf.ticker}</td>
+            <td>+${need.toLocaleString()} shares</td>
+            <td>≈ $${cost.toLocaleString('en-US', { maximumFractionDigits: 0 })}</td>
+          </tr>`;
+        }).join('');
+      } else {
+        nb.className = 'needed-block';
+      }
+    }
+
+    function resetAll() {
+      ETFS.forEach(etf => {
+        shares[etf.ticker] = 0;
+        const inp = $('inp-' + etf.ticker);
+        if (inp) inp.value = '';
+        refreshCard(etf.ticker);
+      });
+      refreshSummary();
+    }
+
+    async function loadPrice() {
+      try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+        const d = await res.json();
+        btcPrice = parseFloat(d.price);
+      } catch {
+        try {
+          const res = await fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD');
+          const d = await res.json();
+          btcPrice = parseFloat(d.result.XXBTZUSD.c[0]);
+        } catch {}
+      }
+      if (btcPrice > 0) {
+        $('etf-btc-price').textContent = '$' + btcPrice.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        $('etf-updated').textContent = new Date().toLocaleTimeString();
+        ETFS.forEach(e => refreshCard(e.ticker));
+        refreshSummary();
+        updateNavTime();
+      }
+    }
+
+    buildGrid();
+    loadPrice();
+    setInterval(loadPrice, 30000);
+  </script>
+</body>
+</html>
