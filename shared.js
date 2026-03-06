@@ -92,3 +92,76 @@ document.addEventListener('DOMContentLoaded', () => {
     if (href === path) a.classList.add('active');
   });
 });
+
+// ─── HAMBURGER NAV ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Inject burger button, drawer, and overlay into every page's nav
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'nav-overlay';
+  document.body.appendChild(overlay);
+
+  // Drawer — built from nav-links
+  const drawer = document.createElement('div');
+  drawer.className = 'nav-drawer';
+
+  // All nav links to mirror into drawer
+  const navLinks = [
+    { href: 'index.html',          label: '⌂ Home' },
+    { href: 'index.html#tools',    label: '⚙ Tools' },
+    { href: 'index.html#markets',  label: '📈 Markets' },
+    { href: 'index.html#onchain',  label: '⛓ On-Chain' },
+    { href: 'index.html#mining',   label: '⛏ Mining' },
+    { href: 'index.html#lightning',label: '⚡ Lightning' },
+    { href: 'index.html#macro',    label: '🌐 Macro' },
+    { href: 'tool-etf.html',       label: '🏦 ETF → 1 BTC' },
+    { href: 'tool-satstack.html',  label: '📈 Sat Stack' },
+    { href: 'tool-address.html',   label: '🔍 Address Checker' },
+    { href: 'tool-fee.html',       label: '⛽ Fee Estimator' },
+    { href: 'tool-converter.html', label: '🔄 Sats Converter' },
+    { href: 'tool-halving.html',   label: '📉 Halving' },
+    { href: 'tool-cheap.html',     label: '🎯 Is BTC Cheap?' },
+    { href: 'tool-alarm.html',     label: '🔔 Fee Alarm' },
+    { href: 'tool-signal.html',    label: '📡 BTC Signal' },
+    { href: 'tool-regret.html',    label: '😢 Regret Calc' },
+    { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey' },
+  ];
+
+  const curFile = window.location.pathname.split('/').pop() || 'index.html';
+  navLinks.forEach(({ href, label }) => {
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = label;
+    if (href.split('/').pop().split('#')[0] === curFile) a.classList.add('active');
+    if (href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
+    drawer.appendChild(a);
+  });
+  document.body.appendChild(drawer);
+
+  // Burger button
+  const burger = document.createElement('button');
+  burger.className = 'nav-burger';
+  burger.setAttribute('aria-label', 'Menu');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(burger);
+
+  function openMenu() {
+    burger.classList.add('open');
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    burger.classList.remove('open');
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', () => burger.classList.contains('open') ? closeMenu() : openMenu());
+  overlay.addEventListener('click', closeMenu);
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+});
