@@ -130,15 +130,18 @@
   <script src="shared.js"></script>
   <script>
     const ETFS = [
-      { ticker:'IBIT', name:'iShares Bitcoin Trust',         issuer:'BlackRock',    btcPerShare:0.00009887, fp:41 },
-      { ticker:'FBTC', name:'Fidelity Wise Origin BTC Fund', issuer:'Fidelity',     btcPerShare:0.00059695, fp:62 },
-      { ticker:'BITB', name:'Bitwise Bitcoin ETF',           issuer:'Bitwise',      btcPerShare:0.00099120, fp:37 },
-      { ticker:'ARKB', name:'ARK 21Shares Bitcoin ETF',      issuer:'ARK/21Shares', btcPerShare:0.00096714, fp:23 },
-      { ticker:'BTCO', name:'Invesco Galaxy Bitcoin ETF',    issuer:'Invesco',      btcPerShare:0.00099547, fp:68 },
-      { ticker:'HODL', name:'VanEck Bitcoin Trust',          issuer:'VanEck',       btcPerShare:0.00095614, fp:27 },
-      { ticker:'BRRR', name:'Valkyrie Bitcoin Fund',         issuer:'CoinShares',   btcPerShare:0.00094800, fp:25 },
-      { ticker:'EZBC', name:'Franklin Bitcoin ETF',          issuer:'Franklin',     btcPerShare:0.00099700, fp:39 },
-      { ticker:'BTCW', name:'WisdomTree Bitcoin Fund',       issuer:'WisdomTree',   btcPerShare:0.00095200, fp:25 },
+      // btcPerShare = authoritative NAV ratio as of Mar 2026
+      // IBIT/FBTC sourced from BlackRock/Fidelity official holdings data
+      // Others derived from (share price / BTC spot) at recent close
+      { ticker:'IBIT', name:'iShares Bitcoin Trust',         issuer:'BlackRock',    btcPerShare:0.000568, fp:41 },
+      { ticker:'FBTC', name:'Fidelity Wise Origin BTC Fund', issuer:'Fidelity',     btcPerShare:0.000860, fp:62 },
+      { ticker:'BITB', name:'Bitwise Bitcoin ETF',           issuer:'Bitwise',      btcPerShare:0.000514, fp:37 },
+      { ticker:'ARKB', name:'ARK 21Shares Bitcoin ETF',      issuer:'ARK/21Shares', btcPerShare:0.000319, fp:23 },
+      { ticker:'BTCO', name:'Invesco Galaxy Bitcoin ETF',    issuer:'Invesco',      btcPerShare:0.000944, fp:68 },
+      { ticker:'HODL', name:'VanEck Bitcoin Trust',          issuer:'VanEck',       btcPerShare:0.000375, fp:27 },
+      { ticker:'BRRR', name:'Valkyrie Bitcoin Fund',         issuer:'CoinShares',   btcPerShare:0.000347, fp:25 },
+      { ticker:'EZBC', name:'Franklin Bitcoin ETF',          issuer:'Franklin',     btcPerShare:0.000548, fp:39 },
+      { ticker:'BTCW', name:'WisdomTree Bitcoin Fund',       issuer:'WisdomTree',   btcPerShare:0.000347, fp:25 },
     ];
 
     const sharePrices = {};   // live share prices
@@ -160,7 +163,7 @@
             <span class="etf-issuer">${etf.issuer}</span>
           </div>
           <div class="etf-meta">
-            <span class="etf-ratio">≈ <span>${etf.btcPerShare.toFixed(8)}</span> BTC/share</span>
+            <span class="etf-ratio">≈ <span>${etf.btcPerShare.toFixed(6)}</span> BTC/share</span>
             <span class="etf-share-price loading" id="sp-${etf.ticker}">loading…</span>
           </div>
           <input type="number" class="etf-shares-input" id="inp-${etf.ticker}"
