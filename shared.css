@@ -628,7 +628,7 @@ footer a { color: var(--orange); text-decoration: none; }
   .clock-val { font-size: 1.1rem; }
 }
 
-/* ─── HAMBURGER MENU ─── */
+/* ─── HAMBURGER ─── */
 .nav-burger {
   display: none;
   flex-direction: column;
@@ -649,7 +649,7 @@ footer a { color: var(--orange); text-decoration: none; }
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.2s ease;
+  transition: transform 0.25s, opacity 0.2s;
 }
 .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav-burger.open span:nth-child(2) { opacity: 0; }
@@ -670,11 +670,12 @@ footer a { color: var(--orange); text-decoration: none; }
   -webkit-overflow-scrolling: touch;
   visibility: hidden;
   transform: translateX(105%);
-  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), visibility 0.28s;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.28s;
 }
 .nav-drawer.open {
   visibility: visible;
   transform: translateX(0);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), visibility 0s;
 }
 .nav-drawer a {
   display: block;
@@ -690,8 +691,7 @@ footer a { color: var(--orange); text-decoration: none; }
   -webkit-tap-highlight-color: transparent;
 }
 .nav-drawer a:last-child { border-bottom: none; }
-.nav-drawer a:hover,
-.nav-drawer a.active { color: var(--orange); }
+.nav-drawer a:hover, .nav-drawer a.active { color: var(--orange); }
 
 .nav-overlay {
   position: fixed;
@@ -700,17 +700,18 @@ footer a { color: var(--orange); text-decoration: none; }
   z-index: 9999;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.25s ease, visibility 0.25s;
+  transition: opacity 0.25s, visibility 0s linear 0.25s;
   -webkit-tap-highlight-color: transparent;
 }
 .nav-overlay.open {
   visibility: visible;
   opacity: 1;
+  transition: opacity 0.25s, visibility 0s;
 }
 
 @media (max-width: 600px) {
   .nav-burger { display: flex; }
-  .nav-links { display: none; }
-  .nav-status { display: none; }
+  .nav-links   { display: none; }
+  .nav-status  { display: none; }
   nav { padding: 1rem 1.25rem; }
 }

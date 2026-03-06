@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ─── HAMBURGER NAV ────────────────────────────────────────────────
-(function initBurger() {
-  var navLinks = [
+(function () {
+  var LINKS = [
     { href: 'index.html',           label: '⌂ Home' },
     { href: 'index.html#tools',     label: '⚙ All Tools' },
     { href: 'tool-etf.html',        label: '🏦 ETF → 1 BTC' },
@@ -108,10 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { href: 'tool-cheap.html',      label: '🎯 Is BTC Cheap?' },
     { href: 'tool-signal.html',     label: '📡 BTC Signal' },
     { href: 'tool-regret.html',     label: '😢 Regret Calc' },
-    { href: 'index.html#markets',   label: '📊 Markets' },
-    { href: 'index.html#onchain',   label: '⛓ On-Chain' },
-    { href: 'index.html#mining',    label: '⛏ Mining' },
-    { href: 'index.html#lightning', label: '⚡ Lightning' },
+    { href: 'btc-search.html',      label: '🔒 Stealth View' },
     { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey' },
   ];
 
@@ -119,62 +116,58 @@ document.addEventListener('DOMContentLoaded', () => {
     var nav = document.querySelector('nav');
     if (!nav) return;
 
-    // Overlay
     var overlay = document.createElement('div');
     overlay.className = 'nav-overlay';
     document.body.appendChild(overlay);
 
-    // Drawer
     var drawer = document.createElement('div');
     drawer.className = 'nav-drawer';
-    var curFile = window.location.pathname.split('/').pop() || 'index.html';
-    navLinks.forEach(function(item) {
+    var cur = window.location.pathname.split('/').pop() || 'index.html';
+    LINKS.forEach(function (item) {
       var a = document.createElement('a');
       a.href = item.href;
       a.textContent = item.label;
-      if (item.href.split('/').pop().split('#')[0] === curFile) a.classList.add('active');
+      if (item.href.split('/').pop().split('#')[0] === cur) a.classList.add('active');
       if (item.href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
       drawer.appendChild(a);
     });
     document.body.appendChild(drawer);
 
-    // Burger button — inject into nav
     var burger = document.createElement('button');
     burger.className = 'nav-burger';
     burger.setAttribute('aria-label', 'Menu');
     burger.innerHTML = '<span></span><span></span><span></span>';
     nav.appendChild(burger);
 
-    function open() {
+    function openMenu() {
       burger.classList.add('open');
       drawer.classList.add('open');
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-    function close() {
+    function closeMenu() {
       burger.classList.remove('open');
       drawer.classList.remove('open');
       overlay.classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    burger.addEventListener('click', function(e) {
+    burger.addEventListener('click', function (e) {
       e.stopPropagation();
-      burger.classList.contains('open') ? close() : open();
+      burger.classList.contains('open') ? closeMenu() : openMenu();
     });
-    overlay.addEventListener('click', close);
-    drawer.querySelectorAll('a').forEach(function(a) {
-      a.addEventListener('click', close);
+    overlay.addEventListener('click', closeMenu);
+    drawer.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', closeMenu);
     });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') close();
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
     });
   }
 
-  // Run immediately if DOM ready, otherwise wait
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', build);
   } else {
     build();
   }
-})();
+}());
