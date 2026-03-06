@@ -4,104 +4,337 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Google</title>
-<link rel="shortcut icon" href="https://www.google.com/favicon.ico">
+<link rel="icon" href="https://www.google.com/favicon.ico">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: arial, sans-serif; background: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  body {
+    font-family: arial, sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
   /* Top nav */
-  .top-nav { display: flex; justify-content: flex-end; align-items: center; padding: 8px 20px; gap: 12px; font-size: 13px; color: #202124; flex-shrink: 0; }
-  .top-nav a { color: #202124; text-decoration: none; }
+  .top-nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 12px;
+    font-size: 13px;
+    color: #202124;
+  }
+
+  .top-nav a {
+    color: #202124;
+    text-decoration: none;
+  }
+
   .top-nav a:hover { text-decoration: underline; }
-  .sign-in-btn { background: #1a73e8; color: #fff !important; padding: 8px 20px; border-radius: 4px; font-size: 13px; font-weight: 500; text-decoration: none !important; white-space: nowrap; }
+
+  .sign-in-btn {
+    background: #1a73e8;
+    color: #fff !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none !important;
+    white-space: nowrap;
+  }
 
   /* Main */
-  .main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 120px; }
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 120px;
+  }
+
+  .logo-wrap {
+    margin-bottom: 28px;
+  }
+
+  /* Google SVG logo */
+  .google-logo {
+    width: 272px;
+    height: 92px;
+  }
 
   /* Search bar */
-  .search-wrap { width: 100%; max-width: 584px; }
-  .search-bar { display: flex; align-items: center; border: 1px solid #dfe1e5; border-radius: 24px; padding: 0 14px; height: 46px; background: #fff; transition: box-shadow 0.2s, border-color 0.2s; gap: 10px; }
-  .search-bar:hover, .search-bar:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: rgba(223,225,229,0); }
-  .search-icon { color: #9aa0a6; flex-shrink: 0; display: flex; }
-  .search-input { flex: 1; border: none; outline: none; font-size: 16px; color: #202124; background: transparent; }
-  .icon-btn { color: #9aa0a6; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; }
+  .search-wrap {
+    width: 100%;
+    max-width: 584px;
+    position: relative;
+  }
 
-  /* Buttons */
-  .search-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
-  .search-btn { background: #f8f9fa; border: 1px solid #f8f9fa; border-radius: 4px; color: #3c4043; font-size: 14px; padding: 0 16px; height: 36px; cursor: pointer; white-space: nowrap; font-family: arial, sans-serif; }
-  .search-btn:hover { border-color: #dadce0; box-shadow: 0 1px 1px rgba(0,0,0,.1); color: #202124; }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    padding: 0 14px;
+    height: 44px;
+    background: #fff;
+    box-shadow: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    gap: 10px;
+  }
 
-  /* Language */
-  .lang-line { margin-top: 28px; font-size: 13px; color: #202124; }
-  .lang-line a { color: #1558d6; text-decoration: none; }
+  .search-bar:hover, .search-bar:focus-within {
+    box-shadow: 0 1px 6px rgba(32,33,36,.28);
+    border-color: rgba(223,225,229,0);
+  }
+
+  .search-icon {
+    color: #9aa0a6;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #202124;
+    background: transparent;
+    caret-color: #202124;
+  }
+
+  .mic-icon, .camera-icon {
+    color: #9aa0a6;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .search-btn {
+    background: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-size: 14px;
+    padding: 0 16px;
+    height: 36px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover {
+    border-color: #dadce0;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    color: #202124;
+  }
+
+  /* Language line */
+  .lang-line {
+    margin-top: 26px;
+    font-size: 13px;
+    color: #202124;
+  }
+
+  .lang-line a {
+    color: #1558d6;
+    text-decoration: none;
+  }
+
   .lang-line a:hover { text-decoration: underline; }
 
   /* Bottom bar */
-  .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #f2f2f2; border-top: 1px solid #e4e4e4; padding: 13px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #70757a; z-index: 100; }
-  .bottom-links { display: flex; gap: 24px; }
-  .bottom-bar a { color: #70757a; text-decoration: none; }
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #f2f2f2;
+    border-top: 1px solid #e4e4e4;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #70757a;
+    z-index: 100;
+  }
+
+  .bottom-left, .bottom-right {
+    display: flex;
+    gap: 24px;
+  }
+
+  .bottom-bar a {
+    color: #70757a;
+    text-decoration: none;
+  }
+
   .bottom-bar a:hover { text-decoration: underline; }
 
-  /* BTC widget */
-  .btc-widget { position: fixed; bottom: 52px; right: 20px; background: #fff; border: 1px solid #dfe1e5; border-radius: 12px; padding: 10px 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; z-index: 200; min-width: 192px; transition: box-shadow 0.2s; cursor: default; user-select: none; }
-  .btc-widget:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-  .btc-coin { width: 28px; height: 28px; background: #f7931a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; flex-shrink: 0; font-family: arial, sans-serif; }
-  .btc-text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-  .btc-label { font-size: 10px; color: #70757a; letter-spacing: 0.3px; font-weight: 500; }
-  .btc-price { font-size: 17px; font-weight: 700; color: #202124; letter-spacing: -0.4px; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .btc-change { font-size: 11px; font-weight: 500; line-height: 1; }
-  .up   { color: #188038; }
-  .down { color: #c5221f; }
-  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #34a853; flex-shrink: 0; align-self: flex-start; margin-top: 3px; animation: blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  @keyframes flashGreen { 0%{color:#202124} 40%{color:#188038} 100%{color:#202124} }
-  @keyframes flashRed   { 0%{color:#202124} 40%{color:#c5221f} 100%{color:#202124} }
-  .flash-up   { animation: flashGreen 0.5s ease; }
-  .flash-down { animation: flashRed   0.5s ease; }
+  /* BTC Ticker */
+  .btc-ticker {
+    position: fixed;
+    bottom: 54px;
+    right: 20px;
+    background: #fff;
+    border: 1px solid #dfe1e5;
+    border-radius: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Google Sans', arial, sans-serif;
+    z-index: 200;
+    cursor: default;
+    transition: box-shadow 0.2s;
+    min-width: 200px;
+  }
+
+  .btc-ticker:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  }
+
+  .btc-icon {
+    width: 28px;
+    height: 28px;
+    background: #f7931a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    font-family: arial;
+  }
+
+  .btc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .btc-label {
+    font-size: 10px;
+    color: #70757a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  .btc-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #202124;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btc-change {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .btc-change.up { color: #188038; }
+  .btc-change.down { color: #c5221f; }
+
+  .btc-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34a853;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .btc-price.flash-up {
+    animation: flashUp 0.4s ease;
+  }
+  .btc-price.flash-down {
+    animation: flashDown 0.4s ease;
+  }
+
+  @keyframes flashUp {
+    0% { color: #202124; }
+    50% { color: #188038; }
+    100% { color: #202124; }
+  }
+
+  @keyframes flashDown {
+    0% { color: #202124; }
+    50% { color: #c5221f; }
+    100% { color: #202124; }
+  }
 </style>
 </head>
 <body>
 
 <div class="top-nav">
-  <a href="https://mail.google.com" target="_blank" rel="noopener">Gmail</a>
-  <a href="https://images.google.com" target="_blank" rel="noopener">Images</a>
-  <svg width="24" height="24" viewBox="0 0 24 24" style="cursor:pointer;color:#5f6368;vertical-align:middle" fill="currentColor">
+  <a href="#">Gmail</a>
+  <a href="#">Images</a>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="cursor:pointer;color:#5f6368" fill="currentColor">
     <path d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 14c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM6 20c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
   </svg>
   <a href="#" class="sign-in-btn">Sign in</a>
 </div>
 
 <div class="main">
-  <!-- Google logo (proper coloured SVG) -->
-  <div style="margin-bottom:28px">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 92" width="272" height="92" aria-label="Google">
-      <path fill="#4285F4" d="M67.6 41.4H35.3v9.4h18.3c-1.6 4.8-6.5 13.6-18.3 13.6-11 0-20-9.1-20-20.4 0-11.3 9-20.4 20-20.4 6.3 0 10.5 2.7 12.9 5l8.7-8.5C51.6 15.2 44.4 12 35.3 12 17.2 12 2.5 26.7 2.5 44.8s14.7 32.8 32.8 32.8c18.9 0 31.5-13.3 31.5-32.1 0-2.2-.2-3.8-.6-5.1h-.6z"/>
+  <div class="logo-wrap">
+    <!-- Google logo SVG -->
+    <svg class="google-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 92">
       <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
       <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
       <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.67-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.26zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z"/>
       <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z"/>
       <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z"/>
+      <path fill="#4285F4" d="M35.29 41.41V32h31.portable use 9.32 0 17.69 3.29 23.99 8.65l-6.69 6.68C49.56 43.26 42.65 41.41 35.29 41.41z"/>
+      <path fill="#4285F4" d="M35.29 41.41v-9.41h32c.28 1.54.42 3.15.42 4.88 0 2.67-.3 5.24-.84 7.71H35.29V41.41z"/>
+      <!-- simplified G icon -->
+      <path fill="#4285F4" d="M67.6 41.41H35.29v9.42h18.31c-1.61 4.83-6.54 13.55-18.31 13.55-11.01 0-19.99-9.12-19.99-20.38 0-11.26 8.98-20.38 19.99-20.38 6.27 0 10.47 2.67 12.85 4.97l8.73-8.48C51.55 15.19 44.35 12 35.29 12 17.2 12 2.5 26.7 2.5 44.79s14.7 32.79 32.79 32.79c18.93 0 31.45-13.32 31.45-32.07 0-2.16-.23-3.8-.58-5.1h-.56z"/>
     </svg>
   </div>
 
   <div class="search-wrap">
     <div class="search-bar">
-      <span class="search-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input class="search-input" type="text" autocomplete="off" autofocus>
+      <span class="mic-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+        </svg>
       </span>
-      <input class="search-input" id="q" type="text" autocomplete="off" autofocus>
-      <span class="icon-btn" title="Search by voice">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
-      </span>
-      <span class="icon-btn" title="Search by image">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 10.5l4.77-8.26C13.47 2.09 12.75 2 12 2c-2.4 0-4.6.85-6.32 2.25l3.66 6.35.06-.1zM21.54 9c-.92-2.92-3.15-5.26-6-6.34L11.88 9h9.66zm.26 1h-7.49l.29.5 4.76 8.25C21 16.97 22 14.61 22 12c0-.69-.07-1.35-.2-2zM8.54 12l-3.9-6.75C3.01 7.03 2 9.39 2 12c0 .69.07 1.35.2 2h7.49l-1.15-2zm-6.08 3c.92 2.92 3.15 5.26 6 6.34L12.12 15H2.46zm11.27 0l-3.9 6.76c.7.15 1.42.24 2.17.24 2.4 0 4.6-.85 6.32-2.25l-3.66-6.35-.93 1.6z"/></svg>
+      <span class="camera-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.4 10.5l4.77-8.26C13.47 2.09 12.75 2 12 2c-2.4 0-4.6.85-6.32 2.25l3.66 6.35.06-.1zM21.54 9c-.92-2.92-3.15-5.26-6-6.34L11.88 9h9.66zm.26 1h-7.49l.29.5 4.76 8.25C21 16.97 22 14.61 22 12c0-.69-.07-1.35-.2-2zM8.54 12l-3.9-6.75C3.01 7.03 2 9.39 2 12c0 .69.07 1.35.2 2h7.49l-1.15-2zm-6.08 3c.92 2.92 3.15 5.26 6 6.34L12.12 15H2.46zm11.27 0l-3.9 6.76c.7.15 1.42.24 2.17.24 2.4 0 4.6-.85 6.32-2.25l-3.66-6.35-.93 1.6z"/>
+        </svg>
       </span>
     </div>
   </div>
 
   <div class="search-buttons">
-    <button class="search-btn" onclick="doSearch()">Google Search</button>
-    <button class="search-btn" onclick="feelingLucky()">I'm Feeling Lucky</button>
+    <button class="search-btn">Google Search</button>
+    <button class="search-btn">I'm Feeling Lucky</button>
   </div>
 
   <div class="lang-line">
@@ -109,20 +342,22 @@
   </div>
 </div>
 
-<!-- BTC ticker -->
-<div class="btc-widget" title="Bitcoin price — updates every 15s">
-  <div class="btc-coin">₿</div>
-  <div class="btc-text">
+<!-- BTC Ticker -->
+<div class="btc-ticker" title="Bitcoin price — updates every 15 seconds">
+  <div class="btc-icon">₿</div>
+  <div class="btc-info">
     <span class="btc-label">Bitcoin · Live</span>
-    <span class="btc-price" id="btcPrice">—</span>
+    <span class="btc-price" id="btcPrice">Loading…</span>
     <span class="btc-change" id="btcChange"></span>
   </div>
-  <div class="live-dot"></div>
+  <div class="btc-dot"></div>
 </div>
 
 <div class="bottom-bar">
-  <div class="bottom-links"><span>United States</span></div>
-  <div class="bottom-links">
+  <div class="bottom-left">
+    <span>United States</span>
+  </div>
+  <div class="bottom-right">
     <a href="#">Advertising</a>
     <a href="#">Business</a>
     <a href="#">How Search works</a>
@@ -133,50 +368,51 @@
 </div>
 
 <script>
-  function doSearch() {
-    const q = document.getElementById('q').value.trim();
-    window.open('https://www.google.com/search?q=' + encodeURIComponent(q || ''), '_self');
-  }
-  function feelingLucky() {
-    const q = document.getElementById('q').value.trim();
-    if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q) + '&btnI=1', '_self');
-  }
-  document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  let lastPrice = null;
+  let openPrice = null;
 
-  let prevPrice = null;
-
-  async function fetchPrice() {
+  async function fetchBTC() {
     try {
-      const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-      const d = await r.json();
-      paint(parseFloat(d.lastPrice), parseFloat(d.priceChangePercent));
-    } catch {
+      const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+      const d = await res.json();
+      const price = parseFloat(d.lastPrice);
+      const open = parseFloat(d.openPrice);
+      const change = price - open;
+      const changePct = (change / open) * 100;
+
+      const priceEl = document.getElementById('btcPrice');
+      const changeEl = document.getElementById('btcChange');
+
+      if (lastPrice !== null) {
+        if (price > lastPrice) {
+          priceEl.className = 'btc-price flash-up';
+        } else if (price < lastPrice) {
+          priceEl.className = 'btc-price flash-down';
+        }
+        setTimeout(() => priceEl.className = 'btc-price', 450);
+      }
+
+      priceEl.textContent = '$' + price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+      const sign = change >= 0 ? '+' : '';
+      changeEl.textContent = `${sign}${changePct.toFixed(2)}% today`;
+      changeEl.className = 'btc-change ' + (change >= 0 ? 'up' : 'down');
+
+      lastPrice = price;
+    } catch (e) {
+      // fallback to Kraken
       try {
-        const r = await fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD');
-        const d = await r.json();
-        const t = d.result.XXBTZUSD;
-        const p = parseFloat(t.c[0]);
-        paint(p, ((p - parseFloat(t.o)) / parseFloat(t.o)) * 100);
+        const res = await fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD');
+        const d = await res.json();
+        const price = parseFloat(d.result.XXBTZUSD.c[0]);
+        document.getElementById('btcPrice').textContent = '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        lastPrice = price;
       } catch {}
     }
   }
 
-  function paint(price, pct) {
-    const pe = document.getElementById('btcPrice');
-    const ce = document.getElementById('btcChange');
-    if (prevPrice !== null && price !== prevPrice) {
-      pe.className = 'btc-price ' + (price > prevPrice ? 'flash-up' : 'flash-down');
-      setTimeout(() => { pe.className = 'btc-price'; }, 550);
-    }
-    pe.textContent = '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    const sign = pct >= 0 ? '+' : '';
-    ce.textContent = sign + pct.toFixed(2) + '% today';
-    ce.className = 'btc-change ' + (pct >= 0 ? 'up' : 'down');
-    prevPrice = price;
-  }
-
-  fetchPrice();
-  setInterval(fetchPrice, 15000);
+  fetchBTC();
+  setInterval(fetchBTC, 15000);
 </script>
 </body>
 </html>

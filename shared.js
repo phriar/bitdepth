@@ -94,96 +94,87 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ─── HAMBURGER NAV ────────────────────────────────────────────────
-(function() {
-  function initBurger() {
-    const nav = document.querySelector('nav');
+(function initBurger() {
+  var navLinks = [
+    { href: 'index.html',           label: '⌂ Home' },
+    { href: 'index.html#tools',     label: '⚙ All Tools' },
+    { href: 'tool-etf.html',        label: '🏦 ETF → 1 BTC' },
+    { href: 'tool-satstack.html',   label: '📈 Sat Stack' },
+    { href: 'tool-address.html',    label: '🔍 Address Checker' },
+    { href: 'tool-fee.html',        label: '⛽ Fee Estimator' },
+    { href: 'tool-alarm.html',      label: '🔔 Fee Alarm' },
+    { href: 'tool-converter.html',  label: '🔄 Sats Converter' },
+    { href: 'tool-halving.html',    label: '📉 Halving' },
+    { href: 'tool-cheap.html',      label: '🎯 Is BTC Cheap?' },
+    { href: 'tool-signal.html',     label: '📡 BTC Signal' },
+    { href: 'tool-regret.html',     label: '😢 Regret Calc' },
+    { href: 'index.html#markets',   label: '📊 Markets' },
+    { href: 'index.html#onchain',   label: '⛓ On-Chain' },
+    { href: 'index.html#mining',    label: '⛏ Mining' },
+    { href: 'index.html#lightning', label: '⚡ Lightning' },
+    { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey' },
+  ];
+
+  function build() {
+    var nav = document.querySelector('nav');
     if (!nav) return;
 
-    // Create overlay (appended to body, behind drawer)
-    const overlay = document.createElement('div');
+    // Overlay
+    var overlay = document.createElement('div');
     overlay.className = 'nav-overlay';
     document.body.appendChild(overlay);
 
-    // Create drawer (appended to body, not inside nav)
-    const drawer = document.createElement('div');
+    // Drawer
+    var drawer = document.createElement('div');
     drawer.className = 'nav-drawer';
-    drawer.setAttribute('aria-hidden', 'true');
-
-    const navLinks = [
-      { href: 'index.html',           label: '⌂ Home' },
-      { href: 'index.html#tools',     label: '⚙ All Tools' },
-      { href: 'tool-etf.html',        label: '🏦 ETF → 1 BTC' },
-      { href: 'tool-satstack.html',   label: '📈 Sat Stack' },
-      { href: 'tool-address.html',    label: '🔍 Address Checker' },
-      { href: 'tool-fee.html',        label: '⛽ Fee Estimator' },
-      { href: 'tool-alarm.html',      label: '🔔 Fee Alarm' },
-      { href: 'tool-converter.html',  label: '🔄 Sats Converter' },
-      { href: 'tool-halving.html',    label: '📉 Halving' },
-      { href: 'tool-cheap.html',      label: '🎯 Is BTC Cheap?' },
-      { href: 'tool-signal.html',     label: '📡 BTC Signal' },
-      { href: 'tool-regret.html',     label: '😢 Regret Calc' },
-      { href: 'index.html#markets',   label: '📊 Markets' },
-      { href: 'index.html#onchain',   label: '⛓ On-Chain' },
-      { href: 'index.html#mining',    label: '⛏ Mining' },
-      { href: 'index.html#lightning', label: '⚡ Lightning' },
-      { href: 'https://x.com/btc_journey', label: '𝕏 @btc_journey' },
-    ];
-
-    const curFile = window.location.pathname.split('/').pop() || 'index.html';
-    navLinks.forEach(({ href, label }) => {
-      const a = document.createElement('a');
-      a.href = href;
-      a.textContent = label;
-      if (href.split('/').pop().split('#')[0] === curFile) a.classList.add('active');
-      if (href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
+    var curFile = window.location.pathname.split('/').pop() || 'index.html';
+    navLinks.forEach(function(item) {
+      var a = document.createElement('a');
+      a.href = item.href;
+      a.textContent = item.label;
+      if (item.href.split('/').pop().split('#')[0] === curFile) a.classList.add('active');
+      if (item.href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
       drawer.appendChild(a);
     });
     document.body.appendChild(drawer);
 
-    // Create burger button — insert before nav-status so flex order is correct
-    const burger = document.createElement('button');
+    // Burger button — inject into nav
+    var burger = document.createElement('button');
     burger.className = 'nav-burger';
-    burger.setAttribute('aria-label', 'Open menu');
-    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Menu');
     burger.innerHTML = '<span></span><span></span><span></span>';
-
-    // Insert burger as last child of nav (after logo, nav-links, nav-status)
     nav.appendChild(burger);
 
-    function openMenu() {
+    function open() {
       burger.classList.add('open');
-      burger.setAttribute('aria-expanded', 'true');
       drawer.classList.add('open');
-      drawer.setAttribute('aria-hidden', 'false');
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-    function closeMenu() {
+    function close() {
       burger.classList.remove('open');
-      burger.setAttribute('aria-expanded', 'false');
       drawer.classList.remove('open');
-      drawer.setAttribute('aria-hidden', 'true');
       overlay.classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    burger.addEventListener('click', (e) => {
+    burger.addEventListener('click', function(e) {
       e.stopPropagation();
-      burger.classList.contains('open') ? closeMenu() : openMenu();
+      burger.classList.contains('open') ? close() : open();
     });
-    overlay.addEventListener('click', closeMenu);
-    drawer.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => { closeMenu(); });
+    overlay.addEventListener('click', close);
+    drawer.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', close);
     });
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMenu();
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') close();
     });
   }
 
+  // Run immediately if DOM ready, otherwise wait
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBurger);
+    document.addEventListener('DOMContentLoaded', build);
   } else {
-    initBurger(); // DOM already ready
+    build();
   }
 })();
